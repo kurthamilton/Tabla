@@ -4,21 +4,21 @@
     <body>
         <section id="instruments.index">
             <div>
-                <select rv-on-change="actions.selectInstrument" rv-value="model.selectedInstrument">
-                    <option rv-each-name="model.names" rv-value="name">{ name }</option>
+                <select class="instruments">
                 </select>
             </div>
             <div>
-                <div rv-each-string="model.instrument.strings">
-                    { string.note }{ string.octave }
+                <div class="strings">
+
                 </div>
             </div>
-            <div>
-                
+            <div id="tablature.index">
+                <div class="tab-grid">
+
+                </div>
             </div>
         </section>
         <!--scripts-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.8.1/rivets.bundled.min.js"></script>
         <script data-main="app/app" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.min.js"></script>
     </body>
 </html>
