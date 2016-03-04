@@ -1,0 +1,42 @@
+/* layout */
+section {
+    margin: 20px 0;
+}
+/* tab grid */
+.bars {
+    display: flex;
+    flex-wrap: wrap;
+}
+.bar {
+    margin-bottom: 10px;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+}
+.beats {
+    display: flex;
+    flex-direction: row;
+}
+.strings {
+    flex-direction: column;
+}
+.string {
+    position: relative;
+    width: 10px;
+}
+.string:after {
+    background: #c00;
+    content: "";
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+.string:hover {
+    border: 1px solid #A9A9E4;
+    cursor: pointer;
+}
+.string:hover:after {
+    /*todo: fix hover offsetting*/
+}

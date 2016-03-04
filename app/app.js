@@ -2,16 +2,18 @@
     'use strict';
 
     configure();
-    requirejs(['controllers.instruments'], app);
+    requirejs(['controllers.instruments', 'controllers.tablature'], app);
 
-    function app(instrumentsController) {
+    function app(instrumentsController, tablatureController) {
         instrumentsController.index();
+        tablatureController.index();
     }
 
     function configure() {
         require.config({
             paths: {
                 'controllers.instruments': 'controllers/instruments-controller',
+                'controllers.tablature': 'controllers/tablature-controller',
                 'models.bar': 'models/bar',
                 'models.instrument': 'models/instrument',
                 'models.note': 'models/note',
