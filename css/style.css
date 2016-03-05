@@ -1,7 +1,16 @@
+/* reset */
+html {
+    box-sizing: border-box;
+}
+*, *:after, *:before {
+    box-sizing: inherit;
+}
+
 /* layout */
 section {
     margin: 20px 0;
 }
+
 /* tab grid */
 .bars {
     display: flex;
@@ -24,19 +33,14 @@ section {
     width: 10px;
 }
 .string:after {
-    background: #c00;
+    border-bottom: 1px solid #CA4848;
     content: "";
-    display: block;
-    height: 1px;
     left: 0;
     position: absolute;
     top: 50%;
     width: 100%;
 }
 .string:hover {
-    border: 1px solid #A9A9E4;
+    box-shadow: 0px 0px 0px 1px #42429A;
     cursor: pointer;
-}
-.string:hover:after {
-    /*todo: fix hover offsetting*/
 }
