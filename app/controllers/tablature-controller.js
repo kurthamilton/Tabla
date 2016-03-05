@@ -20,6 +20,7 @@
         };
     }
 
+    // event handlers
     function bindClick(scope) {
         document.addEventListener('click', function(e) {
             cancelStringSelect(scope);
@@ -88,6 +89,7 @@
         });
     }
 
+    // dom functions
     function moveVertically(scope, direction) {
         let target = null;
         if (direction > 0) {
@@ -100,15 +102,12 @@
     }
 
     function moveHorizontally(scope, direction) {
-        let target = null;
-
-        // todo: move to outer sibling
-        if (direction > 0) {
-            target = scope.selected.nextSibling;
-        } else {
-            target = scope.selected.previousSibling;
+        let siblingBeat = getSiblingBeat(scope.selected, direction);
+        if (!siblingBeat) {
+            return;
         }
-
+        let index = indexInParent(scope.selected, 'string');
+        let target = siblingBeat.querySelector(`.string:nth-child(${index + 1})`);
         moveToString(scope, target);
     }
 
@@ -147,6 +146,46 @@
         return false;
     }
 
+    function getSiblingBeat(element, direction) {
+        let beat = closestClass(element, 'beat');
+        if (direction > 0) {
+            beat = beat.nextSibling;
+        } else {
+            beat = beat.previousSibling;
+        }
+
+        if (hasClass(beat, 'beat')) {
+            return beat;
+        }
+
+        let bar = getSiblingBar(element, direction);
+        if (!bar) {
+            return null;
+        }
+
+        if (direction > 0) {
+            return bar.querySelector('.beat:first-child');
+        } else {
+            return bar.querySelector('.beat:last-child');
+        }
+    }
+
+    function getSiblingBar(element, direction) {
+        let bar = closestClass(element, 'bar');
+        if (direction > 0) {
+            bar = bar.nextSibling;
+        } else {
+            bar = bar.previousSibling;
+        }
+
+        if (hasClass(bar, 'bar')) {
+            return bar;
+        }
+
+        return null;
+    }
+
+    // model functions
     function getBars(numberOfBars) {
         var bars = [];
         for (let i = 0; i < numberOfBars; i++) {
@@ -177,7 +216,30 @@
         return strings;
     }
 
+
+    // todo: utility functions that should be moved somewhere good
+    function closestClass(element, className) {
+        while (element) {
+            if (hasClass(element, className)) {
+                break;
+            }
+            element = element.parentElement;
+        }
+
+        return element;
+    }
     function hasClass(element, className) {
         return element && element.classList && element.classList.contains(className);
+    }
+    function indexInParent(element, className) {
+        let index = -1;
+        while (element) {
+            if (!hasClass(element, className)) {
+                break;
+            }
+            index++;
+            element = element.previousSibling;
+        }
+        return index;
     }
 })(rivets);
