@@ -83,6 +83,15 @@
             else if (e.keyCode === 39) {
                 // right arrow
                 moveHorizontally(scope, 1);
+            } else if (e.keyCode === 9) {
+                // tab forwards and backwards through beats
+                // todo: beats
+                if (e.shiftKey === true) {
+                    moveHorizontally(scope, -1);
+                } else {
+                    moveHorizontally(scope, 1);
+                }
+                e.preventDefault();
             }
 
             console.log(e.keyCode);
@@ -102,12 +111,12 @@
     }
 
     function moveHorizontally(scope, direction) {
-        let siblingBeat = getSiblingBeat(scope.selected, direction);
-        if (!siblingBeat) {
+        let siblingQuaver = getSiblingQuaver(scope.selected, direction);
+        if (!siblingQuaver) {
             return;
         }
         let index = indexInParent(scope.selected, 'string');
-        let target = siblingBeat.querySelector(`.string:nth-child(${index + 1})`);
+        let target = siblingQuaver.querySelector(`.string:nth-child(${index + 1})`);
         moveToString(scope, target);
     }
 
@@ -146,16 +155,16 @@
         return false;
     }
 
-    function getSiblingBeat(element, direction) {
-        let beat = closestClass(element, 'beat');
+    function getSiblingQuaver(element, direction) {
+        let quaver = closestClass(element, 'quaver');
         if (direction > 0) {
-            beat = beat.nextSibling;
+            quaver = quaver.nextSibling;
         } else {
-            beat = beat.previousSibling;
+            quaver = quaver.previousSibling;
         }
 
-        if (hasClass(beat, 'beat')) {
-            return beat;
+        if (hasClass(quaver, 'quaver')) {
+            return quaver;
         }
 
         let bar = getSiblingBar(element, direction);
@@ -164,9 +173,9 @@
         }
 
         if (direction > 0) {
-            return bar.querySelector('.beat:first-child');
+            return bar.querySelector('.quaver:first-child');
         } else {
-            return bar.querySelector('.beat:last-child');
+            return bar.querySelector('.quaver:last-child');
         }
     }
 
@@ -190,22 +199,22 @@
         var bars = [];
         for (let i = 0; i < numberOfBars; i++) {
             let bar = {
-                beats: getBeats(16)
+                quavers: getQuavers(16)
             };
             bars.push(bar);
         }
         return bars;
     }
 
-    function getBeats(numberOfBeats) {
-        var beats = [];
-        for (let i = 0; i < numberOfBeats; i++) {
-            let beat = {
+    function getQuavers(numberOfQuavers) {
+        var quavers = [];
+        for (let i = 0; i < numberOfQuavers; i++) {
+            let quaver = {
                 strings: getStrings(5)
             };
-            beats.push(beat);
+            quavers.push(quaver);
         }
-        return beats;
+        return quavers;
     }
 
     function getStrings(numberOfStrings) {
