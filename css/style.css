@@ -40,7 +40,8 @@ section {
     top: 50%;
     width: 100%;
 }
-.string:hover {
+.string:hover,
+.string.selected {
     box-shadow: 0px 0px 0px 1px #42429A;
     cursor: pointer;
 }
