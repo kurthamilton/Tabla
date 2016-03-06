@@ -4,19 +4,14 @@
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
-        <section id="instruments.index">
+        <section id="instruments">
             <div>
                 <select class="instruments" rv-value="model.selectedInstrument">
                     <option rv-each-name="model.names" value="name">{ name }</option>
                 </select>
             </div>
-            <div>
-                <div class="strings">
-
-                </div>
-            </div>
         </section>
-        <section id="tablature.index">
+        <section id="tablature">
             <div class="bars">
                 <div class="bar" rv-each-bar="model.bars">
                     <div class="quavers">

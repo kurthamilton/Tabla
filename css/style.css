@@ -30,6 +30,7 @@ section {
 }
 .string {
     position: relative;
+    text-align: center;
     width: 10px;
 }
 .string:after {

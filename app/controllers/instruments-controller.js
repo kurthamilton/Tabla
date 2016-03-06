@@ -1,14 +1,20 @@
 (function(rivets) {
     'use strict';
 
-    define(['services.instrumentFactory'], instrumentFactory => new InstrumentsController(instrumentFactory));
+    define(['services.instrumentFactory'], InstrumentsController);
 
     function InstrumentsController(instrumentFactory) {
-        this.index = function() {
-            let scope = new Scope(instrumentFactory);
-            let view = document.getElementById('instruments.index');
-            rivets.bind(view, scope);
+        return {
+            load: function() {
+                render();
+            }
         };
+
+        function render() {
+            let scope = new Scope(instrumentFactory);
+            let view = document.getElementById('instruments');
+            return rivets.bind(view, scope);
+        }
     }
 
     function Scope(instrumentFactory) {

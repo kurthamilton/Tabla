@@ -8,17 +8,10 @@
     }
 
     Tune.prototype.addNote = function(note) {
-        let key = `${note.bar}.${note.beat}`;
-        if (!this.notes.hasOwnProperty(key)) {
+        let prop = `${note.bar}.${note.beat}.${note.quaver}`;
+        if (!this.notes.hasOwnProperty(prop)) {
             this.notes = {};
         }
-        let beat = this.notes[key];
-        if (beat.hasOwnProperty(note.string)) {
-            console.log(`oops - string ${note.string} already exists at ${key}`);
-            return;
-        }
-
-        // todo: check string doesn't conflict with surrounding strings
-        beat[note.string] = note;
+        this.notes[prop][note.string] = note;
     };
 })();

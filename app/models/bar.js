@@ -3,7 +3,7 @@
 
     define(() => Bar);
 
-    function Bar() {
-
+    function Bar(options) {
+        this.index = options.index;
     }
 })();
