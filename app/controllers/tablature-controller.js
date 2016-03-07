@@ -76,33 +76,38 @@
                     moveHorizontally(-1);
                 }
                 else if (e.keyCode === 38) {
-                    // up arrow
-                    moveVertically(-1);
+                    // up arrow - move all the way to top if ctrl
+                    moveVertically(e.ctrlKey === true ? -2 : -1);
                 }
                 else if (e.keyCode === 40) {
-                    // down arrow
-                    moveVertically(1);
+                    // down arrow - move all the way to down if ctrl
+                    moveVertically(e.ctrlKey === true ? 2 : 1);
                 }
                 else if (e.keyCode === 39) {
                     // right arrow
                     moveHorizontally(1);
                 } else if (e.keyCode === 9) {
                     // tab forwards and backwards through crotchets
-                    if (e.shiftKey === true) {
-                        moveHorizontally(-2);
-                    } else {
-                        moveHorizontally(2);
-                    }
+                    moveHorizontally(e.shiftKey === true ? -2 : 2);
                     e.preventDefault();
                 }
 
-                //console.log(e.keyCode);
+                console.log(e.keyCode);
             });
         }
 
         // dom functions
         function moveVertically(direction) {
-            let target = domUtils.sibling(scope.selected, direction, 'string');
+            let target = null;
+            if (Math.abs(direction) === 1) {
+                // move by 1 string if direction is 1 or -1
+                target = domUtils.sibling(scope.selected, direction, 'string');
+            } else if (Math.abs(direction) === 2) {
+                // move to top string if direction is -2, else to bottom string
+                let strings = scope.selected.parentElement.querySelectorAll('.string');
+                target = strings[direction === -2 ? 0 : strings.length - 1];
+            }
+
             selectString(target);
         }
 
