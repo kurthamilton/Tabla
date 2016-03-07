@@ -3,27 +3,31 @@
 
     define(() => Tune);
 
-    function Tune() {
+    function Tune(options) {
+        this.beatsPerBar = 4;
         this.index = {};
         this.notes = [];
     }
 
     Tune.prototype.addNote = function(note) {
-        let indexKey = `${note.bar}.${note.quaver}.${note.string}`;
-        if (this.index.hasOwnProperty(indexKey)) {
-            let arrayIndex = this.index[indexKey];
-            this.notes.splice(arrayIndex, 1);
-        }
+        let indexKey = this.getIndexKey(note);
+        this.deleteNote(note);
         this.index[indexKey] = this.notes.length;
         this.notes.push(note);
     };
 
-    Tune.prototype.deleteNote = function() {
-        // todo
+    Tune.prototype.deleteNote = function(note) {
+        let indexKey = this.getIndexKey(note);
+        if (!this.index.hasOwnProperty(indexKey)) {
+            return;
+        }
+        let arrayIndex = this.index[indexKey];
+        this.notes.splice(arrayIndex, 1);
+        delete this.index[indexKey];
     };
 
-    Tune.prototype.getFret = function(bar, quaver, string) {
-        let indexKey = `${bar}.${quaver}.${string}`;
+    Tune.prototype.getFret = function(note) {
+        let indexKey = this.getIndexKey(note);
         if (!this.index.hasOwnProperty(indexKey)) {
             return null;
         }
@@ -31,13 +35,14 @@
         return this.notes[arrayIndex].fret;
     };
 
+    Tune.prototype.getIndexKey = function(note) {
+        return `${note.bar}.${note.crotchet}.${note.quaver}.${note.string}`;
+    };
+
     Tune.prototype.maxBar = function() {
         let maxBar = 0;
         for (let i = 0; i < this.notes.length; i++) {
-            let bar = this.notes[i].bar;
-            if (bar > maxBar) {
-                maxBar = bar;
-            }
+            maxBar = Math.max(this.notes[i].bar, maxBar);
         }
         return maxBar;
     };

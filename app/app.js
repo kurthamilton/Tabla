@@ -1,4 +1,4 @@
-(function() {
+(function(rivets) {
     'use strict';
 
     configure();
@@ -10,10 +10,11 @@
     }
 
     function configure() {
-        rivets.formatters.default = function(value, args) {
-            return (typeof value !== 'undefined' && value !== null) ? value : args;
-        };
+        rivetsConfig();
+        requireConfig();
+    }
 
+    function requireConfig() {
         require.config({
             baseUrl: 'app',
             paths: {
@@ -21,4 +22,10 @@
             }
         });
     }
-})();
+
+    function rivetsConfig() {
+        rivets.formatters.default = function(value, args) {
+            return (typeof value !== 'undefined' && value !== null) ? value : args;
+        };
+    }
+})(rivets);

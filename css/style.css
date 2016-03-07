@@ -12,7 +12,7 @@ section {
 }
 
 /* tab grid */
-.bars {
+.bars, .crotchets {
     display: flex;
     flex-wrap: wrap;
 }

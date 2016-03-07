@@ -90,7 +90,6 @@
                     moveHorizontally(1);
                 } else if (e.keyCode === 9) {
                     // tab forwards and backwards through crotchets
-                    // todo: crotchets
                     if (e.shiftKey === true) {
                         moveHorizontally(-1);
                     } else {
@@ -99,29 +98,23 @@
                     e.preventDefault();
                 }
 
-                console.log(e.keyCode);
+                //console.log(e.keyCode);
             });
         }
 
         // dom functions
         function moveVertically(direction) {
-            let target = null;
-            if (direction > 0) {
-                target = scope.selected.nextSibling;
-            } else {
-                target = scope.selected.previousSibling;
-            }
-
+            let target = domUtils.sibling(scope.selected, direction, 'string');
             moveToString(target);
         }
 
         function moveHorizontally(direction) {
-            let siblingQuaver = getSiblingQuaver(scope.selected, direction);
-            if (!siblingQuaver) {
+            let sibling = getSiblingQuaver(scope.selected, direction);
+            if (!sibling) {
                 return;
             }
             let index = domUtils.indexInParent(scope.selected, 'string');
-            let target = siblingQuaver.querySelector(`.string:nth-child(${index + 1})`);
+            let target = sibling.querySelector(`.string:nth-child(${index + 1})`);
             moveToString(target);
         }
 
@@ -137,7 +130,6 @@
             cancelStringSelect();
 
             if (!target) {
-                scope.selectedNote = null;
                 return;
             }
 
@@ -148,11 +140,13 @@
 
         function getNote(target) {
             let stringElement = domUtils.closestClass(target, 'string');
-            let quaverElement = domUtils.closestClass(target, 'quaver');
-            let barElement = domUtils.closestClass(quaverElement, 'bar');
+            let quaverElement = domUtils.closestClass(stringElement, 'quaver');
+            let crotchetElement = domUtils.closestClass(quaverElement, 'crotchet');
+            let barElement = domUtils.closestClass(crotchetElement, 'bar');
 
             return new Note({
                 bar: domUtils.indexInParent(barElement, 'bar'),
+                crotchet: domUtils.indexInParent(crotchetElement, 'crotchet'),
                 fret: null,
                 quaver: domUtils.indexInParent(quaverElement, 'quaver'),
                 string: domUtils.indexInParent(stringElement, 'string')
@@ -173,7 +167,7 @@
             if (fret === null || isNaN(fret) === true) {
                 scope.selected.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
-                scope.model.tune.addNote(scope.selectedNote);
+                scope.model.tune.deleteNote(scope.selectedNote);
                 scope.save();
                 return true;
             }
@@ -190,42 +184,20 @@
         }
 
         function getSiblingQuaver(element, direction) {
-            let quaver = domUtils.closestClass(element, 'quaver');
-            if (direction > 0) {
-                quaver = quaver.nextSibling;
-            } else {
-                quaver = quaver.previousSibling;
-            }
-
-            if (domUtils.hasClass(quaver, 'quaver')) {
+            let quaver = domUtils.sibling(element, direction, 'quaver', 'crotchet');
+            if (quaver) {
                 return quaver;
             }
+            return domUtils.sibling(element, direction, 'quaver', 'bar');
+        }
 
-            let bar = getSiblingBar(element, direction);
-            if (!bar) {
-                return null;
-            }
-
-            if (direction > 0) {
-                return bar.querySelector('.quaver:first-child');
-            } else {
-                return bar.querySelector('.quaver:last-child');
-            }
+        function getSiblingCrotchet(element, direction) {
+            return domUtils.sibling(element, direction, 'crotchet', 'bar');
         }
 
         function getSiblingBar(element, direction) {
-            let bar = domUtils.closestClass(element, 'bar');
-            if (direction > 0) {
-                bar = bar.nextSibling;
-            } else {
-                bar = bar.previousSibling;
-            }
+            return domUtils.sibling(element, direction, 'bar');
 
-            if (domUtils.hasClass(bar, 'bar')) {
-                return bar;
-            }
-
-            return null;
         }
     }
 })(rivets);

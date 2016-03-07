@@ -5,8 +5,9 @@
 
     function Note(options) {
         this.bar = options.bar;
-        this.quaver = options.quaver;
+        this.crotchet = options.crotchet;
         this.fret = options.fret;
+        this.quaver = options.quaver;
         this.string = options.string;
     }
 })();

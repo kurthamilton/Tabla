@@ -18,34 +18,44 @@
         // model methods
         function getBars(tune) {
             let bars = [];
-            let numberOfBars = tune.maxBar();
-            if (numberOfBars < 16) {
-                numberOfBars = 16;
-            }
-            for (let i = 0; i < numberOfBars; i++) {
-                let bar = {
-                    quavers: getQuavers(tune, i, 16)
-                };
-                bars.push(bar);
+            for (let i = 0; i < Math.max(tune.maxBar(), 16); i++) {
+                bars.push({
+                    crotchets: getCrotchets(tune, i)
+                });
             }
             return bars;
         }
 
-        function getQuavers(tune, bar, numberOfQuavers) {
+        function getCrotchets(tune, bar) {
+            let crotchets = [];
+            for (let i = 0; i < tune.beatsPerBar; i++) {
+                crotchets.push({
+                    quavers: getQuavers(tune, bar, i, 4)
+                });
+
+            }
+            return crotchets;
+        }
+
+        function getQuavers(tune, bar, crotchet, numberOfQuavers) {
             let quavers = [];
             for (let i = 0; i < numberOfQuavers; i++) {
-                let quaver = {
-                    strings: getStrings(tune, bar, i, 5)
-                };
-                quavers.push(quaver);
+                quavers.push({
+                    strings: getStrings(tune, bar, crotchet, i, 5)
+                });
             }
             return quavers;
         }
 
-        function getStrings(tune, bar, quaver, numberOfStrings) {
+        function getStrings(tune, bar, crotchet, quaver, numberOfStrings) {
             let strings = [];
             for (let i = 0; i < numberOfStrings; i++) {
-                let fret = tune.getFret(bar, quaver, i);
+                let fret = tune.getFret({
+                    bar: bar,
+                    crotchet: crotchet,
+                    quaver: quaver,
+                    string: i
+                });
                 strings.push({ index: i, fret: fret });
             }
             return strings;
@@ -53,20 +63,22 @@
 
         // storage methods
         function load() {
-            let savedNotes = storageService.get('notes');
+            let saved = storageService.get('tune');
             let tune = new Tune();
-            if (!savedNotes) {
+            if (!saved) {
                 return tune;
             }
 
-            for (let i = 0; i < savedNotes.length; i++) {
-                tune.addNote(new Note(savedNotes[i]));
+            for (let i = 0; i < saved.notes.length; i++) {
+                tune.addNote(new Note(saved.notes[i]));
             }
             return tune;
         }
 
         function save() {
-            storageService.set('notes', model.tune.notes);
+            storageService.set('tune', {
+                notes: model.tune.notes
+            });
         }
     }
 })();
