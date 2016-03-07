@@ -3,9 +3,10 @@
 
     define(() => Tune);
 
-    function Tune(options) {
+    function Tune() {
         this.beatsPerBar = 4;
         this.index = {};
+        this.instrumentName = '';
         this.notes = [];
     }
 
