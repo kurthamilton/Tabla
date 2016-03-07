@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/instrument-factory'], InstrumentsController);
+    define(['services/instrument-service'], InstrumentsController);
 
-    function InstrumentsController(instrumentFactory) {
+    function InstrumentsController(instrumentService) {
         return {
             load: function() {
                 render();
@@ -11,26 +11,19 @@
         };
 
         function render() {
-            let scope = new Scope(instrumentFactory);
+            let scope = {
+                model: instrumentService.model,
+                actions: {
+                    selectInstrument: selectInstrument
+                }
+            };
+
             let view = document.getElementById('instruments');
             return rivets.bind(view, scope);
         }
-    }
 
-    function Scope(instrumentFactory) {
-        let model = {
-            instrument: null,
-            names: instrumentFactory.available(),
-            selectedInstrument: ''
-        };
-
-        let actions = {
-            selectInstrument: function(e, scope) {
-                scope.model.instrument = instrumentFactory.get(model.selectedInstrument);
-            }
-        };
-
-        this.actions = actions;
-        this.model = model;
+        function selectInstrument(e, scope) {
+            instrumentService.selectInstrument(scope.model.selectedInstrument);
+        }
     }
 })(rivets);

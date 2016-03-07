@@ -4,16 +4,15 @@
     define(['services/storage-service', 'models/note', 'models/tune'], TablatureService);
 
     function TablatureService(storageService, Note, Tune) {
-        let model = new Model();
+        let tune = load();
+
         return {
             save: save,
-            model: model
+            model: {
+                tune: tune,
+                bars: getBars(tune)
+            }
         };
-
-        function Model() {
-            this.tune = load();
-            this.bars = getBars(this.tune);
-        }
 
         // model methods
         function getBars(tune) {
