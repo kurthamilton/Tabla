@@ -30,12 +30,9 @@
 
         function bindClick() {
             document.addEventListener('click', function(e) {
-                let target = e.target;
-                if (!domUtils.hasClass(target, 'string')) {
-                    target = null;
+                if (!selectString(e.target)) {
+                    cancelStringSelect();
                 }
-
-                selectString(target);
             });
         }
 
@@ -47,11 +44,12 @@
 
                 // 0 - 9
                 if (e.keyCode >= 48 && e.keyCode <= 57) {
-                    // Append the typed number to the current content. Set the fret to the current number if not successful.
-                    let keyNumber = e.keyCode - 48;
-                    let fret = parseInt(`${scope.selected.textContent}${keyNumber}`);
+                    // Append the typed number to the current content
+                    let number = e.keyCode - 48;
+                    let fret = parseInt(`${scope.selected.textContent}${number}`);
                     if (!setFret(fret)) {
-                        setFret(keyNumber);
+                        // Set the fret to the current number if not successful.
+                        setFret(number);
                     }
                 }
             });
@@ -105,7 +103,7 @@
         // dom functions
         function moveVertically(direction) {
             let target = domUtils.sibling(scope.selected, direction, 'string');
-            moveToString(target);
+            selectString(target);
         }
 
         function moveHorizontally(direction) {
@@ -115,27 +113,21 @@
             }
             let index = domUtils.indexInParent(scope.selected, 'string');
             let target = sibling.querySelector(`.string:nth-child(${index + 1})`);
-            moveToString(target);
-        }
-
-        function moveToString(target) {
-            if (!domUtils.hasClass(target, 'string')) {
-                return;
-            }
-
             selectString(target);
         }
 
         function selectString(target) {
-            cancelStringSelect();
-
-            if (!target) {
-                return;
+            if (!target || !domUtils.hasClass(target, 'string')) {
+                return false;
             }
+
+            cancelStringSelect();
 
             target.classList.add('selected');
             scope.selected = target;
             scope.selectedNote = getNote(target);
+
+            return true;
         }
 
         function getNote(target) {
@@ -189,15 +181,6 @@
                 return quaver;
             }
             return domUtils.sibling(element, direction, 'quaver', 'bar');
-        }
-
-        function getSiblingCrotchet(element, direction) {
-            return domUtils.sibling(element, direction, 'crotchet', 'bar');
-        }
-
-        function getSiblingBar(element, direction) {
-            return domUtils.sibling(element, direction, 'bar');
-
         }
     }
 })(rivets);

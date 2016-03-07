@@ -30,6 +30,8 @@
                 return index;
             },
             sibling: function(element, direction, className, parentClassName) {
+                // todo: accept parentClassName as array or string
+
                 element = utils.closestClass(element, className);
 
                 let sibling = null;
@@ -47,15 +49,16 @@
                     return null;
                 }
 
-                let parent = utils.sibling(element, direction, parentClassName);
-                if (!parent) {
+                let aunt = utils.sibling(element, direction, parentClassName);
+                if (!aunt) {
                     return null;
                 }
 
+                let cousins = aunt.querySelectorAll(`.${className}`);
                 if (direction > 0) {
-                    return parent.querySelector(`.${className}:first-child`);
+                    return cousins[0];
                 }
-                return parent.querySelector(`.${className}:last-child`);
+                return cousins[cousins.length - 1];
             }
         };
 
