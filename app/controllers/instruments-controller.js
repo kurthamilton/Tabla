@@ -1,7 +1,7 @@
 (function(rivets) {
     'use strict';
 
-    define(['services.instrumentFactory'], InstrumentsController);
+    define(['services/instrument-factory'], InstrumentsController);
 
     function InstrumentsController(instrumentFactory) {
         return {

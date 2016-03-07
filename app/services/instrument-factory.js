@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    define(['models.instrument', 'models.string'], InstrumentFactory);
+    define(['models/instrument', 'models/string'], InstrumentFactory);
 
     function InstrumentFactory(Instrument, String) {
         const instruments = {

@@ -9,7 +9,7 @@
                 if (!localStorage) {
                     return null;
                 }
-                let item = window.localStorage.getItem(key);
+                let item = window.localStorage.getItem(`tabcreator.${key}`);
                 if (!item) {
                     return null;
                 }
@@ -20,7 +20,7 @@
                     return;
                 }
                 let data = JSON.stringify(item);
-                localStorage.setItem(key, data);
+                localStorage.setItem(`tabcreator.${key}`, data);
             }
         };
     }

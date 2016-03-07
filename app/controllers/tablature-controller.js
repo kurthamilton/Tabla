@@ -1,109 +1,231 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'services.tablature.dom', 'services.storage', 'models.note', 'models.tune'], TablatureController);
+    define(['utils.dom', 'services/tablature-service', 'models/note'], TablatureController);
 
-    function TablatureController(domUtils, tablatureDomService, storageService, Note, Tune) {
+    function TablatureController(domUtils, tablatureService, Note) {
+        let scope = {
+            model: tablatureService.model,
+            save: tablatureService.save,
+            selected: null,
+            selectedNote: null
+        };
+
         return {
             load: function() {
-                let scope = new Scope();
-                render(scope);
-                tablatureDomService.bind(scope);
+                render();
+                bindEvents();
             }
         };
 
-        function render(scope) {
+        function render() {
             let view = document.getElementById('tablature');
-            rivets.bind(view, scope);
+            rivets.bind(view, scope.model);
         }
 
-        function bind() {
-            bindClick(scope);
-            bindKeys(scope);
+        function bindEvents() {
+            bindClick();
+            bindKeys();
         }
 
-        function Scope() {
-            let scope = this;
-
-            let tune = loadTune();
-            this.data = {
-                selectedNote: null
-            };
-            this.model = {
-                bars: getBars(20),
-                tune: tune
-            };
-            this.save = function() {
-                saveTune(storageService, scope);
-            };
-            this.select = function(target) {
-                if (scope.selected) {
-                    scope.selected.classList.remove('selected');
-                    scope.selected = null;
+        function bindClick() {
+            document.addEventListener('click', function(e) {
+                let target = e.target;
+                if (!domUtils.hasClass(target, 'string')) {
+                    target = null;
                 }
 
-                if (!target) {
-                    scope.data.selectedNote = null;
+                selectString(target);
+            });
+        }
+
+        function bindKeys() {
+            document.addEventListener('keypress', function(e) {
+                if (!scope.selected || e.shiftKey === true) {
                     return;
                 }
 
-                target.classList.add('selected');
-                scope.selected = target;
+                // 0 - 9
+                if (e.keyCode >= 48 && e.keyCode <= 57) {
+                    // Append the typed number to the current content. Set the fret to the current number if not successful.
+                    let keyNumber = e.keyCode - 48;
+                    let fret = parseInt(`${scope.selected.textContent}${keyNumber}`);
+                    if (!setFret(fret)) {
+                        setFret(keyNumber);
+                    }
+                }
+            });
 
-                let stringElement = domUtils.closestClass(target, 'string');
-                let quaverElement = domUtils.closestClass(target, 'quaver');
-                let barElement = domUtils.closestClass(quaverElement, 'bar');
+            document.addEventListener('keydown', function(e) {
+                if (!scope.selected) {
+                    return;
+                }
 
-                let quavers = domUtils.indexInParent(quaverElement, 'quaver');
-                let quaver = quavers % 4;
+                if (e.keyCode === 46) {
+                    // delete
+                    setFret(null);
+                }
+                else if (e.keyCode === 8) {
+                    // backspace
+                    if (isNaN(parseInt(scope.selected.textContent)) === false) {
+                        let fret = parseInt(scope.selected.textContent.substring(0, scope.selected.textContent.length - 1));
+                        setFret(fret);
+                    }
+                    e.preventDefault();
+                }
+                else if (e.keyCode === 37) {
+                    // left arrow
+                    moveHorizontally(-1);
+                }
+                else if (e.keyCode === 38) {
+                    // up arrow
+                    moveVertically(-1);
+                }
+                else if (e.keyCode === 40) {
+                    // down arrow
+                    moveVertically(1);
+                }
+                else if (e.keyCode === 39) {
+                    // right arrow
+                    moveHorizontally(1);
+                } else if (e.keyCode === 9) {
+                    // tab forwards and backwards through crotchets
+                    // todo: crotchets
+                    if (e.shiftKey === true) {
+                        moveHorizontally(-1);
+                    } else {
+                        moveHorizontally(1);
+                    }
+                    e.preventDefault();
+                }
 
-                scope.data.selectedNote = new Note({
-                    bar: domUtils.indexInParent(barElement, 'bar'),
-                    beat: (quavers - quaver) / 4,
-                    fret: null,
-                    quaver: quaver,
-                    string: domUtils.indexInParent(stringElement, 'strings')
-                });
-            };
-            this.selected = null;
+                console.log(e.keyCode);
+            });
         }
 
-        function getBars(numberOfBars) {
-            let bars = [];
-            for (let i = 0; i < numberOfBars; i++) {
-                let bar = {
-                    quavers: getQuavers(16)
-                };
-                bars.push(bar);
+        // dom functions
+        function moveVertically(direction) {
+            let target = null;
+            if (direction > 0) {
+                target = scope.selected.nextSibling;
+            } else {
+                target = scope.selected.previousSibling;
             }
-            return bars;
+
+            moveToString(target);
         }
 
-        function getQuavers(numberOfQuavers) {
-            let quavers = [];
-            for (let i = 0; i < numberOfQuavers; i++) {
-                let quaver = {
-                    strings: getStrings(5)
-                };
-                quavers.push(quaver);
+        function moveHorizontally(direction) {
+            let siblingQuaver = getSiblingQuaver(scope.selected, direction);
+            if (!siblingQuaver) {
+                return;
             }
-            return quavers;
+            let index = domUtils.indexInParent(scope.selected, 'string');
+            let target = siblingQuaver.querySelector(`.string:nth-child(${index + 1})`);
+            moveToString(target);
         }
 
-        function getStrings(numberOfStrings) {
-            let strings = [];
-            for (let i = 0; i < numberOfStrings; i++) {
-                strings.push(i);
+        function moveToString(target) {
+            if (!domUtils.hasClass(target, 'string')) {
+                return;
             }
-            return strings;
+
+            selectString(target);
         }
 
-        function loadTune() {
-            return new Tune();
+        function selectString(target) {
+            cancelStringSelect();
+
+            if (!target) {
+                scope.selectedNote = null;
+                return;
+            }
+
+            target.classList.add('selected');
+            scope.selected = target;
+            scope.selectedNote = getNote(target);
         }
 
-        function saveTune() {
-            storageService.set('tune', scope.model.tune);
+        function getNote(target) {
+            let stringElement = domUtils.closestClass(target, 'string');
+            let quaverElement = domUtils.closestClass(target, 'quaver');
+            let barElement = domUtils.closestClass(quaverElement, 'bar');
+
+            return new Note({
+                bar: domUtils.indexInParent(barElement, 'bar'),
+                fret: null,
+                quaver: domUtils.indexInParent(quaverElement, 'quaver'),
+                string: domUtils.indexInParent(stringElement, 'string')
+            });
+        }
+
+        function cancelStringSelect() {
+            if (!scope.selected) {
+                return;
+            }
+
+            scope.selected.classList.remove('selected');
+            scope.selected = null;
+            scope.selectedNote = null;
+        }
+
+        function setFret(fret) {
+            if (fret === null || isNaN(fret) === true) {
+                scope.selected.innerHTML = '&nbsp;';
+                scope.selectedNote.fret = null;
+                scope.model.tune.addNote(scope.selectedNote);
+                scope.save();
+                return true;
+            }
+
+            // todo: configurable bounds
+            if (fret >= 0 && fret <= 24) {
+                scope.selected.innerHTML = fret;
+                scope.selectedNote.fret = fret;
+                scope.model.tune.addNote(scope.selectedNote);
+                scope.save();
+                return true;
+            }
+            return false;
+        }
+
+        function getSiblingQuaver(element, direction) {
+            let quaver = domUtils.closestClass(element, 'quaver');
+            if (direction > 0) {
+                quaver = quaver.nextSibling;
+            } else {
+                quaver = quaver.previousSibling;
+            }
+
+            if (domUtils.hasClass(quaver, 'quaver')) {
+                return quaver;
+            }
+
+            let bar = getSiblingBar(element, direction);
+            if (!bar) {
+                return null;
+            }
+
+            if (direction > 0) {
+                return bar.querySelector('.quaver:first-child');
+            } else {
+                return bar.querySelector('.quaver:last-child');
+            }
+        }
+
+        function getSiblingBar(element, direction) {
+            let bar = domUtils.closestClass(element, 'bar');
+            if (direction > 0) {
+                bar = bar.nextSibling;
+            } else {
+                bar = bar.previousSibling;
+            }
+
+            if (domUtils.hasClass(bar, 'bar')) {
+                return bar;
+            }
+
+            return null;
         }
     }
 })(rivets);

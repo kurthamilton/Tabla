@@ -13,11 +13,11 @@
         </section>
         <section id="tablature">
             <div class="bars">
-                <div class="bar" rv-each-bar="model.bars">
+                <div class="bar" rv-each-bar="bars">
                     <div class="quavers">
                         <div class="quaver" rv-each-quaver="bar.quavers">
                             <div class="strings">
-                                <div class="string" rv-each-string="quaver.strings">&nbsp;</div>
+                                <div class="string" rv-each-string="quaver.strings">{ string.fret | default '&nbsp' }</div>
                             </div>
                         </div>
                     </div>
