@@ -89,9 +89,9 @@
                 } else if (e.keyCode === 9) {
                     // tab forwards and backwards through crotchets
                     if (e.shiftKey === true) {
-                        moveHorizontally(-1);
+                        moveHorizontally(-2);
                     } else {
-                        moveHorizontally(1);
+                        moveHorizontally(2);
                     }
                     e.preventDefault();
                 }
@@ -107,12 +107,27 @@
         }
 
         function moveHorizontally(direction) {
-            let sibling = getSiblingQuaver(scope.selected, direction);
+            // todo: enum for direction
+            let sibling = null;
+            if (Math.abs(direction) === 1) {
+                // move by 1 quaver if direction is 1 or -1
+                sibling = getSiblingQuaver(scope.selected, direction);
+            } else if (Math.abs(direction) === 2) {
+                // move by 1 crotchet if direction is 2 or -2
+                if (direction < 0 && scope.selectedNote.quaver > 0) {
+                    // stay within same crotchet if tabbing backwards from an advanced position within a crotchet
+                    sibling = domUtils.closestClass(scope.selected, 'crotchet');
+                } else {
+                    sibling = getSiblingCrotchet(scope.selected, direction);
+                }
+            }
+
             if (!sibling) {
                 return;
             }
+
             let index = domUtils.indexInParent(scope.selected, 'string');
-            let target = sibling.querySelector(`.string:nth-child(${index + 1})`);
+            let target = sibling.querySelectorAll('.string')[index];
             selectString(target);
         }
 
@@ -181,6 +196,10 @@
                 return quaver;
             }
             return domUtils.sibling(element, direction, 'quaver', 'bar');
+        }
+
+        function getSiblingCrotchet(element, direction) {
+            return domUtils.sibling(element, direction, 'crotchet', 'bar');
         }
     }
 })(rivets);
