@@ -2,7 +2,7 @@
 html {
     box-sizing: border-box;
 }
-*, *:after, *:before {
+*, :after, :before {
     box-sizing: inherit;
 }
 
@@ -12,23 +12,23 @@ section {
 }
 
 /* tab grid */
-.bars, .crotchets {
+.bars, .bar {
     display: flex;
     flex-wrap: wrap;
 }
 .bar {
-    margin-bottom: 10px;
     border-left: 1px solid #000;
     border-right: 1px solid #000;
+    margin-bottom: 10px;
+    margin-left: -1px; /*hide double border. It's not possible to use something last :last-child-of-row with flexbox*/
 }
 .crotchet:not(:last-child) {
     border-right: 1px dashed #BBB;
 }
-.quavers {
+.crotchet {
     display: flex;
-    flex-direction: row;
 }
-.strings {
+.quaver {
     flex-direction: column;
 }
 .string {
