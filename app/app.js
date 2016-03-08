@@ -2,9 +2,14 @@
     'use strict';
 
     configure();
-    requirejs(['controllers/instruments-controller', 'controllers/tablature-controller'], app);
 
-    function app(instrumentsController, tablatureController) {
+    let dependencies = ['controllers/instruments-controller',
+                        'controllers/session-controller',
+                        'controllers/tablature-controller'];
+    requirejs(dependencies, app);
+
+    function app(instrumentsController, sessionController, tablatureController) {
+        sessionController.load();
         instrumentsController.load();
         tablatureController.load();
     }
@@ -18,7 +23,8 @@
         require.config({
             baseUrl: 'app',
             paths: {
-                'utils.dom': '../js/dom-utils'
+                'utils.dom': '../js/dom-utils',
+                'utils': '../js/utils'
             }
         });
     }
