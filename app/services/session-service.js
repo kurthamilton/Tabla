@@ -9,10 +9,15 @@
 
         loadSessions();
 
+        let model = {
+            activeSessionId: sessions.length > 0 ? sessions[0].id : null,
+            sessions: sessions
+        };
+
         return {
-            active: sessions.length > 0 ? sessions[sessions.length - 1] : null,
             create: createSession,
-            delete: deleteSession
+            delete: deleteSession,
+            model: model
         };
 
         function createSession(options) {
@@ -27,7 +32,7 @@
                 name: option.name
             };
 
-            sessions.push(session);
+            sessions.unshift(session);
             save();
         }
 
@@ -45,10 +50,12 @@
                 return;
             }
 
-            // move session to end of array so that it is automatically loaded next time
+            // move session to start of array
             let session = sessions.splice(index[id], 1);
-            sessions.push(session)
+            sessions.unshift(session);
             save();
+
+            model.activeSessionId = session.id;
         }
 
         function loadSessions() {

@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/instrument-service'], InstrumentsController);
+    define(['services/instrument-service'], InstrumentController);
 
-    function InstrumentsController(instrumentService) {
+    function InstrumentController(instrumentService) {
         return {
             load: function() {
                 render();

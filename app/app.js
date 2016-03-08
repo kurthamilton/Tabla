@@ -3,14 +3,14 @@
 
     configure();
 
-    let dependencies = ['controllers/instruments-controller',
+    let dependencies = ['controllers/instrument-controller',
                         'controllers/session-controller',
                         'controllers/tablature-controller'];
     requirejs(dependencies, app);
 
-    function app(instrumentsController, sessionController, tablatureController) {
+    function app(instrumentController, sessionController, tablatureController) {
         sessionController.load();
-        instrumentsController.load();
+        instrumentController.load();
         tablatureController.load();
     }
 

@@ -5,13 +5,21 @@
     </head>
     <body>
         <section id="sessions">
-            
-        </section>
-        <section id="instruments">
             <div>
-                <select class="instruments" rv-value="model.selectedInstrument" rv-on-change="actions.selectInstrument">
-                    <option rv-each-name="model.names" rv-value="name">{ name }</option>
+                <select id="sessionsList" rv-value="model.activeSessionId" rv-on-change="actions.changeSession">
+                    <option rv-each-session="model.sessions" rv-value="session.id">{ session.name }</option>
                 </select>
+            </div>
+            <div>
+                Name <input type="string" />
+                <div id="instruments">
+                    <select class="instruments" rv-value="model.selectedInstrument" rv-on-change="actions.selectInstrument">
+                        <option rv-each-name="model.names" rv-value="name">{ name }</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="button" rv-on-click="actions.createSession">New</button>
+                </div>
             </div>
         </section>
         <section id="tablature">
