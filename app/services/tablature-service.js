@@ -1,12 +1,10 @@
 (function() {
     'use strict';
 
-    define(['services/instrument-service', 'services/storage-service', 'models/note', 'models/tune'], TablatureService);
+    define(['services/session-service', 'services/storage-service', 'models/note', 'models/tune'], TablatureService);
 
-    function TablatureService(instrumentService, storageService, Note, Tune) {
+    function TablatureService(sessionService, storageService, Note, Tune) {
         let model = getModel();
-
-        instrumentService.onInstrumentChanged(selectInstrument);
 
         return {
             save: save,
@@ -16,7 +14,6 @@
         // model methods
         function getModel() {
             let tune = load();
-            instrumentService.selectInstrument(tune.instrumentName);
 
             return {
                 tune: tune,
@@ -24,22 +21,11 @@
             };
         }
 
-        function selectInstrument(name) {
-            model.tune = new Tune();
-            model.tune.instrumentName = name;
-            model.bars = getBars(model.tune);
-            save();
-        }
-
         function getBars(tune) {
-            if (!instrumentService.model.instrument) {
-                return null;
-            }
-
             let bars = [];
             for (let i = 0; i < Math.max(tune.maxBar(), 16); i++) {
                 bars.push({
-                    crotchets: getCrotchets(tune, instrumentService.model.instrument, i)
+                    crotchets: getCrotchets(tune, '', i)
                 });
             }
             return bars;

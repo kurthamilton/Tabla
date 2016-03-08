@@ -7,8 +7,23 @@ html {
 }
 
 /* layout */
+body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 50px;
+    padding-right: 50px;
+}
 section {
     margin: 20px 0;
+}
+
+/* modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.modal:target {
+    display: block;
+    opacity: 1;
 }
 
 /* tab grid */

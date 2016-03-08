@@ -29,7 +29,7 @@
             let session = {
                 id: id,
                 instrument: options.instrument,
-                name: option.name
+                name: options.name
             };
 
             sessions.unshift(session);
@@ -75,6 +75,8 @@
                     sessions.push(session);
                 }
             }
+
+            updateIndex();
         }
 
         function save() {

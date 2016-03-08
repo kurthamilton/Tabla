@@ -1,24 +1,62 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
         <section id="sessions">
-            <div>
-                <select id="sessionsList" rv-value="model.activeSessionId" rv-on-change="actions.changeSession">
-                    <option rv-each-session="model.sessions" rv-value="session.id">{ session.name }</option>
-                </select>
-            </div>
-            <div>
-                Name <input type="string" />
-                <div id="instruments">
-                    <select class="instruments" rv-value="model.selectedInstrument" rv-on-change="actions.selectInstrument">
-                        <option rv-each-name="model.names" rv-value="name">{ name }</option>
-                    </select>
-                </div>
-                <div>
-                    <button type="button" rv-on-click="actions.createSession">New</button>
+            <a href="#session-manager">Sessions</a>
+            <div id="session-manager" class="modal fade in">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <h4 class="modal-title">Sessions</h4>
+                        </div>
+                        <div class="modal-body">
+                            <section>
+                                <div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Instrument</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr rv-each-session="model.sessions">
+                                                <td>{ session.name }</td>
+                                                <td>{ session.instrument }</td>
+                                                <td><a href="#session-manager" rv-on-click="actions.deleteSession">Delete</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                            <section class="form-horizontal">
+                                <h4>Create session</h4>
+                                <div class="form-group">
+                                    <label for="new-session-name" class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input id="new-session-name" type="string" class="form-control" rv-value="newSession.name" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-session-instrument" class="col-sm-2 control-label">Instrument</label>
+                                    <div class="col-sm-10">
+                                        <select id="new-session-instrument" class="form-control" rv-value="newSession.instrument">
+                                            <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" rv-on-click="actions.createSession">Create</button>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
