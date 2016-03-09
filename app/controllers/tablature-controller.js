@@ -1,15 +1,27 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'services/tablature-service', 'models/note'], TablatureController);
+    define(['utils.dom', 'models/note', 'services/instrument-factory', 'services/tablature-service', 'services/tune-service'], TablatureController);
 
-    function TablatureController(domUtils, tablatureService, Note) {
+    function TablatureController(domUtils, Note, instrumentFactory, tablatureService, tuneService) {
         let scope = {
-            model: tablatureService.model,
-            save: tablatureService.save,
+            actions: {
+                createTune: createTune,
+                deleteTune: deleteTune,
+                loadTune: loadTune
+            },
+            instruments: instrumentFactory.available(),
+            newTune: {
+                instrument: '',
+                name: ''
+            },
             selected: null,
-            selectedNote: null
+            selectedNote: null,
+            tablature: tablatureService.model,
+            tunes: tuneService.model.tunes
         };
+
+        onTuneLoaded();
 
         return {
             load: function() {
@@ -20,9 +32,33 @@
 
         function render() {
             let view = document.getElementById('tunes');
-            rivets.bind(view, scope.model);
+            rivets.bind(view, scope);
         }
 
+        // tune functions
+        function createTune(e, scope) {
+            tuneService.actions.create({
+                instrument: scope.newTune.instrument,
+                name: scope.newTune.name
+            });
+            onTuneLoaded();
+        }
+
+        function deleteTune(e, scope) {
+            tuneService.actions.delete(scope.tune.id);
+        }
+
+        function loadTune(e, scope) {
+            tuneService.actions.load(scope.tune.id);
+            onTuneLoaded();
+        }
+
+        function onTuneLoaded() {
+            let tune = tuneService.model.tune;
+            tablatureService.load(tune);
+        }
+
+        // tablature functions
         function bindEvents() {
             bindClick();
             bindKeys();
@@ -175,12 +211,16 @@
             scope.selectedNote = null;
         }
 
+        function save() {
+            tuneService.actions.save();
+        }
+
         function setFret(fret) {
             if (fret === null || isNaN(fret) === true) {
                 scope.selected.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
-                scope.model.tune.deleteNote(scope.selectedNote);
-                scope.save();
+                tuneService.model.tune.deleteNote(scope.selectedNote);
+                save();
                 return true;
             }
 
@@ -188,8 +228,8 @@
             if (fret >= 0 && fret <= 24) {
                 scope.selected.innerHTML = fret;
                 scope.selectedNote.fret = fret;
-                scope.model.tune.addNote(scope.selectedNote);
-                scope.save();
+                tuneService.model.tune.addNote(scope.selectedNote);
+                save();
                 return true;
             }
             return false;
