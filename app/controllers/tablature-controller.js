@@ -19,7 +19,7 @@
         };
 
         function render() {
-            let view = document.getElementById('tablature');
+            let view = document.getElementById('tunes');
             rivets.bind(view, scope.model);
         }
 

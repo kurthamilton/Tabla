@@ -3,12 +3,9 @@
 
     configure();
 
-    let dependencies = ['controllers/session-controller',
-                        'controllers/tablature-controller'];
-    requirejs(dependencies, app);
+    requirejs(['controllers/tablature-controller'], app);
 
-    function app(sessionController, tablatureController) {
-        sessionController.load();
+    function app(tablatureController) {
         tablatureController.load();
     }
 

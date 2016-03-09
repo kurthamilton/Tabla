@@ -7,18 +7,38 @@
         let index = {};
         let sessions = [];
 
-        loadSessions();
+        let eventListeners = {};
 
         let model = {
-            activeSessionId: sessions.length > 0 ? sessions[0].id : null,
+            activeSession: null,
+            activeSessionId: null,
             sessions: sessions
         };
 
+        loadSessions();
+
+        if (sessions.length > 0) {
+            setActiveSession(sessions[0]);
+        }
+
         return {
+            addEventListener: addEventListener,
             create: createSession,
             delete: deleteSession,
             model: model
         };
+
+        function addEventListener(event, callback) {
+            if (typeof callback !== 'function') {
+                return;
+            }
+
+            if (!eventListeners.hasOwnProperty(event)) {
+                eventListeners[event] = [];
+            }
+
+            eventListeners[event].push(callback);
+        }
 
         function createSession(options) {
             let id = utils.guid();
@@ -34,6 +54,9 @@
 
             sessions.unshift(session);
             save();
+
+            setActiveSession(session);
+            trigger('load');
         }
 
         function deleteSession(id) {
@@ -43,6 +66,10 @@
 
             sessions.splice(index[id], 1);
             save();
+
+            if (id === model.activeSessionId) {
+                setActiveSession(null);
+            }
         }
 
         function loadSession(id) {
@@ -55,7 +82,9 @@
             sessions.unshift(session);
             save();
 
-            model.activeSessionId = session.id;
+            setActiveSession(session);
+
+            trigger('load');
         }
 
         function loadSessions() {
@@ -77,6 +106,28 @@
             }
 
             updateIndex();
+        }
+
+        function setActiveSession(session) {
+            if (!session) {
+                model.activeSessionId = null;
+                model.activeSession = null;
+                return;
+            }
+
+            model.activeSessionId = session.id;
+            model.activeSession = session;
+        }
+
+        function trigger(event, ...args) {
+            if (!eventListeners.hasOwnProperty(event)) {
+                return;
+            }
+
+            let callbacks = eventListeners[event];
+            for (let i = 0; i < callbacks.length; i++) {
+                callbacks[i](...args);
+            }
         }
 
         function save() {
