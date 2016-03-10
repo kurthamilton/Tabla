@@ -31,7 +31,7 @@
                                             <tr rv-each-tune="tunes">
                                                 <td>{ tune.name }</td>
                                                 <td>{ tune.instrument }</td>
-                                                <td><a href="#tunes-manager" rv-on-click="actions.load">Load</a></td>
+                                                <td><a href="#" rv-on-click="actions.load">Load</a></td>
                                                 <td><a href="#tunes-manager" rv-on-click="actions.delete">Delete</a></td>
                                             </tr>
                                         </tbody>
@@ -65,6 +65,14 @@
         </section>
         <!--tablature-->
         <section id="tablature">
+            <div>
+                <div>
+                    { tune.name }
+                </div>
+                <div>
+                    { tune.instrument }
+                </div>
+            </div>
             <div class="bars">
                 <div class="bar" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">

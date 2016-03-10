@@ -1,26 +1,35 @@
-(function() {
+(function(rivets) {
     'use strict';
 
     define(['utils.dom', 'models/note', 'services/tablature-service', 'services/tune-service'], TablatureController);
+
     function TablatureController(domUtils, Note, tablatureService, tuneService) {
         let scope = {
             model: tablatureService.model,
             selected: null,
-            selectedNote: null
+            selectedNote: null,
+            tune: null
         };
 
         tuneService.on('load', function() {
-            tablatureService.load(tuneService.model.tune);
+            loadTablature();
         });
+
+        loadTablature();
 
         return {
             load: function() {
-                render();
+                bind();
                 bindEvents();
             }
         };
 
-        function render() {
+        function loadTablature() {
+            scope.tune = tuneService.model.tune;
+            tablatureService.load(scope.tune);
+        }
+
+        function bind() {
             let view = document.getElementById('tablature');
             rivets.bind(view, scope);
         }
@@ -213,4 +222,4 @@
             return domUtils.sibling(element, direction, 'crotchet', 'bar');
         }
     }
-})();
+})(rivets);

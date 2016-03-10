@@ -20,11 +20,11 @@
 
         return {
             load: function() {
-                render();
+                bind();
             }
         };
 
-        function render() {
+        function bind() {
             let view = document.getElementById('tunes');
             rivets.bind(view, scope);
         }

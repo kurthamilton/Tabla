@@ -88,6 +88,7 @@
 
         function loadTune(id) {
             model.tune = getTune(id);
+            saveTunes();
             trigger('load');
         }
 
