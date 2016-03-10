@@ -6,8 +6,8 @@
     requirejs(['controllers/tablature-controller', 'controllers/tunes-controller'], app);
 
     function app(tablatureController, tunesController) {
-        tunesController.load();
         tablatureController.load();
+        tunesController.load();
     }
 
     function configure() {
@@ -28,6 +28,9 @@
     function rivetsConfig() {
         rivets.formatters.default = function(value, args) {
             return (typeof value !== 'undefined' && value !== null) ? value : args;
+        };
+        rivets.formatters.eq = function(value, args) {
+            return value === args;
         };
     }
 })(rivets);

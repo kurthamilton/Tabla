@@ -4,14 +4,13 @@
     define(['utils', 'models/note', 'models/tune', 'services/storage-service'], TuneService);
 
     function TuneService(utils, Note, Tune, storageService) {
-        let eventListeners = {};
-
         let model = {
-            tune: null,
+            active: {
+                id: '',
+                tune: null
+            },
             tunes: null
         };
-
-        loadTunes();
 
         return {
             actions: {
@@ -20,33 +19,9 @@
                 load: loadTune,
                 save: saveTune
             },
-            model: model,
-            on: onEvent
+            load: loadTunes,
+            model: model
         };
-
-        // event handling
-        function onEvent(event, callback) {
-            if (typeof callback !== 'function') {
-                return;
-            }
-
-            if (!eventListeners.hasOwnProperty(event)) {
-                eventListeners[event] = [];
-            }
-
-            eventListeners[event].push(callback);
-        }
-
-        function trigger(event) {
-            if (!eventListeners.hasOwnProperty(event)) {
-                return;
-            }
-
-            let callbacks = eventListeners[event];
-            for (let i = 0; i < callbacks.length; i++) {
-                callbacks[i]();
-            }
-        }
 
         // actions
         function createTune(options) {
@@ -68,7 +43,7 @@
             model.tunes.splice(index, 1);
             saveTunes();
 
-            if (model.tune && model.tune.id === id) {
+            if (model.tuneId === id) {
                 loadTune(null);
             }
         }
@@ -87,9 +62,13 @@
         }
 
         function loadTune(id) {
-            model.tune = getTune(id);
+            setActiveTune(getTune(id));
             saveTunes();
-            trigger('load');
+        }
+
+        function setActiveTune(tune) {
+            model.active.tune = tune;
+            model.active.id = tune ? tune.id : '';
         }
 
         // storage functions
@@ -104,7 +83,6 @@
 
         function loadTunes() {
             model.tunes = [];
-            model.tune = null;
 
             let saved = storageService.get('tunes');
             if (!saved) {
@@ -115,26 +93,26 @@
             let tunes = saved.values;
             for (let i = 0; i < tunes.length; i++) {
                 let tune = deserializeTune(tunes[i]);
-                if (tune.id === activeId) {
-                    model.tune = tune;
-                }
                 model.tunes.push(tune);
+
+                if (tune.id === activeId) {
+                    setActiveTune(tune);
+                }
             }
         }
 
         function saveTune() {
-            if (!model.tune) {
+            let arrayIndex = getTuneIndex(model.tuneId);
+            if (arrayIndex < 0) {
                 return;
             }
-
-            let arrayIndex = getTuneIndex(model.tune.id);
             model.tunes[arrayIndex] = model.tune;
             saveTunes();
         }
 
         function saveTunes() {
             storageService.set('tunes', {
-                activeId: model.tune ? model.tune.id : null,
+                activeId: model.active.id,
                 values: model.tunes
             });
         }

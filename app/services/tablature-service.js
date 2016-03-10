@@ -1,12 +1,16 @@
 (function() {
     'use strict';
 
-    define(['services/instrument-factory'], TablatureService);
+    define(['services/instrument-factory', 'services/tune-service'], TablatureService);
 
-    function TablatureService(instrumentFactory) {
+    function TablatureService(instrumentFactory, tuneService) {
         let model = {
             bars: null
         };
+
+        watch(tuneService.model.active, 'id', function() {
+            load(tuneService.model.active.tune);
+        });
 
         return {
             load: load,

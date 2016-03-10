@@ -11,15 +11,16 @@
                 load: loadTune
             },
             instruments: instrumentFactory.available(),
+            model: tuneService.model,
             newTune: {
                 instrument: '',
                 name: ''
-            },
-            tunes: tuneService.model.tunes
+            }
         };
 
         return {
             load: function() {
+                tuneService.load();
                 bind();
             }
         };

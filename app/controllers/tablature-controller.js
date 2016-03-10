@@ -5,17 +5,11 @@
 
     function TablatureController(domUtils, Note, tablatureService, tuneService) {
         let scope = {
+            activeTune: tuneService.model.active,
             model: tablatureService.model,
             selected: null,
-            selectedNote: null,
-            tune: null
+            selectedNote: null
         };
-
-        tuneService.on('load', function() {
-            loadTablature();
-        });
-
-        loadTablature();
 
         return {
             load: function() {
@@ -23,11 +17,6 @@
                 bindEvents();
             }
         };
-
-        function loadTablature() {
-            scope.tune = tuneService.model.tune;
-            tablatureService.load(scope.tune);
-        }
 
         function bind() {
             let view = document.getElementById('tablature');
