@@ -3,9 +3,10 @@
 
     configure();
 
-    requirejs(['controllers/tablature-controller'], app);
+    requirejs(['controllers/tablature-controller', 'controllers/tunes-controller'], app);
 
-    function app(tablatureController) {
+    function app(tablatureController, tunesController) {
+        tunesController.load();
         tablatureController.load();
     }
 

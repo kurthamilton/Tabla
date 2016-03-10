@@ -1,27 +1,17 @@
-(function(rivets) {
+(function() {
     'use strict';
 
-    define(['utils.dom', 'models/note', 'services/instrument-factory', 'services/tablature-service', 'services/tune-service'], TablatureController);
-
-    function TablatureController(domUtils, Note, instrumentFactory, tablatureService, tuneService) {
+    define(['utils.dom', 'models/note', 'services/tablature-service', 'services/tune-service'], TablatureController);
+    function TablatureController(domUtils, Note, tablatureService, tuneService) {
         let scope = {
-            actions: {
-                createTune: createTune,
-                deleteTune: deleteTune,
-                loadTune: loadTune
-            },
-            instruments: instrumentFactory.available(),
-            newTune: {
-                instrument: '',
-                name: ''
-            },
+            model: tablatureService.model,
             selected: null,
-            selectedNote: null,
-            tablature: tablatureService.model,
-            tunes: tuneService.model.tunes
+            selectedNote: null
         };
 
-        onTuneLoaded();
+        tuneService.on('load', function() {
+            tablatureService.load(tuneService.model.tune);
+        });
 
         return {
             load: function() {
@@ -31,34 +21,10 @@
         };
 
         function render() {
-            let view = document.getElementById('tunes');
+            let view = document.getElementById('tablature');
             rivets.bind(view, scope);
         }
 
-        // tune functions
-        function createTune(e, scope) {
-            tuneService.actions.create({
-                instrument: scope.newTune.instrument,
-                name: scope.newTune.name
-            });
-            onTuneLoaded();
-        }
-
-        function deleteTune(e, scope) {
-            tuneService.actions.delete(scope.tune.id);
-        }
-
-        function loadTune(e, scope) {
-            tuneService.actions.load(scope.tune.id);
-            onTuneLoaded();
-        }
-
-        function onTuneLoaded() {
-            let tune = tuneService.model.tune;
-            tablatureService.load(tune);
-        }
-
-        // tablature functions
         function bindEvents() {
             bindClick();
             bindKeys();
@@ -247,4 +213,4 @@
             return domUtils.sibling(element, direction, 'crotchet', 'bar');
         }
     }
-})(rivets);
+})();

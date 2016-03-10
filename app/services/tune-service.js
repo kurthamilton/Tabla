@@ -4,6 +4,8 @@
     define(['utils', 'models/note', 'models/tune', 'services/storage-service'], TuneService);
 
     function TuneService(utils, Note, Tune, storageService) {
+        let eventListeners = {};
+
         let model = {
             tune: null,
             tunes: null
@@ -18,8 +20,33 @@
                 load: loadTune,
                 save: saveTune
             },
-            model: model
+            model: model,
+            on: onEvent
         };
+
+        // event handling
+        function onEvent(event, callback) {
+            if (typeof callback !== 'function') {
+                return;
+            }
+
+            if (!eventListeners.hasOwnProperty(event)) {
+                eventListeners[event] = [];
+            }
+
+            eventListeners[event].push(callback);
+        }
+
+        function trigger(event) {
+            if (!eventListeners.hasOwnProperty(event)) {
+                return;
+            }
+
+            let callbacks = eventListeners[event];
+            for (let i = 0; i < callbacks.length; i++) {
+                callbacks[i]();
+            }
+        }
 
         // actions
         function createTune(options) {
@@ -29,8 +56,8 @@
                 name: options.name
             });
             model.tunes.unshift(tune);
-            model.tune = tune;
             saveTunes();
+            loadTune(tune.id);
         }
 
         function deleteTune(id) {
@@ -40,6 +67,10 @@
             }
             model.tunes.splice(index, 1);
             saveTunes();
+
+            if (model.tune && model.tune.id === id) {
+                loadTune(null);
+            }
         }
 
         function getTuneIndex(id) {
@@ -57,6 +88,7 @@
 
         function loadTune(id) {
             model.tune = getTune(id);
+            trigger('load');
         }
 
         // storage functions
