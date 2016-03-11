@@ -74,10 +74,15 @@
                 </div>
             </div>
             <div class="bars buffer">
-                <div class="bar" rv-each-bar="model.bars">
-                    <div class="crotchet" rv-each-crotchet="bar.crotchets">
-                        <div class="quaver" rv-each-quaver="crotchet.quavers">
-                            <div class="string" rv-each-string="quaver.strings">{ string.fret | default '&nbsp' }</div>
+                <div rv-each-bar="model.bars">
+                    <div class="bar__manuscript">
+                        <!--manuscript?-->
+                    </div>
+                    <div class="bar bar__tab">
+                        <div class="crotchet" rv-each-crotchet="bar.crotchets">
+                            <div class="quaver" rv-each-quaver="crotchet.quavers">
+                                <div class="string" rv-each-string="quaver.strings">{ string.fret | default '&nbsp' }</div>
+                            </div>
                         </div>
                     </div>
                 </div>

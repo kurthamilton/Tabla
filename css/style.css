@@ -8,8 +8,6 @@ html {
 
 /* layout */
 body {
-    max-width: 1200px;
-    margin: 0 auto;
     padding-left: 50px;
     padding-right: 50px;
 }
@@ -48,9 +46,10 @@ body {
     flex-direction: column;
 }
 .string {
+    font-size: 10px;
     position: relative;
     text-align: center;
-    width: 10px;
+    width: 12px;
 }
 .string:after {
     border-bottom: 1px solid #CA4848;
