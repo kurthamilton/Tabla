@@ -183,7 +183,7 @@
             if (fret === null || isNaN(fret) === true) {
                 scope.selected.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
-                tuneService.model.tune.deleteNote(scope.selectedNote);
+                scope.activeTune.tune.deleteNote(scope.selectedNote);
                 save();
                 return true;
             }
@@ -192,7 +192,7 @@
             if (fret >= 0 && fret <= 24) {
                 scope.selected.innerHTML = fret;
                 scope.selectedNote.fret = fret;
-                tuneService.model.tune.addNote(scope.selectedNote);
+                scope.activeTune.tune.addNote(scope.selectedNote);
                 save();
                 return true;
             }

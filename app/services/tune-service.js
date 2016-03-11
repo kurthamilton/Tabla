@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['utils', 'models/note', 'models/tune', 'services/storage-service'], TuneService);
+    define(['utils', 'models/note', 'models/tune', 'services/storage-service', 'services/tablature-service'], TuneService);
 
-    function TuneService(utils, Note, Tune, storageService) {
+    function TuneService(utils, Note, Tune, storageService, tablatureService) {
         let model = {
             active: {
                 id: '',
@@ -69,6 +69,7 @@
         function setActiveTune(tune) {
             model.active.tune = tune;
             model.active.id = tune ? tune.id : '';
+            tablatureService.load(model.active.tune);
         }
 
         // storage functions
@@ -89,24 +90,25 @@
                 return null;
             }
 
-            let activeId = saved.activeId;
             let tunes = saved.values;
             for (let i = 0; i < tunes.length; i++) {
                 let tune = deserializeTune(tunes[i]);
                 model.tunes.push(tune);
+            }
 
-                if (tune.id === activeId) {
-                    setActiveTune(tune);
-                }
+            let activeId = saved.activeId;
+            let tune = getTune(activeId);
+            if (tune) {
+                setActiveTune(tune);
             }
         }
 
         function saveTune() {
-            let arrayIndex = getTuneIndex(model.tuneId);
+            let arrayIndex = getTuneIndex(model.active.id);
             if (arrayIndex < 0) {
                 return;
             }
-            model.tunes[arrayIndex] = model.tune;
+            model.tunes[arrayIndex] = model.active.tune;
             saveTunes();
         }
 
