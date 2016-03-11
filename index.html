@@ -6,7 +6,7 @@
     </head>
     <body>
         <!--tunes-->
-        <section id="tunes">
+        <section id="tunes" class="buffer">
             <a href="#tunes-manager">Tunes</a>
             <div id="tunes-manager" class="modal fade in">
                 <div class="modal-dialog">
@@ -16,29 +16,27 @@
                             <h4 class="modal-title">Tunes</h4>
                         </div>
                         <div class="modal-body">
-                            <section>
-                                <div>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Instrument</th>
-                                                <th></th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr rv-each-tune="model.tunes" rv-class-active="tune.id | eq model.active.id">
-                                                <td>{ tune.name }</td>
-                                                <td>{ tune.instrument }</td>
-                                                <td><a href="#" rv-on-click="actions.load">Load</a></td>
-                                                <td><a href="#tunes-manager" rv-on-click="actions.delete">Delete</a></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </section>
-                            <section class="form-horizontal">
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Instrument</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr rv-each-tune="model.tunes" rv-class-active="tune.id | eq model.active.id">
+                                            <td>{ tune.name }</td>
+                                            <td>{ tune.instrument }</td>
+                                            <td><a href="#" rv-on-click="actions.load">Load</a></td>
+                                            <td><a href="#tunes-manager" rv-on-click="actions.delete">Delete</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-horizontal">
                                 <h4>Create Tune</h4>
                                 <form rv-on-submit="actions.create">
                                     <div class="form-group">
@@ -59,14 +57,14 @@
                                         <button>Create</button>
                                     </div>
                                 </form>
-                            </section>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <!--tablature-->
-        <section id="tablature">
+        <section id="tablature" class="buffer">
             <div>
                 <div>
                     { activeTune.tune.name }
@@ -75,7 +73,7 @@
                     { activeTune.tune.instrument }
                 </div>
             </div>
-            <div class="bars">
+            <div class="bars buffer">
                 <div class="bar" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
                         <div class="quaver" rv-each-quaver="crotchet.quavers">

@@ -13,8 +13,9 @@ body {
     padding-left: 50px;
     padding-right: 50px;
 }
-section {
-    margin: 20px 0;
+.buffer {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 /* modal */
