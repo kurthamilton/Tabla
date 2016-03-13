@@ -43,7 +43,7 @@
             model.tunes.splice(index, 1);
             saveTunes();
 
-            if (model.tuneId === id) {
+            if (model.active.id === id) {
                 loadTune(null);
             }
         }
