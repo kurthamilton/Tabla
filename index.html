@@ -83,10 +83,20 @@
                 </div>
             </div>
         </section>
-        <!--control-->
-        <section>
+        <!--play-->
+        <section id="play" class="buffer">
             <div>
-                BPM
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="bpm" class="col-sm-2 control-label">BPM</label>
+                        <div class="col-sm-10">
+                            <input id="bpm" type="number" class="form-control" required rv-value="model.bpm" />
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" rv-on-click="actions.play">Play</button>
+                    </div>
+                </div>
             </div>
         </section>
         <!--scripts-->
