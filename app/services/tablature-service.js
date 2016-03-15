@@ -28,7 +28,8 @@
             let instrument = instrumentFactory.get(tune.instrument);
             for (let i = 0; i < Math.max(tune.maxBar(), 16); i++) {
                 bars.push({
-                    crotchets: getCrotchets(tune, instrument, i)
+                    crotchets: getCrotchets(tune, instrument, i),
+                    index: i
                 });
             }
             return bars;
@@ -38,6 +39,7 @@
             let crotchets = [];
             for (let i = 0; i < tune.beatsPerBar; i++) {
                 crotchets.push({
+                    index: i,
                     quavers: getQuavers(tune, instrument, bar, i, 4)
                 });
 
@@ -49,6 +51,7 @@
             let quavers = [];
             for (let i = 0; i < numberOfQuavers; i++) {
                 quavers.push({
+                    index: i,
                     strings: getStrings(tune, instrument, bar, crotchet, i)
                 });
             }
