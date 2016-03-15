@@ -44,9 +44,7 @@
 
     Tune.prototype.maxBar = function() {
         let maxBar = 0;
-        for (let i = 0; i < this.notes.length; i++) {
-            maxBar = Math.max(this.notes[i].bar, maxBar);
-        }
+        this.notes.forEach(note => maxBar = Math.max(note.bar, maxBar));
         return maxBar;
     };
 })();

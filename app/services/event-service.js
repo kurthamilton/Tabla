@@ -26,9 +26,7 @@
             if (!callbacks) {
                 return;
             }
-            for (let i = 0; i < callbacks.length; i++) {
-                callbacks[i](...args);
-            }
+            callbacks.forEach(callback => callback(...args));
         }
     }
 })();

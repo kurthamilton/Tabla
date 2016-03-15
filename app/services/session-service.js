@@ -7,8 +7,6 @@
         let index = {};
         let sessions = [];
 
-        let eventListeners = {};
-
         let model = {
             activeSession: null,
             activeSessionId: null,
@@ -22,23 +20,10 @@
         }
 
         return {
-            addEventListener: addEventListener,
             create: createSession,
             delete: deleteSession,
             model: model
         };
-
-        function addEventListener(event, callback) {
-            if (typeof callback !== 'function') {
-                return;
-            }
-
-            if (!eventListeners.hasOwnProperty(event)) {
-                eventListeners[event] = [];
-            }
-
-            eventListeners[event].push(callback);
-        }
 
         function createSession(options) {
             let id = utils.guid();
@@ -56,7 +41,6 @@
             save();
 
             setActiveSession(session);
-            trigger('load');
         }
 
         function deleteSession(id) {
@@ -83,8 +67,6 @@
             save();
 
             setActiveSession(session);
-
-            trigger('load');
         }
 
         function loadSessions() {
@@ -93,8 +75,7 @@
                 return [];
             }
 
-            for (let i = 0; i < savedSessions.length; i++) {
-                let savedSession = savedSessions[i];
+            savedSessions.forEach(savedSession => {
                 if (savedSession.id && !index.hasOwnProperty(savedSession.id)) {
                     let session = {
                         id: savedSession.id,
@@ -103,7 +84,7 @@
                     };
                     sessions.push(session);
                 }
-            }
+            });
 
             updateIndex();
         }
@@ -119,17 +100,6 @@
             model.activeSession = session;
         }
 
-        function trigger(event, ...args) {
-            if (!eventListeners.hasOwnProperty(event)) {
-                return;
-            }
-
-            let callbacks = eventListeners[event];
-            for (let i = 0; i < callbacks.length; i++) {
-                callbacks[i](...args);
-            }
-        }
-
         function save() {
             updateIndex();
             storageService.set('sessions', sessions);
@@ -137,10 +107,7 @@
 
         function updateIndex() {
             index = {};
-            for (let i = 0; i < sessions.length; i++) {
-                let session = sessions[i];
-                index[session.id] = i;
-            }
+            sessions.forEach((session, i) => index[session.id] = i);
         }
     }
 })();

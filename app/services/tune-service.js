@@ -75,10 +75,7 @@
         // storage functions
         function deserializeTune(object) {
             let tune = new Tune(object);
-            let notes = object.notes;
-            for (let i = 0; i < notes.length; i++) {
-                tune.addNote(new Note(notes[i]));
-            }
+            object.notes.forEach(note => tune.addNote(new Note(note)));
             return tune;
         }
 
@@ -90,11 +87,10 @@
                 return null;
             }
 
-            let tunes = saved.values;
-            for (let i = 0; i < tunes.length; i++) {
-                let tune = deserializeTune(tunes[i]);
+            saved.values.forEach(savedTune => {
+                let tune = deserializeTune(savedTune);
                 model.tunes.push(tune);
-            }
+            });
 
             let activeId = saved.activeId;
             let tune = getTune(activeId);
