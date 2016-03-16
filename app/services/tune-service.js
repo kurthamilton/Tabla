@@ -75,6 +75,7 @@
         // storage functions
         function deserializeTune(object) {
             let tune = new Tune(object);
+            tune.bpm = object.bpm;
             object.notes.forEach(note => tune.addNote(new Note(note)));
             return tune;
         }

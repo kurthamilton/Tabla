@@ -1,11 +1,12 @@
 (function(rivets) {
     'use strict';
 
-    define(PlayController);
+    define(['services/play-service'], PlayController);
 
-    function PlayController() {
+    function PlayController(playService) {
         let scope = {
-
+            actions: playService.actions,
+            model: playService.model
         };
 
         return {

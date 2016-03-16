@@ -5,6 +5,7 @@
 
     function Tune(options) {
         this.beatsPerBar = 4;
+        this.bpm = 120;
         this.id = options.id;
         this.index = {};
         this.instrument = options.instrument;

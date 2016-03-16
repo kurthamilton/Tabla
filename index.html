@@ -67,10 +67,10 @@
         <section id="tablature" class="buffer">
             <div>
                 <div>
-                    { activeTune.tune.name }
+                    { activeTune.name }
                 </div>
                 <div>
-                    { activeTune.tune.instrument }
+                    { activeTune.instrument }
                 </div>
             </div>
             <div class="bars buffer">
@@ -86,15 +86,14 @@
         <!--play-->
         <section id="play" class="buffer">
             <div>
-                <form class="form-inline">
+                <form class="form-inline" rv-on-submit="actions.play">
                     <div class="form-group">
-                        <label for="bpm" class="col-sm-2 control-label">BPM</label>
-                        <div class="col-sm-10">
-                            <input id="bpm" type="number" class="form-control" required min="40" max="300" rv-value="model.bpm" />
-                        </div>
+                        <label for="bpm" class="control-label">BPM</label>
+                        <input id="bpm" type="number" class="form-control" required rv-min="model.bounds.bpm.min" max="model.bounds.bpm.max" rv-value="model.bpm" />
                     </div>
-                    <div>
-                        <button type="button" rv-on-click="actions.play">Play</button>
+                    <div class="buffer-sm">
+                        <button>Play</button>
+                        <button>Stop</button>
                     </div>
                 </form>
             </div>

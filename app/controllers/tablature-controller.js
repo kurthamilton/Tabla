@@ -5,7 +5,9 @@
 
     function TablatureController(domUtils, Note, tablatureService, tuneService) {
         let scope = {
-            activeTune: tuneService.model.active,
+            get activeTune() {
+                return tuneService.model.active.tune
+            },
             model: tablatureService.model,
             selected: null,
             selectedNote: null
@@ -183,7 +185,7 @@
             if (fret === null || isNaN(fret) === true) {
                 scope.selected.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
-                scope.activeTune.tune.deleteNote(scope.selectedNote);
+                scope.activeTune.deleteNote(scope.selectedNote);
                 save();
                 return true;
             }
@@ -192,7 +194,7 @@
             if (fret >= 0 && fret <= 24) {
                 scope.selected.innerHTML = fret;
                 scope.selectedNote.fret = fret;
-                scope.activeTune.tune.addNote(scope.selectedNote);
+                scope.activeTune.addNote(scope.selectedNote);
                 save();
                 return true;
             }
