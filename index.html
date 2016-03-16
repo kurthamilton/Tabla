@@ -86,14 +86,14 @@
         <!--play-->
         <section id="play" class="buffer">
             <div>
-                <form class="form-inline" rv-on-submit="actions.play">
+                <form class="form-inline">
                     <div class="form-group">
                         <label for="bpm" class="control-label">BPM</label>
                         <input id="bpm" type="number" class="form-control" required rv-min="model.bounds.bpm.min" max="model.bounds.bpm.max" rv-value="model.bpm" />
                     </div>
                     <div class="buffer-sm">
-                        <button>Play</button>
-                        <button>Stop</button>
+                        <button type="button" rv-on-click="actions.resume">Play</button>
+                        <button type="button" rv-on-click="actions.stop">Stop</button>
                     </div>
                 </form>
             </div>

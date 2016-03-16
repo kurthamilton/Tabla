@@ -1,17 +1,20 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'models/note', 'services/tablature-service', 'services/tune-service'], TablatureController);
+    define(['utils.dom', 'models/note', 'services/play-service', 'services/tablature-service', 'services/tune-service'], TablatureController);
 
-    function TablatureController(domUtils, Note, tablatureService, tuneService) {
+    function TablatureController(domUtils, Note, playService, tablatureService, tuneService) {
         let scope = {
             get activeTune() {
                 return tuneService.model.active.tune
             },
             model: tablatureService.model,
+            playPosition: null,
             selected: null,
             selectedNote: null
         };
+
+        playService.addEventListener('increment', incrementPlayPosition);
 
         return {
             load: function() {
@@ -99,6 +102,19 @@
         }
 
         // dom functions
+        function incrementPlayPosition() {
+            if (scope.playPosition) {
+                scope.playPosition.classList.remove('play-position');
+                scope.playPosition = getSiblingQuaver(scope.playPosition, 1);
+            }
+
+            if (!scope.playPosition) {
+                scope.playPosition = document.querySelector('.quaver');
+            }
+
+            scope.playPosition.classList.add('play-position');
+        }
+
         function moveVertically(direction) {
             let target = null;
             if (Math.abs(direction) === 1) {

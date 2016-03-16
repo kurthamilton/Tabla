@@ -1,10 +1,21 @@
 (function() {
     'use strict';
 
-    define(['services/tablature-service', 'services/tune-service'], PlayService);
+    define(['services/event-service', 'services/tablature-service', 'services/tune-service'], PlayService);
 
-    function PlayService(tablatureService, tuneService) {
+    function PlayService(eventService, tablatureService, tuneService) {
+        let context = {
+            bar: 0,
+            crotchet: 0,
+            quaver: 0,
+            handle: null,
+            playing: false
+        };
+
         let model = {
+            get bar() {
+                return context.bar;
+            },
             bounds: {
                 bpm: {
                     min: 40,
@@ -29,19 +40,14 @@
             }
         };
 
-        let context = {
-            bar: 0,
-            crotchet: 0,
-            quaver: 0,
-            handle: null,
-            playing: false
-        };
-
         return {
             actions: {
                 resume: resume,
                 start: start,
                 stop: stop
+            },
+            addEventListener: function(event, callback) {
+                eventService.addEventListener(`play-service:${event}`, callback);
             },
             model: model
         };
@@ -59,6 +65,8 @@
             if (context.bar >= tablatureService.model.bars.length) {
                 context.bar = 0;
             }
+
+            trigger('increment');
         }
 
         function play() {
@@ -72,7 +80,10 @@
         }
 
         function quaverInterval() {
-            return 1000 * (model.bpm / 60 / 4);
+            let secondsPerBeat = 60 / model.bpm;
+            let secondsPerQuaver = secondsPerBeat / 4;
+            let millisecondsPerQuaver = 1000 * secondsPerQuaver;
+            return millisecondsPerQuaver;
         }
 
         function start() {
@@ -100,6 +111,10 @@
             }
             clearTimeout(context.handle);
             context.playing = false;
+        }
+
+        function trigger(event) {
+            eventService.trigger(`play-service:${event}`);
         }
     }
 })();
