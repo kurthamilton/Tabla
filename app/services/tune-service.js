@@ -1,12 +1,17 @@
 (function() {
     'use strict';
 
-    define(['utils', 'models/note', 'models/tune', 'services/storage-service', 'services/tablature-service'], TuneService);
+    define(['utils', 'models/note', 'models/tune', 'services/instrument-factory', 'services/storage-service', 'services/tablature-service'], TuneService);
 
-    function TuneService(utils, Note, Tune, storageService, tablatureService) {
+    function TuneService(utils, Note, Tune, instrumentFactory, storageService, tablatureService) {
+        let instrument = null;
+
         let model = {
             active: {
                 id: '',
+                get instrument() {
+                    return instrument;
+                },
                 tune: null
             },
             tunes: null
@@ -69,7 +74,8 @@
         function setActiveTune(tune) {
             model.active.tune = tune;
             model.active.id = tune ? tune.id : '';
-            tablatureService.load(model.active.tune);
+            instrument = tune ? instrumentFactory.get(tune.instrument) : null;
+            tablatureService.load(model.active.tune, instrument);
         }
 
         // storage functions

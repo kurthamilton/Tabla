@@ -48,4 +48,8 @@
         this.notes.forEach(note => maxBar = Math.max(note.bar, maxBar));
         return maxBar;
     };
+
+    Tune.prototype.orderedNotes = function() {
+        return this.notes.sort((a, b) => a.position > b.position);
+    };
 })();

@@ -5,6 +5,14 @@
 
     function Utils() {
         let utils = {
+            arrayCopy: function(a) {
+                let b = new Array(a.length);
+                let i = b.length;
+                while(i--) {
+                    b[i] = a[i];
+                }
+                return b;
+            },
             // lightweight function returning a value looking like a GUID. Uses Math.random, so can't be fully trusted.
             guid: function() {
                 function S4() {

@@ -1,15 +1,16 @@
 (function() {
     'use strict';
 
-    define(['services/event-service', 'services/tablature-service', 'services/tune-service'], PlayService);
+    define(['utils', 'services/event-service', 'services/tablature-service', 'services/tune-service'], PlayService);
 
-    function PlayService(eventService, tablatureService, tuneService) {
+    function PlayService(utils, eventService, tablatureService, tuneService) {
         let context = {
             bar: 0,
             crotchet: 0,
-            quaver: 0,
             handle: null,
-            playing: false
+            notes: null,
+            playing: false,
+            quaver: 0
         };
 
         let model = {
@@ -75,15 +76,22 @@
             }
 
             incrementQuaver();
+            playNotes();
 
             context.handle = setTimeout(play, quaverInterval());
+        }
+
+        function playNotes() {
+            let notes = [];
+            while (context.notes.length > 0 && context.notes[0].bar === context.bar && context.notes[0].crotchet === context.crotchet && context.notes[0].quaver === context.quaver) {
+
+            }
         }
 
         function quaverInterval() {
             let secondsPerBeat = 60 / model.bpm;
             let secondsPerQuaver = secondsPerBeat / 4;
-            let millisecondsPerQuaver = 1000 * secondsPerQuaver;
-            return millisecondsPerQuaver;
+            return 1000 * secondsPerQuaver;
         }
 
         function start() {
@@ -92,6 +100,7 @@
             }
             context.bar = 0;
             context.crotchet = 0;
+            context.notes = model.tune.orderedNotes();
             context.playing = true;
             context.quaver = 0;
             play();
@@ -101,6 +110,7 @@
             if (context.playing) {
                 return;
             }
+            context.notes = model.tune.orderedNotes();
             context.playing = true;
             play();
         }

@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['services/instrument-factory'], TablatureService);
+    define(TablatureService);
 
-    function TablatureService(instrumentFactory) {
+    function TablatureService() {
         let model = {
             bars: null
         };
@@ -13,19 +13,18 @@
             model: model
         };
 
-        function load(tune) {
-            model.bars = getBars(tune);
+        function load(tune, instrument) {
+            model.bars = getBars(tune, instrument);
         }
 
         // model methods
-        function getBars(tune) {
+        function getBars(tune, instrument) {
             let bars = [];
 
             if (!tune) {
                 return bars;
             }
 
-            let instrument = instrumentFactory.get(tune.instrument);
             for (let i = 0; i < Math.max(tune.maxBar(), 16); i++) {
                 bars.push({
                     crotchets: getCrotchets(tune, instrument, i),
