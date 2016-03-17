@@ -1,4 +1,4 @@
-(function() {
+(function(MIDI) {
     'use strict';
 
     define(['utils', 'services/event-service', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], PlayService);
@@ -41,6 +41,8 @@
             }
         };
 
+        loadPlugin();
+
         return {
             actions: {
                 resume: resume,
@@ -70,6 +72,19 @@
             trigger('increment');
         }
 
+        function loadPlugin() {
+            MIDI.loadPlugin({
+                soundfontUrl: "./soundfont/",
+                instrument: "acoustic_grand_piano",
+                onprogress: function(state, progress) {
+                    console.log(state, progress);
+                },
+                onsuccess: function() {
+                    trigger('ready');
+                }
+            });
+        }
+
         function play() {
             if (!context.playing) {
                 return;
@@ -79,6 +94,11 @@
             incrementQuaver();
 
             context.handle = setTimeout(play, quaverInterval());
+        }
+
+        function playNote(note) {
+            let midiNote = scaleService.midiNote(note.note, note.octave);
+            MIDI.noteOn(0, midiNote, 127, 0);
         }
 
         function playNotes() {
@@ -92,7 +112,12 @@
             for (let i in frets) {
                 let string = instrument.strings[i];
                 let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
+                if (model.notes.hasOwnProperty(i)) {
+                    // stop note on current string
+                    stopNote(note);
+                }
                 model.notes[i] = note;
+                playNote(note);
             }
             trigger('play');
         }
@@ -131,8 +156,13 @@
             context.playing = false;
         }
 
+        function stopNote(note) {
+            let midiNote = scaleService.midiNote(note);
+            MIDI.noteOff(0, midiNote, 0);
+        }
+
         function trigger(event, ...args) {
             eventService.trigger(`play-service:${event}`, ...args);
         }
     }
-})();
+})(MIDI);

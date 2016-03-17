@@ -7,6 +7,9 @@
 
     function ScaleService() {
         return {
+            midiNote: function(note, octave) {
+                return (12 * octave) + scale.indexOf(note);
+            },
             noteAtFret: function(note, octave, fret) {
                 let scaleIndex = scale.indexOf(note);
                 for (let i = 0; i < fret; i++) {
