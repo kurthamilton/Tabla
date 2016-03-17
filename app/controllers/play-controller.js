@@ -6,7 +6,8 @@
     function PlayController(playService) {
         let scope = {
             actions: playService.actions,
-            model: playService.model
+            model: playService.model,
+            notes: []
         };
 
         playService.addEventListener('play', playNotes);
@@ -22,8 +23,11 @@
             rivets.bind(view, scope);
         }
 
-        function playNotes(notes) {
-            console.log(notes);
+        function playNotes() {
+            scope.notes.splice(0, scope.notes.length)
+            for (let i in playService.model.notes) {
+                scope.notes.push(playService.model.notes[i]);
+            }
         }
     }
 })(rivets);

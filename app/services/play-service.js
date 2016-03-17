@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['utils', 'services/event-service', 'services/tablature-service', 'services/tune-service'], PlayService);
+    define(['utils', 'services/event-service', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], PlayService);
 
-    function PlayService(utils, eventService, tablatureService, tuneService) {
+    function PlayService(utils, eventService, scaleService, tablatureService, tuneService) {
         let context = {
             bar: 0,
             crotchet: 0,
@@ -35,6 +35,7 @@
                 model.tune.bpm = value;
                 tuneService.actions.save();
             },
+            notes: {},
             get tune() {
                 return tuneService.model.active.tune;
             }
@@ -74,17 +75,26 @@
                 return;
             }
 
-            incrementQuaver();
             playNotes();
+            incrementQuaver();
 
             context.handle = setTimeout(play, quaverInterval());
         }
 
         function playNotes() {
-            let frets = model.tune.getFrets(context) || {};
-            for (let string in frets) {
-                trigger('play', { string: string, fret: frets[string] });
+            let frets = model.tune.getFrets(context);
+
+            if (!frets) {
+                return;
             }
+
+            let instrument = tuneService.model.active.instrument;
+            for (let i in frets) {
+                let string = instrument.strings[i];
+                let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
+                model.notes[i] = note;
+            }
+            trigger('play');
         }
 
         function quaverInterval() {
@@ -101,6 +111,7 @@
             context.crotchet = 0;
             context.playing = true;
             context.quaver = 0;
+            trigger('reset');
             play();
         }
 

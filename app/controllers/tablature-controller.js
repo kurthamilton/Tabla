@@ -14,6 +14,7 @@
             selectedNote: null
         };
 
+        playService.addEventListener('reset', resetPlayPosition);
         playService.addEventListener('increment', incrementPlayPosition);
 
         return {
@@ -113,6 +114,13 @@
             }
 
             scope.playPosition.classList.add('play-position');
+        }
+
+        function resetPlayPosition() {
+            if (scope.playPosition) {
+                scope.playPosition.classList.remove('play-position');
+            }
+            scope.playPosition = null;
         }
 
         function moveVertically(direction) {
