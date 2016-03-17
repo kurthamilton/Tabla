@@ -81,7 +81,6 @@
         // storage functions
         function deserializeTune(object) {
             let tune = new Tune(object);
-            tune.bpm = object.bpm;
             object.notes.forEach(note => tune.addNote(new Note(note)));
             return tune;
         }
@@ -118,7 +117,7 @@
         function saveTunes() {
             storageService.set('tunes', {
                 activeId: model.active.id,
-                values: model.tunes
+                values: model.tunes.map(tune => tune.serialize())
             });
         }
     }

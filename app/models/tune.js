@@ -14,33 +14,36 @@
     }
 
     Tune.prototype.addNote = function(note) {
-        let indexKey = this.getIndexKey(note);
         this.deleteNote(note);
-        this.index[indexKey] = this.notes.length;
+        let index = this.notes.length;
         this.notes.push(note);
+
+        let bar = this.index[note.bar] || (this.index[note.bar] = {});
+        let crotchet = bar[note.crotchet] || (bar[note.crotchet] = {});
+        let quaver = crotchet[note.quaver] || (crotchet[note.quaver] = {});
+        quaver[note.string] = index;
     };
 
     Tune.prototype.deleteNote = function(note) {
-        let indexKey = this.getIndexKey(note);
-        if (!this.index.hasOwnProperty(indexKey)) {
+        let index = getPosition(this.index, note);
+        if (index < 0) {
             return;
         }
-        let arrayIndex = this.index[indexKey];
-        this.notes.splice(arrayIndex, 1);
-        delete this.index[indexKey];
+        this.notes.splice(index, 1);
+        delete this.index[note.bar][note.crotchet][note.quaver][note.string];
     };
 
     Tune.prototype.getFret = function(note) {
-        let indexKey = this.getIndexKey(note);
-        if (!this.index.hasOwnProperty(indexKey)) {
+        let index = getPosition(this.index, note);
+        if (index === undefined || index < 0) {
             return null;
         }
-        let arrayIndex = this.index[indexKey];
-        return this.notes[arrayIndex].fret;
+        return this.notes[index].fret;
     };
 
-    Tune.prototype.getIndexKey = function(note) {
-        return `${note.bar}.${note.crotchet}.${note.quaver}.${note.string}`;
+    Tune.prototype.getFrets = function(note) {
+        let parts = getIndexParts(this.index, note);
+        return parts.quaver;
     };
 
     Tune.prototype.maxBar = function() {
@@ -49,7 +52,41 @@
         return maxBar;
     };
 
-    Tune.prototype.orderedNotes = function() {
-        return this.notes.sort((a, b) => a.position > b.position);
+    Tune.prototype.serialize = function() {
+        return {
+            beatsPerBar: this.beatsPerBar,
+            bpm: this.bpm,
+            id: this.id,
+            instrument: this.instrument,
+            name: this.name,
+            notes: this.notes
+        };
     };
+
+    function getIndexParts(index, note) {
+        let parts = {
+            bar: null,
+            crotchet: null,
+            quaver: null,
+            string: null
+        };
+
+        let partNames = ['bar', 'crotchet' ,'quaver', 'string'];
+        for (let i = 0; i < partNames.length; i++) {
+            let partName = partNames[i];
+            let part = index[note[partName]];
+            if (!part) {
+                i = partNames.length;
+            }
+            parts[partName] = part || null;
+            index = part;
+        }
+
+        return parts;
+    }
+
+    function getPosition(index, note) {
+        let parts = getIndexParts(index, note);
+        return parts.string || -1;
+    }
 })();

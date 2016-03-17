@@ -9,6 +9,8 @@
             model: playService.model
         };
 
+        playService.addEventListener('play', playNotes);
+
         return {
             load: function() {
                 bind();
@@ -18,6 +20,10 @@
         function bind() {
             let view = document.getElementById('play');
             rivets.bind(view, scope);
+        }
+
+        function playNotes(notes) {
+            console.log(notes);
         }
     }
 })(rivets);

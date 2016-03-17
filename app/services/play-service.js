@@ -8,7 +8,6 @@
             bar: 0,
             crotchet: 0,
             handle: null,
-            notes: null,
             playing: false,
             quaver: 0
         };
@@ -82,9 +81,9 @@
         }
 
         function playNotes() {
-            let notes = [];
-            while (context.notes.length > 0 && context.notes[0].bar === context.bar && context.notes[0].crotchet === context.crotchet && context.notes[0].quaver === context.quaver) {
-
+            let frets = model.tune.getFrets(context) || {};
+            for (let string in frets) {
+                trigger('play', { string: string, fret: frets[string] });
             }
         }
 
@@ -100,7 +99,6 @@
             }
             context.bar = 0;
             context.crotchet = 0;
-            context.notes = model.tune.orderedNotes();
             context.playing = true;
             context.quaver = 0;
             play();
@@ -110,7 +108,6 @@
             if (context.playing) {
                 return;
             }
-            context.notes = model.tune.orderedNotes();
             context.playing = true;
             play();
         }
@@ -123,8 +120,8 @@
             context.playing = false;
         }
 
-        function trigger(event) {
-            eventService.trigger(`play-service:${event}`);
+        function trigger(event, ...args) {
+            eventService.trigger(`play-service:${event}`, ...args);
         }
     }
 })();

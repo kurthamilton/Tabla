@@ -59,14 +59,13 @@
 
         function getStrings(tune, instrument, bar, crotchet, quaver) {
             let strings = [];
+            let frets = tune.getFrets({
+                bar: bar,
+                crotchet: crotchet,
+                quaver: quaver
+            }) || {};
             for (let i = 0; i < instrument.strings.length; i++) {
-                let fret = tune.getFret({
-                    bar: bar,
-                    crotchet: crotchet,
-                    quaver: quaver,
-                    string: i
-                });
-                strings.push({ index: i, fret: fret });
+                strings.push({ index: i, fret: frets[i] });
             }
             return strings;
         }
