@@ -41,7 +41,7 @@
             }
         };
 
-        loadInstrument('banjo');
+        tuneService.addEventListener('load', loadInstrument);
 
         return {
             actions: {
@@ -72,17 +72,20 @@
             trigger('increment');
         }
 
-        function loadInstrument(instrumentName) {
-            MIDI.loadPlugin({
-                instrument: instrumentName,
-                onprogress: function(state, progress) {
-                    console.log(state, progress);
-                },
-                onsuccess: function() {
-                    MIDI.programChange(1, MIDI.GM.byName[instrumentName].number);
-                    console.log('ready');
-                    trigger('ready');
-                }
+        function loadInstrument() {
+            let instrumentName = tuneService.model.active.instrument.name;
+
+            utils.loadScript(`./assets/midi/${instrumentName}-ogg.js`, function() {
+                MIDI.loadPlugin({
+                    instrument: instrumentName,
+                    onprogress: function(state, progress) {
+                        console.log(state, progress);
+                    },
+                    onsuccess: function() {
+                        MIDI.programChange(0, MIDI.GM.byName[instrumentName].number);
+                        trigger('ready');
+                    }
+                });
             });
         }
 
@@ -99,7 +102,7 @@
 
         function playNote(note) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
-            MIDI.noteOn(1, midiNote, 127); // channel, note, velocity
+            MIDI.noteOn(0, midiNote, 127); // channel, note, velocity
         }
 
         function playNotes() {

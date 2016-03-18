@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['utils', 'models/note', 'models/tune', 'services/instrument-factory', 'services/storage-service', 'services/tablature-service'], TuneService);
+    define(['utils', 'models/note', 'models/tune','services/event-service', 'services/instrument-factory', 'services/storage-service'], TuneService);
 
-    function TuneService(utils, Note, Tune, instrumentFactory, storageService, tablatureService) {
+    function TuneService(utils, Note, Tune, eventService, instrumentFactory, storageService) {
         let instrument = null;
 
         let model = {
@@ -24,9 +24,16 @@
                 load: loadTune,
                 save: saveTune
             },
+            addEventListener: function(event, callback) {
+                eventService.addEventListener(`tune-service:${event}`, callback);
+            },
             load: loadTunes,
             model: model
         };
+
+        function trigger(event) {
+            eventService.trigger(`tune-service:${event}`);
+        }
 
         // actions
         function createTune(options) {
@@ -75,7 +82,7 @@
             model.active.tune = tune;
             model.active.id = tune ? tune.id : '';
             instrument = tune ? instrumentFactory.get(tune.instrument) : null;
-            tablatureService.load(model.active.tune, instrument);
+            trigger('load');
         }
 
         // storage functions

@@ -1,19 +1,23 @@
 (function() {
     'use strict';
 
-    define(TablatureService);
+    define(['services/tune-service'], TablatureService);
 
-    function TablatureService() {
+    function TablatureService(tuneService) {
         let model = {
             bars: null
         };
+
+        tuneService.addEventListener('load', load);
 
         return {
             load: load,
             model: model
         };
 
-        function load(tune, instrument) {
+        function load() {
+            let tune = tuneService.model.active.tune;
+            let instrument = tuneService.model.active.instrument;
             model.bars = getBars(tune, instrument);
         }
 
