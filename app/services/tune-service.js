@@ -37,11 +37,8 @@
 
         // actions
         function createTune(options) {
-            let tune = new Tune({
-                id: utils.guid(),
-                instrument: options.instrument,
-                name: options.name
-            });
+            options.id = utils.guid();
+            let tune = new Tune(options);
             model.tunes.unshift(tune);
             saveTunes();
             loadTune(tune.id);

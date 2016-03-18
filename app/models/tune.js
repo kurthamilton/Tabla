@@ -10,6 +10,7 @@
         this.instrument = options.instrument;
         this.name = options.name;
         this.notes = [];
+        this.sound = options.sound;
     }
 
     Tune.prototype.addNote = function(note) {
@@ -49,7 +50,8 @@
             id: this.id,
             instrument: this.instrument,
             name: this.name,
-            notes: this.notes
+            notes: this.notes,
+            sound: this.sound
         };
     };
 

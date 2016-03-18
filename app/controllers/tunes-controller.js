@@ -8,14 +8,17 @@
             actions: {
                 create: createTune,
                 delete: deleteTune,
-                load: loadTune
+                load: loadTune,
+                selectInstrument: selectInstrument
             },
             instruments: instrumentFactory.available(),
             model: tuneService.model,
             newTune: {
                 instrument: '',
-                name: ''
-            }
+                name: '',
+                sound: ''
+            },
+            sounds: []
         };
 
         return {
@@ -31,10 +34,7 @@
         }
 
         function createTune(e, scope) {
-            tuneService.actions.create({
-                instrument: scope.newTune.instrument,
-                name: scope.newTune.name
-            });
+            tuneService.actions.create(scope.newTune);
         }
 
         function deleteTune(e, scope) {
@@ -43,6 +43,11 @@
 
         function loadTune(e, scope) {
             tuneService.actions.load(scope.tune.id);
+        }
+
+        function selectInstrument(e, scope) {
+            scope.sounds.splice(0, scope.sounds.length);
+            scope.sounds.push(...instrumentFactory.sounds(scope.newTune.instrument));
         }
     }
 })(rivets);

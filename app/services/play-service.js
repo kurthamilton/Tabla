@@ -73,16 +73,19 @@
         }
 
         function loadInstrument() {
-            let instrumentName = tuneService.model.active.instrument.name;
+            let tune = tuneService.model.active.tune;
+            if (!tune) {
+                return;
+            }
 
-            utils.loadScript(`./assets/midi/${instrumentName}-ogg.js`, function() {
+            utils.loadScript(`./assets/midi/${tune.sound}-ogg.js`, function() {
                 MIDI.loadPlugin({
-                    instrument: instrumentName,
+                    instrument: tune.sound,
                     onprogress: function(state, progress) {
                         console.log(state, progress);
                     },
                     onsuccess: function() {
-                        MIDI.programChange(0, MIDI.GM.byName[instrumentName].number);
+                        MIDI.programChange(0, MIDI.GM.byName[tune.sound].number);
                         trigger('ready');
                     }
                 });
