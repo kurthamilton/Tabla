@@ -50,7 +50,7 @@
                 stop: stop
             },
             addEventListener: function(event, callback) {
-                eventService.addEventListener(`play-service:${event}`, callback);
+                eventService.addEventListener(PlayService, event, callback);
             },
             model: model
         };
@@ -166,7 +166,7 @@
         }
 
         function trigger(event, ...args) {
-            eventService.trigger(`play-service:${event}`, ...args);
+            eventService.trigger(PlayService, event, ...args);
         }
     }
 })(MIDI);

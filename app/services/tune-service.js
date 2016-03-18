@@ -25,14 +25,14 @@
                 save: saveTune
             },
             addEventListener: function(event, callback) {
-                eventService.addEventListener(`tune-service:${event}`, callback);
+                eventService.addEventListener(TuneService, event, callback);
             },
             load: loadTunes,
             model: model
         };
 
         function trigger(event) {
-            eventService.trigger(`tune-service:${event}`);
+            eventService.trigger(TuneService, event);
         }
 
         // actions

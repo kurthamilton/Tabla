@@ -84,10 +84,12 @@
                 else if (e.keyCode === 38) {
                     // up arrow - move all the way to top if ctrl
                     moveVertically(e.ctrlKey === true ? -2 : -1);
+                    e.preventDefault();
                 }
                 else if (e.keyCode === 40) {
                     // down arrow - move all the way to down if ctrl
                     moveVertically(e.ctrlKey === true ? 2 : 1);
+                    e.preventDefault();
                 }
                 else if (e.keyCode === 39) {
                     // right arrow

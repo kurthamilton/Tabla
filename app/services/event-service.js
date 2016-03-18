@@ -4,24 +4,27 @@
     define(EventService);
 
     function EventService() {
-        let eventListeners = {};
-
         return {
             addEventListener: addEventListener,
             trigger: trigger
         };
 
-        function addEventListener(event, callback) {
+        function addEventListener(target, event, callback) {
             if (!event || typeof callback !== 'function') {
                 return;
             }
+            let eventListeners = (target._events || (target._events = {}));
             if (!eventListeners.hasOwnProperty(event)) {
                 eventListeners[event] = [];
             }
             eventListeners[event].push(callback);
         }
 
-        function trigger(event, ...args) {
+        function trigger(target, event, ...args) {
+            let eventListeners = target._events;
+            if (!eventListeners) {
+                return;
+            }
             let callbacks = eventListeners[event];
             if (!callbacks) {
                 return;
