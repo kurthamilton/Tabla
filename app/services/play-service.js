@@ -75,7 +75,7 @@
         function loadPlugin() {
             MIDI.loadPlugin({
                 soundfontUrl: "./soundfont/",
-                instrument: "acoustic_grand_piano",
+                instrument: "banjo",
                 onprogress: function(state, progress) {
                     console.log(state, progress);
                 },
