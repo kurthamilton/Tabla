@@ -41,7 +41,7 @@
             }
         };
 
-        loadPlugin();
+        loadInstrument('banjo');
 
         return {
             actions: {
@@ -72,14 +72,15 @@
             trigger('increment');
         }
 
-        function loadPlugin() {
+        function loadInstrument(instrumentName) {
             MIDI.loadPlugin({
-                soundfontUrl: "./soundfont/",
-                instrument: "banjo",
+                instrument: instrumentName,
                 onprogress: function(state, progress) {
                     console.log(state, progress);
                 },
                 onsuccess: function() {
+                    MIDI.programChange(1, MIDI.GM.byName[instrumentName].number);
+                    console.log('ready');
                     trigger('ready');
                 }
             });
@@ -98,7 +99,7 @@
 
         function playNote(note) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
-            MIDI.noteOn(0, midiNote, 127, 0);
+            MIDI.noteOn(1, midiNote, 127); // channel, note, velocity
         }
 
         function playNotes() {
@@ -157,7 +158,7 @@
         }
 
         function stopNote(note) {
-            let midiNote = scaleService.midiNote(note);
+            let midiNote = scaleService.midiNote(note.note, note.octave);
             MIDI.noteOff(0, midiNote, 0);
         }
 

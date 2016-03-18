@@ -7,11 +7,11 @@
         const instruments = {
             banjo: function() {
                 let banjo = new Instrument('banjo');
-                banjo.strings.push(new String({ index: 0, note: 'D', octave: 4 }));
-                banjo.strings.push(new String({ index: 1, note: 'B', octave: 3 }));
-                banjo.strings.push(new String({ index: 2, note: 'G', octave: 3 }));
-                banjo.strings.push(new String({ index: 3, note: 'D', octave: 3 }));
-                banjo.strings.push(new String({ index: 4, note: 'G', octave: 4, startFret: 5 }));
+                banjo.strings.push(new String({ index: 0, note: 'D', octave: 5 }));
+                banjo.strings.push(new String({ index: 1, note: 'B', octave: 4 }));
+                banjo.strings.push(new String({ index: 2, note: 'G', octave: 4 }));
+                banjo.strings.push(new String({ index: 3, note: 'D', octave: 4 }));
+                banjo.strings.push(new String({ index: 4, note: 'G', octave: 5, startFret: 5 }));
                 return banjo;
             },
             guitar: function() {
