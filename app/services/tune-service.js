@@ -104,12 +104,10 @@
         }
 
         function loadTunes() {
-            model.tunes = [];
-
-            let saved = storageService.get('tunes');
-            if (!saved) {
-                return null;
-            }
+            let saved = storageService.get('tunes') || {
+                activeId: '',
+                values: []
+            };
 
             model.tunes.push(...saved.values);
             loadTune(saved.activeId);

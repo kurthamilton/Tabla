@@ -3,12 +3,12 @@
 
     configure();
 
-    requirejs(['controllers/tunes-controller', 'controllers/tablature-controller', 'controllers/play-controller'], app);
+    requirejs(['controllers/tunes-controller', 'controllers/tablature-controller', 'controllers/audio-controller'], app);
 
-    function app(tunesController, tablatureController, playController) {
+    function app(tunesController, tablatureController, audioController) {
         tunesController.load();
         tablatureController.load();
-        playController.load();
+        audioController.load();
     }
 
     function configure() {

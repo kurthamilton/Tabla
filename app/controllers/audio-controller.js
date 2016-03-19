@@ -1,26 +1,33 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/audio-service'], PlayController);
+    define(['services/audio-service', 'services/tune-service'], AudioController);
 
-    function PlayController(audioService) {
+    function AudioController(audioService, tuneService) {
         let scope = {
             actions: audioService.actions,
+            hasTune: false,
             model: audioService.model,
             notes: []
         };
 
         audioService.addEventListener('play', playNotes);
+        tuneService.addEventListener('load', onTuneLoaded);
 
         return {
             load: function() {
-                bind();
+
             }
         };
 
         function bind() {
-            let view = document.getElementById('play');
+            let view = document.getElementById('audio');
             rivets.bind(view, scope);
+        }
+
+        function onTuneLoaded(tune) {
+            scope.hasTune = ((tune || null) !== null);
+            bind();
         }
 
         function playNotes() {
