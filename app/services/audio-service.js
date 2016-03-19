@@ -41,7 +41,7 @@
             }
         };
 
-        tuneService.addEventListener('load', loadInstrument);
+        tuneService.addEventListener('load', loadInstruments);
 
         return {
             actions: {
@@ -72,23 +72,25 @@
             trigger('increment');
         }
 
-        function loadInstrument() {
+        function loadInstruments() {
             let tune = tuneService.model.tune;
             if (!tune) {
                 return;
             }
 
-            let sound = tune.parts[0].sound;
-            utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
-                MIDI.loadPlugin({
-                    instrument: sound,
-                    onprogress: function(state, progress) {
-                        console.log(state, progress);
-                    },
-                    onsuccess: function() {
-                        MIDI.programChange(0, MIDI.GM.byName[sound].number);
-                        trigger('ready');
-                    }
+            tune.parts.forEach((part, partIndex) => {
+                let sound = part.sound;
+                utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
+                    MIDI.loadPlugin({
+                        instrument: sound,
+                        onprogress: function(state, progress) {
+                            console.log(state, progress);
+                        },
+                        onsuccess: function() {
+                            MIDI.programChange(partIndex, MIDI.GM.byName[sound].number);
+                            trigger('ready');
+                        }
+                    });
                 });
             });
         }
@@ -104,29 +106,31 @@
             context.handle = setTimeout(play, quaverInterval());
         }
 
-        function playNote(note) {
+        function playNote(note, channel) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
-            MIDI.noteOn(0, midiNote, 127); // channel, note, velocity
+            MIDI.noteOn(channel, midiNote, 127); // channel, note, velocity
         }
 
         function playNotes() {
-            let frets = model.tune.parts[0].getFrets(context);
-
-            if (!frets) {
-                return;
-            }
-
-            let instrument = tuneService.model.instrument;
-            for (let i in frets) {
-                let string = instrument.strings[i];
-                let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
-                if (model.notes.hasOwnProperty(i)) {
-                    // stop note on current string
-                    stopNote(note);
+            model.tune.parts.forEach((part, partIndex) => {
+                let frets = part.getFrets(context);
+                if (!frets) {
+                    return;
                 }
-                model.notes[i] = note;
-                playNote(note);
-            }
+
+                let instrument = tuneService.model.instrument;
+                for (let i in frets) {
+                    let string = instrument.strings[i];
+                    let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
+                    if (model.notes.hasOwnProperty(partIndex) && model.notes[partIndex].hasOwnProperty(i)) {
+                        // stop note on current string
+                        stopNote(note, partIndex);
+                    }
+                    model.notes[partIndex] = { i: note };
+                    playNote(note, partIndex);
+                }
+            });
+
             trigger('play');
         }
 
@@ -136,22 +140,26 @@
             return 1000 * secondsPerQuaver;
         }
 
-        function start() {
-            if (context.playing) {
-                return;
-            }
+        function reset() {
             context.bar = 0;
             context.crotchet = 0;
-            context.playing = true;
             context.quaver = 0;
             trigger('reset');
-            play();
         }
 
         function resume() {
             if (context.playing) {
                 return;
             }
+            context.playing = true;
+            play();
+        }
+
+        function start() {
+            if (context.playing) {
+                return;
+            }
+            reset();
             context.playing = true;
             play();
         }
@@ -164,9 +172,9 @@
             context.playing = false;
         }
 
-        function stopNote(note) {
+        function stopNote(note, channel) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
-            MIDI.noteOff(0, midiNote, 0);
+            MIDI.noteOff(channel, midiNote, 0);
         }
 
         function trigger(event, ...args) {
