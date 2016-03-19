@@ -10,7 +10,7 @@
             playPosition: null,
             selected: null,
             selectedNote: null,
-            tune: null                      // a tune view model, not the full tune object
+            tune: null
         };
 
         tuneService.addEventListener('load', onTuneLoaded);
@@ -105,9 +105,7 @@
 
         function onTuneLoaded(tune) {
             scope.hasTune = ((tune || null) !== null);
-            scope.tune = {
-                name: tune ? tune.name : null
-            };
+            scope.tune = tune;
             bind();
         }
 
@@ -218,7 +216,7 @@
             if (fret === null || isNaN(fret) === true) {
                 scope.selected.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
-                scope.activeTune.deleteNote(scope.selectedNote);
+                scope.tune.deleteNote(scope.selectedNote);
                 save();
                 return true;
             }
@@ -227,7 +225,7 @@
             if (fret >= 0 && fret <= 24) {
                 scope.selected.innerHTML = fret;
                 scope.selectedNote.fret = fret;
-                scope.activeTune.addNote(scope.selectedNote);
+                scope.tune.addNote(scope.selectedNote);
                 save();
                 return true;
             }

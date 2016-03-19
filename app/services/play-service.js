@@ -115,7 +115,7 @@
                 return;
             }
 
-            let instrument = tuneService.model.active.instrument;
+            let instrument = tuneService.model.instrument;
             for (let i in frets) {
                 let string = instrument.strings[i];
                 let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
