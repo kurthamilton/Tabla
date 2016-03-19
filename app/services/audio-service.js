@@ -47,7 +47,8 @@
             actions: {
                 resume: resume,
                 start: start,
-                stop: stop
+                stop: stop,
+                toggle: toggle
             },
             addEventListener: function(event, callback) {
                 eventService.addEventListener(AudioService, event, callback);
@@ -175,6 +176,14 @@
         function stopNote(note, channel) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
             MIDI.noteOff(channel, midiNote, 0);
+        }
+
+        function toggle() {
+            if (context.playing) {
+                stop();
+            } else {
+                resume();
+            }
         }
 
         function trigger(event, ...args) {

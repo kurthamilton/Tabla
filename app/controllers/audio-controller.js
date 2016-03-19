@@ -16,13 +16,29 @@
 
         return {
             load: function() {
-
+                bindEvents();
             }
         };
 
         function bind() {
             let view = document.getElementById('audio');
             rivets.bind(view, scope);
+        }
+
+        function bindEvents() {
+            document.addEventListener('keydown', function(e) {
+                if (!scope.hasTune) {
+                    return;
+                }
+
+                if (e.keyCode === 32) {
+                    // space
+                    audioService.actions.toggle();
+                } else if (e.keyCode === 36) {
+                    // home
+                    // todo: reset cursor.
+                }
+            });
         }
 
         function onTuneLoaded(tune) {
