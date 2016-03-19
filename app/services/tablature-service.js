@@ -8,16 +8,14 @@
             bars: null
         };
 
-        tuneService.addEventListener('load', load);
+        tuneService.addEventListener('load', onTuneLoaded);
 
         return {
-            load: load,
             model: model
         };
 
-        function load() {
-            let tune = tuneService.model.active.tune;
-            let instrument = tuneService.model.active.instrument;
+        function onTuneLoaded(tune) {
+            let instrument = tuneService.model.instrument;
             model.bars = getBars(tune, instrument);
         }
 

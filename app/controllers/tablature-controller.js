@@ -5,21 +5,20 @@
 
     function TablatureController(domUtils, Note, playService, tablatureService, tuneService) {
         let scope = {
-            get activeTune() {
-                return tuneService.model.active.tune
-            },
+            hasTune: false,
             model: tablatureService.model,
             playPosition: null,
             selected: null,
-            selectedNote: null
+            selectedNote: null,
+            tune: null                      // a tune view model, not the full tune object
         };
 
+        tuneService.addEventListener('load', onTuneLoaded);
         playService.addEventListener('reset', resetPlayPosition);
         playService.addEventListener('increment', incrementPlayPosition);
 
         return {
             load: function() {
-                bind();
                 bindEvents();
             }
         };
@@ -102,6 +101,14 @@
 
                 console.log(e.keyCode);
             });
+        }
+
+        function onTuneLoaded(tune) {
+            scope.hasTune = ((tune || null) !== null);
+            scope.tune = {
+                name: tune ? tune.name : null
+            };
+            bind();
         }
 
         // dom functions

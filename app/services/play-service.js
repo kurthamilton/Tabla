@@ -37,7 +37,7 @@
             },
             notes: {},
             get tune() {
-                return tuneService.model.active.tune;
+                return tuneService.model.tune;
             }
         };
 
@@ -73,7 +73,7 @@
         }
 
         function loadInstrument() {
-            let tune = tuneService.model.active.tune;
+            let tune = tuneService.model.tune;
             if (!tune) {
                 return;
             }

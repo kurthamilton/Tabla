@@ -13,6 +13,14 @@
                 }
                 return b;
             },
+            async: function(method, callback) {
+                setTimeout(function() {
+                    method();
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }, 0);
+            },
             // lightweight function returning a value looking like a GUID. Uses Math.random, so can't be fully trusted.
             guid: function() {
                 function S4() {

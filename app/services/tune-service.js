@@ -4,17 +4,10 @@
     define(['utils', 'models/note', 'models/tune','services/event-service', 'services/instrument-factory', 'services/storage-service'], TuneService);
 
     function TuneService(utils, Note, Tune, eventService, instrumentFactory, storageService) {
-        let instrument = null;
-
         let model = {
-            active: {
-                id: '',
-                get instrument() {
-                    return instrument;
-                },
-                tune: null
-            },
-            tunes: null
+            instrument: null,   // the active instrument object
+            tune: null,         // the active tune object
+            tunes: []           // an array of simple tune info objects
         };
 
         return {
@@ -31,17 +24,21 @@
             model: model
         };
 
-        function trigger(event) {
-            eventService.trigger(TuneService, event);
-        }
-
         // actions
         function createTune(options) {
             options.id = utils.guid();
+
             let tune = new Tune(options);
-            model.tunes.unshift(tune);
-            saveTunes();
-            loadTune(tune.id);
+            model.tunes.push({
+                id: tune.id,
+                name: tune.name
+            });
+            setActiveTune(tune);
+
+            utils.async(() => {
+                saveTune();
+                saveTunes();
+            });
         }
 
         function deleteTune(id) {
@@ -49,37 +46,32 @@
             if (index < 0) {
                 return;
             }
-            model.tunes.splice(index, 1);
-            saveTunes();
 
-            if (model.active.id === id) {
-                loadTune(null);
+            model.tunes.splice(index, 1);
+
+            if (model.tune && model.tune.id === id) {
+                setActiveTune(null);
             }
+
+            utils.async(() => {
+                removeTune(id);
+                saveTunes();
+            });
         }
 
         function getTuneIndex(id) {
             return model.tunes.findIndex(i => i.id === id);
         }
 
-        function getTune(id) {
-            let index = getTuneIndex(id);
-            if (index < 0) {
-                return null;
-            }
-
-            return model.tunes[index];
-        }
-
-        function loadTune(id) {
-            setActiveTune(getTune(id));
-            saveTunes();
-        }
-
         function setActiveTune(tune) {
-            model.active.tune = tune;
-            model.active.id = tune ? tune.id : '';
-            instrument = tune ? instrumentFactory.get(tune.instrument) : null;
-            trigger('load');
+            model.instrument = instrumentFactory.get(tune ? tune.instrument : null);
+            model.tune = tune;
+            trigger('load', tune);
+        }
+
+        // event handlers
+        function trigger(event, ...args) {
+            eventService.trigger(TuneService, event, ...args);
         }
 
         // storage functions
@@ -87,6 +79,15 @@
             let tune = new Tune(object);
             object.notes.forEach(note => tune.addNote(new Note(note)));
             return tune;
+        }
+
+        function loadTune(id) {
+            let saved = storageService.get(`tune.${id}`);
+            let tune = null;
+            if (saved) {
+                tune = deserializeTune(saved);
+            }
+            setActiveTune(tune);
         }
 
         function loadTunes() {
@@ -97,31 +98,25 @@
                 return null;
             }
 
-            saved.values.forEach(savedTune => {
-                let tune = deserializeTune(savedTune);
-                model.tunes.push(tune);
-            });
+            model.tunes.push(...saved.values);
+            loadTune(saved.activeId);
+        }
 
-            let activeId = saved.activeId;
-            let tune = getTune(activeId);
-            if (tune) {
-                setActiveTune(tune);
-            }
+        function removeTune(id) {
+            storageService.remove(`tune.${id}`);
         }
 
         function saveTune() {
-            let arrayIndex = getTuneIndex(model.active.id);
-            if (arrayIndex < 0) {
+            if (!model.tune) {
                 return;
             }
-            model.tunes[arrayIndex] = model.active.tune;
-            saveTunes();
+            storageService.set(`tune.${model.tune.id}`, model.tune.serialize());
         }
 
         function saveTunes() {
             storageService.set('tunes', {
-                activeId: model.active.id,
-                values: model.tunes.map(tune => tune.serialize())
+                activeId: model.tune ? model.tune.id : null,
+                values: model.tunes
             });
         }
     }
