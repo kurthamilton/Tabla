@@ -31,6 +31,7 @@
             let tune = new Tune(options);
 
             options.id = utils.guid();
+            options.sound = instrumentFactory.defaultSound(options.instrumentName);
             options.tune = tune;
             tune.parts.push(new Part(options));
 

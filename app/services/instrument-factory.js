@@ -44,6 +44,9 @@
             available: function() {
                 return getAvailableNames();
             },
+            defaultSound: function(name) {
+                return instrumentSounds[name][0];
+            },
             get: function(name) {
                 if (instruments.hasOwnProperty(name)) {
                     return instruments[name]();

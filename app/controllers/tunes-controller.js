@@ -15,8 +15,7 @@
             model: tuneService.model,
             newTune: {
                 instrumentName: '',
-                name: '',
-                sound: ''
+                name: ''
             },
             sounds: []
         };
@@ -24,6 +23,9 @@
         return {
             load: function() {
                 tuneService.load();
+                if (tuneService.model.tunes.length === 0) {
+                    window.location.hash = 'tunes-manager';
+                }
                 bind();
             }
         };
