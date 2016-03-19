@@ -88,6 +88,7 @@
                 tune = deserializeTune(saved);
             }
             setActiveTune(tune);
+            utils.async(() => saveTunes());
         }
 
         function loadTunes() {

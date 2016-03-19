@@ -18,8 +18,8 @@
             },
             bounds: {
                 bpm: {
-                    min: 40,
-                    max: 300
+                    get min() { return 40; },
+                    get max() { return 300; }
                 }
             },
             get bpm() {

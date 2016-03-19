@@ -4,8 +4,8 @@
     define(() => Tune);
 
     function Tune(options) {
-        this.beatsPerBar = 4;
-        this.bpm = 120;
+        this.beatsPerBar = options.beatsPerBar || 4;
+        this.bpm = options.bpm || 120;
         this.id = options.id;
         this.instrument = options.instrument;
         this.name = options.name;
