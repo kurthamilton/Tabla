@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['utils', 'models/note', 'models/tune','services/event-service', 'services/instrument-factory', 'services/storage-service'], TuneService);
+    define(['utils', 'models/note', 'models/part', 'models/tune','services/event-service', 'services/instrument-factory', 'services/storage-service'], TuneService);
 
-    function TuneService(utils, Note, Tune, eventService, instrumentFactory, storageService) {
+    function TuneService(utils, Note, Part, Tune, eventService, instrumentFactory, storageService) {
         let model = {
             instrument: null,   // the active instrument object
             tune: null,         // the active tune object
@@ -29,6 +29,11 @@
             options.id = utils.guid();
 
             let tune = new Tune(options);
+
+            options.id = utils.guid();
+            options.tune = tune;
+            tune.parts.push(new Part(options));
+
             model.tunes.push({
                 id: tune.id,
                 name: tune.name
@@ -64,7 +69,7 @@
         }
 
         function setActiveTune(tune) {
-            model.instrument = instrumentFactory.get(tune ? tune.instrument : null);
+            model.instrument = instrumentFactory.get(tune ? tune.parts[0].instrumentName : null);
             model.tune = tune;
             trigger('load', tune);
         }
@@ -75,9 +80,16 @@
         }
 
         // storage functions
+        function deserializePart(object, tune) {
+            let part = new Part(object);
+            part.tune = tune;
+            object.notes.forEach(note => part.addNote(new Note(note)));
+            return part;
+        }
+
         function deserializeTune(object) {
             let tune = new Tune(object);
-            object.notes.forEach(note => tune.addNote(new Note(note)));
+            object.parts.forEach(part => tune.parts.push(deserializePart(part, tune)));
             return tune;
         }
 

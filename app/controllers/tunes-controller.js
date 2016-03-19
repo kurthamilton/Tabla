@@ -14,7 +14,7 @@
             instruments: instrumentFactory.available(),
             model: tuneService.model,
             newTune: {
-                instrument: '',
+                instrumentName: '',
                 name: '',
                 sound: ''
             },
@@ -47,7 +47,7 @@
 
         function selectInstrument(e, scope) {
             scope.sounds.splice(0, scope.sounds.length);
-            scope.sounds.push(...instrumentFactory.sounds(scope.newTune.instrument));
+            scope.sounds.push(...instrumentFactory.sounds(scope.newTune.instrumentName));
         }
     }
 })(rivets);

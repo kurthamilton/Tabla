@@ -1,16 +1,16 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/play-service'], PlayController);
+    define(['services/audio-service'], PlayController);
 
-    function PlayController(playService) {
+    function PlayController(audioService) {
         let scope = {
-            actions: playService.actions,
-            model: playService.model,
+            actions: audioService.actions,
+            model: audioService.model,
             notes: []
         };
 
-        playService.addEventListener('play', playNotes);
+        audioService.addEventListener('play', playNotes);
 
         return {
             load: function() {
@@ -25,8 +25,8 @@
 
         function playNotes() {
             scope.notes.splice(0, scope.notes.length)
-            for (let i in playService.model.notes) {
-                scope.notes.push(playService.model.notes[i]);
+            for (let i in audioService.model.notes) {
+                scope.notes.push(audioService.model.notes[i]);
             }
         }
     }

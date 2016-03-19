@@ -1,9 +1,9 @@
 (function(MIDI) {
     'use strict';
 
-    define(['utils', 'services/event-service', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], PlayService);
+    define(['utils', 'services/event-service', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], AudioService);
 
-    function PlayService(utils, eventService, scaleService, tablatureService, tuneService) {
+    function AudioService(utils, eventService, scaleService, tablatureService, tuneService) {
         let context = {
             bar: 0,
             crotchet: 0,
@@ -50,7 +50,7 @@
                 stop: stop
             },
             addEventListener: function(event, callback) {
-                eventService.addEventListener(PlayService, event, callback);
+                eventService.addEventListener(AudioService, event, callback);
             },
             model: model
         };
@@ -78,14 +78,15 @@
                 return;
             }
 
-            utils.loadScript(`./assets/midi/${tune.sound}-ogg.js`, function() {
+            let sound = tune.parts[0].sound;
+            utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
                 MIDI.loadPlugin({
-                    instrument: tune.sound,
+                    instrument: sound,
                     onprogress: function(state, progress) {
                         console.log(state, progress);
                     },
                     onsuccess: function() {
-                        MIDI.programChange(0, MIDI.GM.byName[tune.sound].number);
+                        MIDI.programChange(0, MIDI.GM.byName[sound].number);
                         trigger('ready');
                     }
                 });
@@ -109,7 +110,7 @@
         }
 
         function playNotes() {
-            let frets = model.tune.getFrets(context);
+            let frets = model.tune.parts[0].getFrets(context);
 
             if (!frets) {
                 return;
@@ -169,7 +170,7 @@
         }
 
         function trigger(event, ...args) {
-            eventService.trigger(PlayService, event, ...args);
+            eventService.trigger(AudioService, event, ...args);
         }
     }
 })(MIDI);

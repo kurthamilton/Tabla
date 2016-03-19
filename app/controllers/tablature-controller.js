@@ -1,21 +1,21 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'models/note', 'services/play-service', 'services/tablature-service', 'services/tune-service'], TablatureController);
+    define(['utils.dom', 'models/note', 'services/audio-service', 'services/tablature-service', 'services/tune-service'], TablatureController);
 
-    function TablatureController(domUtils, Note, playService, tablatureService, tuneService) {
+    function TablatureController(domUtils, Note, audioService, tablatureService, tuneService) {
         let scope = {
             hasTune: false,
             model: tablatureService.model,
+            part: null,
             playPosition: null,
             selected: null,
-            selectedNote: null,
-            tune: null
+            selectedNote: null
         };
 
         tuneService.addEventListener('load', onTuneLoaded);
-        playService.addEventListener('reset', resetPlayPosition);
-        playService.addEventListener('increment', incrementPlayPosition);
+        audioService.addEventListener('reset', resetPlayPosition);
+        audioService.addEventListener('increment', incrementPlayPosition);
 
         return {
             load: function() {
@@ -105,7 +105,7 @@
 
         function onTuneLoaded(tune) {
             scope.hasTune = ((tune || null) !== null);
-            scope.tune = tune;
+            scope.part = tune ? tune.parts[0] : null;
             bind();
         }
 
@@ -216,7 +216,7 @@
             if (fret === null || isNaN(fret) === true) {
                 scope.selected.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
-                scope.tune.deleteNote(scope.selectedNote);
+                scope.part.deleteNote(scope.selectedNote);
                 save();
                 return true;
             }
@@ -225,7 +225,7 @@
             if (fret >= 0 && fret <= 24) {
                 scope.selected.innerHTML = fret;
                 scope.selectedNote.fret = fret;
-                scope.tune.addNote(scope.selectedNote);
+                scope.part.addNote(scope.selectedNote);
                 save();
                 return true;
             }
