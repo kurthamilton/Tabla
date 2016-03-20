@@ -35,7 +35,9 @@
                 model.tune.bpm = value;
                 tuneService.actions.save();
             },
+            loading: false,
             notes: {},
+            ready: false,
             get tune() {
                 return tuneService.model.tune;
             }
@@ -74,11 +76,15 @@
         }
 
         function loadInstruments() {
+            model.loading = true;
+            model.ready = false;
+
             let tune = tuneService.model.tune;
             if (!tune) {
                 return;
             }
 
+            let loadedParts = [];
             tune.parts.forEach((part, partIndex) => {
                 let sound = part.sound;
                 utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
@@ -89,7 +95,12 @@
                         },
                         onsuccess: function() {
                             MIDI.programChange(partIndex, MIDI.GM.byName[sound].number);
-                            trigger('ready');
+                            loadedParts.push(partIndex);
+                            if (loadedParts.length === tune.parts.length) {
+                                model.loading = false;
+                                model.ready = true;
+                                trigger('ready');
+                            }
                         }
                     });
                 });

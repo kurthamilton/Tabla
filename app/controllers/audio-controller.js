@@ -6,18 +6,11 @@
     function AudioController(audioService, tuneService) {
         let scope = {
             actions: audioService.actions,
-            hasTune: false,
-            loading: true,
             model: audioService.model,
-            notes: [],
-            ready: false
+            notes: []
         };
 
         tuneService.addEventListener('load', onTuneLoaded);
-        audioService.addEventListener('ready', () => {
-            scope.loading = false;
-            scope.ready = true;
-        });
         audioService.addEventListener('play', playNotes);
 
         return {
@@ -48,9 +41,6 @@
         }
 
         function onTuneLoaded(tune) {
-            scope.ready = false;
-            scope.loading = true;
-            scope.hasTune = ((tune || null) !== null);
             bind();
         }
 

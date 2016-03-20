@@ -81,7 +81,7 @@
         </section>
         <!--play-->
         <section id="audio" class="buffer">
-            <div rv-show="ready">
+            <div rv-show="model.ready">
                 <form class="form-inline">
                     <div class="form-group">
                         <label for="bpm" class="control-label">BPM</label>
@@ -97,7 +97,7 @@
                     </div>
                 </form>
             </div>
-            <div class="loading" rv-show="loading">
+            <div class="loading" rv-show="model.loading">
                 <br/>
                 Loading sounds...
             </div>
