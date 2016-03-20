@@ -20,7 +20,6 @@
         require.config({
             baseUrl: 'app',
             paths: {
-                'dictionary': '../js/dictionary',
                 'utils.dom': '../js/dom-utils',
                 'utils': '../js/utils'
             }
