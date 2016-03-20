@@ -7,12 +7,18 @@
         let scope = {
             actions: audioService.actions,
             hasTune: false,
+            loading: true,
             model: audioService.model,
-            notes: []
+            notes: [],
+            ready: false
         };
 
-        audioService.addEventListener('play', playNotes);
         tuneService.addEventListener('load', onTuneLoaded);
+        audioService.addEventListener('ready', () => {
+            scope.loading = false;
+            scope.ready = true;
+        });
+        audioService.addEventListener('play', playNotes);
 
         return {
             load: function() {
@@ -42,6 +48,8 @@
         }
 
         function onTuneLoaded(tune) {
+            scope.ready = false;
+            scope.loading = true;
             scope.hasTune = ((tune || null) !== null);
             bind();
         }

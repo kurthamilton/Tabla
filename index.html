@@ -80,8 +80,8 @@
             </div>
         </section>
         <!--play-->
-        <section id="audio" class="buffer" rv-show="hasTune">
-            <div>
+        <section id="audio" class="buffer">
+            <div rv-show="ready">
                 <form class="form-inline">
                     <div class="form-group">
                         <label for="bpm" class="control-label">BPM</label>
@@ -96,6 +96,10 @@
                         <div rv-each-note="notes">{ note.note }{ note.octave }</div>
                     </div>
                 </form>
+            </div>
+            <div class="loading" rv-show="loading">
+                <br/>
+                Loading sounds...
             </div>
         </section>
         <!--scripts-->
