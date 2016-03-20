@@ -1,0 +1,6 @@
+- Index notes. Serialize index? Is note class needed? Index by bar.position
+- Preload notes
+- Edit tune details
+- Edit part details
+- Add / delete parts
+- Set note length
