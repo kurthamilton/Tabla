@@ -1,7 +1,8 @@
+- Manage instruments on part add / delete
 - Preload notes
 - Edit tune details
 - Edit part details
-- Add / delete parts
 - Set note length
 - Key events for play position: home, backwards/forwards with cursor, associate with selected note.
 - multi-select notes / copy & paste
+- form validation

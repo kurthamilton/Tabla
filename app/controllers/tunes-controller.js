@@ -6,13 +6,23 @@
     function TunesController(instrumentFactory, tuneService) {
         let scope = {
             actions: {
+                addPart: addPart,
                 create: createTune,
                 delete: deleteTune,
+                deletePart: deletePart,
                 load: loadTune,
-                selectInstrument: selectInstrument
+                selectPart: selectPart
             },
             instruments: instrumentFactory.available(),
             model: tuneService.model,
+            newPart: {
+                instrumentName: '',
+                name: '',
+                selectInstrument: function() {
+                    selectInstrument(scope.newPart.instrumentName);
+                },
+                sound: ''
+            },
             newTune: {
                 instrumentName: '',
                 name: ''
@@ -35,21 +45,36 @@
             rivets.bind(view, scope);
         }
 
-        function createTune(e, scope) {
+        // actions
+        function addPart() {
+            tuneService.actions.addPart(scope.newPart);
+        }
+
+        function createTune() {
             tuneService.actions.create(scope.newTune);
         }
 
-        function deleteTune(e, scope) {
+        function deletePart() {
+            let model = tuneService.model;
+            let index = model.tune.parts.findIndex(p => p.id === model.part.id);
+            tuneService.actions.deletePart(index);
+        }
+
+        function deleteTune() {
             tuneService.actions.delete(scope.tune.id);
         }
 
-        function loadTune(e, scope) {
+        function loadTune() {
             tuneService.actions.load(scope.tune.id);
         }
 
-        function selectInstrument(e, scope) {
+        function selectInstrument(instrumentName) {
             scope.sounds.splice(0, scope.sounds.length);
-            scope.sounds.push(...instrumentFactory.sounds(scope.newTune.instrumentName));
+            scope.sounds.push(...instrumentFactory.sounds(instrumentName));
+        }
+
+        function selectPart(e, scope) {
+            tuneService.actions.selectPart(scope.index);
         }
     }
 })(rivets);

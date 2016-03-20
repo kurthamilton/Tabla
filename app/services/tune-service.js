@@ -5,17 +5,20 @@
 
     function TuneService(utils, Note, Part, Tune, eventService, instrumentFactory, storageService) {
         let model = {
-            instrument: null,   // the active instrument object
+            part: null,         // the active part object
             tune: null,         // the active tune object
             tunes: []           // an array of simple tune info objects
         };
 
         return {
             actions: {
+                addPart: addPart,
                 create: createTune,
                 delete: deleteTune,
+                deletePart: deletePart,
                 load: loadTune,
-                save: saveTune
+                save: saveTune,
+                selectPart: selectPart
             },
             addEventListener: function(event, callback) {
                 eventService.addEventListener(TuneService, event, callback);
@@ -25,12 +28,30 @@
         };
 
         // actions
+        function addPart(options) {
+            if (!model.tune) {
+                return;
+            }
+
+            options.id = utils.guid();
+            options.sound = options.sound || instrumentFactory.defaultSound(options.instrumentName);
+            options.tune = model.tune;
+
+            let part = new Part(options);
+            model.tune.parts.push(part);
+
+            setActivePart(part);
+
+            utils.async(() => saveTune());
+        }
+
         function createTune(options) {
             options.id = utils.guid();
 
             let tune = new Tune(options);
 
             options.id = utils.guid();
+            options.name = options.instrumentName;
             options.sound = instrumentFactory.defaultSound(options.instrumentName);
             options.tune = tune;
             tune.parts.push(new Part(options));
@@ -45,6 +66,20 @@
                 saveTune();
                 saveTunes();
             });
+        }
+
+        function deletePart(index) {
+            let tune = model.tune;
+            let id = tune.parts[index].id;
+            tune.parts.splice(index, 1);
+
+            if (id === model.part.id) {
+                if (index >= tune.parts.length) {
+                    index = tune.parts.length - 1;
+                }
+                setActivePart(tune.parts.length > 0 ? tune.parts[index] : null);
+            }
+            utils.async(() => saveTune());
         }
 
         function deleteTune(id) {
@@ -69,9 +104,19 @@
             return model.tunes.findIndex(i => i.id === id);
         }
 
+        function selectPart(index) {
+            let part = model.tune.parts[index];
+            setActivePart(part);
+        }
+
+        function setActivePart(part) {
+            model.part = part;
+            trigger('part-load', part);
+        }
+
         function setActiveTune(tune) {
-            model.instrument = instrumentFactory.get(tune ? tune.parts[0].instrumentName : null);
             model.tune = tune;
+            setActivePart(tune ? tune.parts[0] : null);
             trigger('load', tune);
         }
 

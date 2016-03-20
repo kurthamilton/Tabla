@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'models/note', 'services/audio-service', 'services/tablature-service', 'services/tune-service'], TablatureController);
+    define(['utils.dom', 'utils', 'models/note', 'services/audio-service', 'services/tablature-service', 'services/tune-service'], TablatureController);
 
-    function TablatureController(domUtils, Note, audioService, tablatureService, tuneService) {
+    function TablatureController(domUtils, utils, Note, audioService, tablatureService, tuneService) {
         let scope = {
             model: tablatureService.model,
             part: null,
@@ -207,7 +207,7 @@
         }
 
         function save() {
-            tuneService.actions.save();
+            utils.async(() => tuneService.actions.save());
         }
 
         function setFret(fret) {

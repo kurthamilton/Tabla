@@ -1,36 +1,36 @@
 (function() {
     'use strict';
 
-    define(['services/tune-service'], TablatureService);
+    define(['services/instrument-factory', 'services/tune-service'], TablatureService);
 
-    function TablatureService(tuneService) {
+    function TablatureService(instrumentFactory, tuneService) {
         let model = {
             bars: null,
             ready: false
         };
 
-        tuneService.addEventListener('load', onTuneLoaded);
+        tuneService.addEventListener('part-load', onPartLoaded);
 
         return {
             model: model
         };
 
-        function onTuneLoaded(tune) {
+        function onPartLoaded(part) {
             model.ready = false;
 
-            let instrument = tuneService.model.instrument;
-            model.bars = getBars(tune ? tune.parts[0] : null, instrument);
+            model.bars = getBars(part);
             model.ready = model.bars.length > 0;
         }
 
         // model methods
-        function getBars(part, instrument) {
+        function getBars(part) {
             let bars = [];
 
             if (!part) {
                 return bars;
             }
 
+            let instrument = instrumentFactory.get(part.instrumentName);
             for (let i = 0; i < part.tune.bars; i++) {
                 bars.push({
                     crotchets: getCrotchets(part, instrument, i),
