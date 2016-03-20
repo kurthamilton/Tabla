@@ -76,7 +76,6 @@
         }
 
         function loadInstruments() {
-            model.loading = true;
             model.ready = false;
 
             let tune = tuneService.model.tune;
@@ -84,6 +83,7 @@
                 return;
             }
 
+            model.loading = true;
             let loadedParts = [];
             tune.parts.forEach((part, partIndex) => {
                 let sound = part.sound;
