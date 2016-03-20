@@ -11,41 +11,26 @@
             if (!isValid(note)) {
                 return;
             }
+            let position = getPosition(note);
+            if (!notes.hasOwnProperty(position)) {
+                notes[position] = {};
+            }
 
-            let notesLevel = notes;
-            properties.forEach((property, i) => {
-                let noteValue = note[property];
-
-                if (!notesLevel.hasOwnProperty(noteValue)) {
-                    notesLevel[noteValue] = {};
-                }
-
-                if (i === properties.length - 1) {
-                    notesLevel[noteValue] = note.fret;
-                }
-
-                notesLevel = notesLevel[noteValue];
-            });
+            notes[position][note.string] = note.fret;
         };
 
-        this.getFrets = function(position) {
+        this.getFrets = function(notePosition) {
             let frets = {};
 
-            let bar = notes[position.bar];
-            if (!bar) {
-                return frets;
-            }
-            let crotchet = bar[position.crotchet];
-            if (!crotchet) {
-                return frets;
-            }
-            let quaver = crotchet[position.quaver];
-            if (!quaver) {
-                return frets;
+            let position = getPosition(notePosition);
+            if (!notes.hasOwnProperty(position)) {
+                return;
             }
 
-            for (let string in quaver) {
-                frets[string] = quaver[string];
+            for (let string in notes[position]) {
+                if (notes[position].hasOwnProperty(string)) {
+                    frets[string] = notes[position][string];
+                }
             }
 
             return frets;
@@ -56,42 +41,32 @@
                 return;
             }
 
-            let notesLevel = notes;
-            properties.forEach((property, i) => {
-                let noteValue = note[property];
+            let position = getPosition(note);
+            if (!notes.hasOwnProperty(position) || !notes[position].hasOwnProperty(note.string)) {
+                return;
+            }
 
-                if (!notesLevel.hasOwnProperty(noteValue)) {
-                    return;
-                }
-
-                if (i === properties.length - 1) {
-                    delete notesLevel[noteValue];
-                }
-
-                notesLevel = notesLevel[noteValue];
-            });
+            delete notes[position][note.string];
         };
 
         this.serialize = function() {
             let serialized = [];
-            for (let bar in notes) {
-                for (let crotchet in notes[bar]) {
-                    for (let quaver in notes[bar][crotchet]) {
-                        for (let string in notes[bar][crotchet][quaver]) {
-                            let fret = notes[bar][crotchet][quaver][string];
-                            if (fret !== undefined) {
-                                serialized.push({
-                                    bar: parseInt(bar),
-                                    crotchet: parseInt(crotchet),
-                                    quaver: parseInt(quaver),
-                                    string: parseInt(string),
-                                    fret: notes[bar][crotchet][quaver][string]
-                                });
-                            }
-                        }
-                    }
+
+            for (let position in notes) {
+                let note = getNoteFromPosition(parseFloat(position));
+
+                let frets = notes[position];
+                for (var string in frets) {
+                    serialized.push({
+                        bar: note.bar,
+                        crotchet: note.crotchet,
+                        quaver: note.quaver,
+                        string: string,
+                        fret: frets[string]
+                    });
                 }
             }
+
             return serialized;
         };
 
@@ -103,6 +78,27 @@
                 }
             });
             return isValid;
+        }
+
+        function getPosition(note) {
+            // return bar.{position as fraction}. e.g. bar 1, crotchet 3, quaver 3 = 1.375
+            return note.bar + (note.crotchet / 10) + (note.quaver / 4 / 10);
+        }
+
+        function getNoteFromPosition(position) {
+            let bar = Math.floor(position);
+            position = (position - bar) * 10;
+
+            let crotchet = Math.floor(position);
+            position = (position - crotchet) * 4;
+
+            let quaver = position;
+
+            return {
+                bar: bar,
+                crotchet: crotchet,
+                quaver: quaver
+            };
         }
     }
 })();
