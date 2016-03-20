@@ -61,15 +61,15 @@
                     </div>
                 </div>
             </div>
-        </section>
-        <!--tablature-->
-        <section id="tablature" class="buffer" rv-show="hasTune">
-            <div>
+            <div class="buffer" rv-show="model.tune">
                 <div>
-                    { part.tune.name }
+                    { model.tune.name }
                 </div>
             </div>
-            <div class="bars buffer">
+        </section>
+        <!--tablature-->
+        <section id="tablature" class="buffer" rv-show="model.ready">
+            <div class="bars">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
                         <div class="quaver" rv-each-quaver="crotchet.quavers">

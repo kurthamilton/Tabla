@@ -5,7 +5,8 @@
 
     function TablatureService(tuneService) {
         let model = {
-            bars: null
+            bars: null,
+            ready: false
         };
 
         tuneService.addEventListener('load', onTuneLoaded);
@@ -15,9 +16,11 @@
         };
 
         function onTuneLoaded(tune) {
-            let instrument = tuneService.model.instrument;
+            model.ready = false;
 
+            let instrument = tuneService.model.instrument;
             model.bars = getBars(tune ? tune.parts[0] : null, instrument);
+            model.ready = model.bars.length > 0;
         }
 
         // model methods

@@ -5,7 +5,6 @@
 
     function TablatureController(domUtils, Note, audioService, tablatureService, tuneService) {
         let scope = {
-            hasTune: false,
             model: tablatureService.model,
             part: null,
             playPosition: null,
@@ -104,7 +103,6 @@
         }
 
         function onTuneLoaded(tune) {
-            scope.hasTune = ((tune || null) !== null);
             scope.part = tune ? tune.parts[0] : null;
             bind();
         }

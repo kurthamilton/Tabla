@@ -26,7 +26,9 @@
 
         function bindEvents() {
             document.addEventListener('keydown', function(e) {
-                if (!scope.hasTune) {
+                // todo: the hash check is to prevent playing while the tune modal is open.
+                // This is a flimsy check and should be improved
+                if (!scope.model.ready || window.location.hash !== '') {
                     return;
                 }
 

@@ -48,6 +48,7 @@
         return {
             actions: {
                 resume: resume,
+                reset: reset,
                 start: start,
                 stop: stop,
                 toggle: toggle
