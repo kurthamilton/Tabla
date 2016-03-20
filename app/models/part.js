@@ -16,6 +16,7 @@
             this.name = options.name || options.instrumentName;
             this.sound = options.sound;
             this.tune = options.tune;
+            this.volume = options.volume || 1;
 
             this.addNote = function(note) {
                 noteCollection.add(note);
@@ -35,7 +36,8 @@
                     instrumentName: part.instrumentName,
                     name: part.name,
                     notes: noteCollection.serialize(),
-                    sound: part.sound
+                    sound: part.sound,
+                    volume: part.volume
                 };
             };
         }

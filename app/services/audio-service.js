@@ -107,9 +107,10 @@
             context.handle = setTimeout(play, quaverInterval());
         }
 
-        function playNote(note, channel) {
+        function playNote(note, channel, volume) {
+            // volume is a percentage between 0 and 1
             let midiNote = scaleService.midiNote(note.note, note.octave);
-            MIDI.noteOn(channel, midiNote, 127); // channel, note, velocity
+            MIDI.noteOn(channel, midiNote, volume * 127);
         }
 
         function playNotes() {
@@ -123,12 +124,16 @@
                 for (let i in frets) {
                     let string = instrument.strings[i];
                     let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
-                    if (model.notes.hasOwnProperty(partIndex) && model.notes[partIndex].hasOwnProperty(i)) {
-                        // stop note on current string
-                        stopNote(note, partIndex);
+                    if (!model.notes.hasOwnProperty(partIndex)) {
+                        model.notes[partIndex] = {};
                     }
-                    model.notes[partIndex] = { i: note };
-                    playNote(note, partIndex);
+
+                    if (model.notes[partIndex].hasOwnProperty(i)) {
+                        // stop note on current string
+                        stopNote(model.notes[partIndex][i], partIndex);
+                    }
+                    model.notes[partIndex][i] = note;
+                    playNote(note, partIndex, part.volume);
                 }
             });
 
@@ -169,13 +174,28 @@
             if (!context.playing) {
                 return;
             }
+            stopNotes();
             clearTimeout(context.handle);
             context.playing = false;
         }
 
         function stopNote(note, channel) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
-            MIDI.noteOff(channel, midiNote, 0);
+            MIDI.noteOff(channel, midiNote);
+        }
+
+        function stopNotes() {
+            // todo: do this in a better way
+            model.tune.parts.forEach((part, partIndex) => {
+                if (model.notes.hasOwnProperty(partIndex)) {
+                    for (let i in model.notes[partIndex]) {
+                        let note = model.notes[partIndex][i];
+                        if (note) {
+                            stopNote(note, partIndex);
+                        }
+                    }
+                }
+            });
         }
 
         function toggle() {
