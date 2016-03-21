@@ -91,21 +91,20 @@
                 utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
                     MIDI.loadPlugin({
                         instrument: sound,
-                        onprogress: function(state, progress) {
-                            console.log(state, progress);
-                        },
-                        onsuccess: function() {
-                            MIDI.programChange(partIndex, MIDI.GM.byName[sound].number);
-                            loadedParts.push(partIndex);
-                            if (loadedParts.length === tune.parts.length) {
-                                model.loading = false;
-                                model.ready = true;
-                                trigger('ready');
-                            }
-                        }
+                        onsuccess: () => loadInstrument(partIndex, sound)
                     });
                 });
             });
+
+            function loadInstrument(partIndex, sound) {
+                MIDI.programChange(partIndex, MIDI.GM.byName[sound].number);
+                loadedParts.push(partIndex);
+                if (loadedParts.length === tune.parts.length) {
+                    model.loading = false;
+                    model.ready = true;
+                    trigger('ready');
+                }
+            }
         }
 
         function play() {

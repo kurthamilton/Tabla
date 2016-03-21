@@ -15,10 +15,8 @@
             },
             async: function(method, callback) {
                 setTimeout(function() {
-                    method();
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
+                    executeFunction(method);
+                    executeFunction(callback);
                 }, 0);
             },
             // lightweight function returning a value looking like a GUID. Uses Math.random, so can't be fully trusted.
@@ -30,6 +28,11 @@
                 return (S4() + S4() + "-" + S4() + S4() + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
             },
             loadScript: function(url, callback) {
+                if (utils.scriptLoaded(url)) {
+                    executeFunction(callback);
+                    return;
+                }
+
                 // Adding the script tag to the head as suggested before
                 var head = document.getElementsByTagName('head')[0];
                 var script = document.createElement('script');
@@ -43,9 +46,19 @@
 
                 // Fire the loading
                 head.appendChild(script);
+            },
+            scriptLoaded: function(url) {
+                return document.querySelector(`script[src="${url}"]`) !== null;
             }
         };
 
         return utils;
+
+        function executeFunction(callback) {
+            if (typeof callback !== 'function') {
+                return;
+            }
+            callback();
+        }
     }
 })();
