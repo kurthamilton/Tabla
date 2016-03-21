@@ -1,7 +1,6 @@
 - Manage instruments on part add / delete
 - Preload notes
 - Edit tune details
-- Edit part details
 - Set note length
 - Key events for play position: home, backwards/forwards with cursor, associate with selected note.
 - multi-select notes / copy & paste
@@ -10,3 +9,5 @@
 - don't save defaults
 - move serialize methods to service
 - save note collection as is
+- hide tunes list if empty
+- custom instruments

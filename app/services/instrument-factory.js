@@ -51,10 +51,12 @@
                 if (instruments.hasOwnProperty(name)) {
                     return instruments[name]();
                 }
-                // todo: custom instruments in storage service
                 return null;
             },
             sounds: function(name) {
+                if (!instrumentSounds.hasOwnProperty(name)) {
+                    return [];
+                }
                 return instrumentSounds[name].slice();
             }
         };

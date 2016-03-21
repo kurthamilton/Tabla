@@ -15,37 +15,39 @@
                 deletePart: deletePart,
                 load: loadTune,
                 onPartEditing: function() {
-                    // populate sounds
-                    selectInstrument(scope.editPart.sounds, scope.model.part.instrumentName);
-                    scope.model.part.sound = scope.editPart.sounds;
+                    scope.editPart = new EditPartViewModel(scope.model.part);
                 },
-                save: tuneService.actions.save,
-                selectPart: selectPart
+                selectPart: selectPart,
+                updatePart: updatePart
             },
-            editPart: {
-                instrumentName: '',
-                name: '',
-                selectInstrument: function() {
-                    selectInstrument(scope.editPart.sounds, scope.model.part.instrumentName);
-                },
-                sounds: []
-            },
+            editPart: null,
             instruments: instrumentFactory.available(),
             model: tuneService.model,
-            newPart: {
-                instrumentName: '',
-                name: '',
-                selectInstrument: function() {
-                    selectInstrument(scope.newPart.sounds, scope.newPart.instrumentName);
-                },
-                sound: '',
-                sounds: []
-            },
+            newPart: new EditPartViewModel({}),
             newTune: {
                 instrumentName: '',
                 name: ''
             }
         };
+
+        function EditPartViewModel(options) {
+            let viewModel = this;
+
+            this.instrumentName = options.instrumentName || '';
+            this.name = options.name || '';
+            this.sound = options.sound || '';
+            let sounds = (this.sounds = []);
+
+            this.selectInstrument = selectInstrument;
+
+            selectInstrument();
+
+            function selectInstrument() {
+                sounds.splice(0, sounds.length);
+                sounds.push(...instrumentFactory.sounds(viewModel.instrumentName));
+                viewModel.sound = sounds.length > 0 ? sounds[0] : '';
+            }
+        }
 
         return {
             load: function() {
@@ -88,13 +90,17 @@
             tuneService.actions.load(scope.tune.id);
         }
 
-        function selectInstrument(sounds, instrumentName) {
-            sounds.splice(0, sounds.length);
-            sounds.push(...instrumentFactory.sounds(instrumentName));
-        }
-
         function selectPart(e, scope) {
             tuneService.actions.selectPart(scope.index);
+        }
+
+        function updatePart() {
+            let part = scope.model.part;
+            let editPart = scope.editPart;
+            part.instrumentName = editPart.instrumentName;
+            part.name = editPart.name;
+            part.sound = editPart.sound;
+            tuneService.actions.save();
         }
     }
 })(rivets);
