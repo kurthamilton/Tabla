@@ -7,11 +7,28 @@
         let scope = {
             actions: {
                 addPart: addPart,
+                closeModal: function() {
+                    window.location.hash = '#';
+                },
                 create: createTune,
                 delete: deleteTune,
                 deletePart: deletePart,
                 load: loadTune,
+                onPartEditing: function() {
+                    // populate sounds
+                    selectInstrument(scope.editPart.sounds, scope.model.part.instrumentName);
+                    scope.model.part.sound = scope.editPart.sounds;
+                },
+                save: tuneService.actions.save,
                 selectPart: selectPart
+            },
+            editPart: {
+                instrumentName: '',
+                name: '',
+                selectInstrument: function() {
+                    selectInstrument(scope.editPart.sounds, scope.model.part.instrumentName);
+                },
+                sounds: []
             },
             instruments: instrumentFactory.available(),
             model: tuneService.model,
@@ -19,15 +36,15 @@
                 instrumentName: '',
                 name: '',
                 selectInstrument: function() {
-                    selectInstrument(scope.newPart.instrumentName);
+                    selectInstrument(scope.newPart.sounds, scope.newPart.instrumentName);
                 },
-                sound: ''
+                sound: '',
+                sounds: []
             },
             newTune: {
                 instrumentName: '',
                 name: ''
-            },
-            sounds: []
+            }
         };
 
         return {
@@ -55,22 +72,25 @@
         }
 
         function deletePart() {
-            let model = tuneService.model;
-            let index = model.tune.parts.findIndex(p => p.id === model.part.id);
-            tuneService.actions.deletePart(index);
+            tuneService.actions.deletePart(getPartIndex());
         }
 
         function deleteTune() {
             tuneService.actions.delete(scope.tune.id);
         }
 
+        function getPartIndex() {
+            let model = tuneService.model;
+            return model.tune.parts.findIndex(p => p.id === model.part.id);
+        }
+
         function loadTune() {
             tuneService.actions.load(scope.tune.id);
         }
 
-        function selectInstrument(instrumentName) {
-            scope.sounds.splice(0, scope.sounds.length);
-            scope.sounds.push(...instrumentFactory.sounds(instrumentName));
+        function selectInstrument(sounds, instrumentName) {
+            sounds.splice(0, sounds.length);
+            sounds.push(...instrumentFactory.sounds(instrumentName));
         }
 
         function selectPart(e, scope) {

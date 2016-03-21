@@ -15,6 +15,9 @@ body {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+.buffer-top {
+    margin-top: 20px;
+}
 .buffer-sm {
     margin-top: 10px;
     margin-bottom: 10px;
