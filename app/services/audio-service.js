@@ -1,9 +1,9 @@
 (function(MIDI) {
     'use strict';
 
-    define(['utils', 'services/event-service', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], AudioService);
+    define(['utils', 'services/event-service', 'services/instrument-factory', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], AudioService);
 
-    function AudioService(utils, eventService, scaleService, tablatureService, tuneService) {
+    function AudioService(utils, eventService, instrumentFactory, scaleService, tablatureService, tuneService) {
         let context = {
             bar: 0,
             crotchet: 0,
@@ -11,6 +11,10 @@
             playing: false,
             quaver: 0
         };
+
+        // todo - move this to somewhere more suitable
+        // A dictionary of instruments, keyed by part index
+        let instruments = {};
 
         let model = {
             get bar() {
@@ -78,6 +82,7 @@
 
         function loadInstruments() {
             model.ready = false;
+            instruments = {};
 
             let tune = tuneService.model.tune;
             if (!tune) {
@@ -88,6 +93,7 @@
             let loadedParts = [];
             tune.parts.forEach((part, partIndex) => {
                 let sound = part.sound;
+                instruments[partIndex] = instrumentFactory.get(part.instrumentName);
                 utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
                     MIDI.loadPlugin({
                         instrument: sound,
@@ -131,7 +137,7 @@
                     return;
                 }
 
-                let instrument = tuneService.model.instrument;
+                let instrument = instruments[partIndex];
                 for (let i in frets) {
                     let string = instrument.strings[i];
                     let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
