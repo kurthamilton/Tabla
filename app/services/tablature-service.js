@@ -9,13 +9,13 @@
             ready: false
         };
 
-        tuneService.addEventListener('part-load', onPartLoaded);
+        tuneService.addEventListener('part.selected', onPartSelected);
 
         return {
             model: model
         };
 
-        function onPartLoaded(part) {
+        function onPartSelected(part) {
             model.ready = false;
 
             model.bars = getBars(part);

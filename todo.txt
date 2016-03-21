@@ -1,4 +1,3 @@
-- Manage instruments on part add / delete
 - Preload notes
 - Edit tune details
 - Set note length
@@ -11,3 +10,6 @@
 - save note collection as is
 - hide tunes list if empty
 - custom instruments
+- don't reload script if present
+- only reload relevant instruments on part add/delete/edit
+- reload instrument on sound changed

@@ -42,6 +42,8 @@
 
             setActivePart(part);
 
+            trigger('part.added', { index: model.tune.parts.length - 1 });
+
             utils.async(() => saveTune());
         }
 
@@ -79,6 +81,9 @@
                 }
                 setActivePart(tune.parts.length > 0 ? tune.parts[index] : null);
             }
+
+            trigger('part.deleted', { index: index });
+
             utils.async(() => saveTune());
         }
 
@@ -111,7 +116,7 @@
 
         function setActivePart(part) {
             model.part = part;
-            trigger('part-load', part);
+            trigger('part.selected', part);
         }
 
         function setActiveTune(tune) {

@@ -44,6 +44,8 @@
         };
 
         tuneService.addEventListener('load', loadInstruments);
+        tuneService.addEventListener('part.added', loadInstruments);
+        tuneService.addEventListener('part.deleted', loadInstruments);
 
         return {
             actions: {
