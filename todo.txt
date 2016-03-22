@@ -13,3 +13,4 @@
 - pitch bend
 - handle case where last part is deleted
 - confirm part delete
+- set bpm by typing (editable div?)
