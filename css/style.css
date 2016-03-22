@@ -38,6 +38,17 @@ body {
     background-repeat: no-repeat;
 }
 
+/* part options */
+.part-options {
+    background-color: #EEE;
+    padding: 5px;
+}
+input[type="range"].bpm-slider {
+    display: inline;
+    height: 10px;
+    width: 125px;
+}
+
 /* tab grid */
 .bars, .bar {
     display: flex;

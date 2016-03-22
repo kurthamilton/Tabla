@@ -17,6 +17,7 @@
                 onPartEditing: function() {
                     scope.editPart = new EditPartViewModel(scope.model.part);
                 },
+                save: tuneService.actions.save,
                 selectPart: selectPart,
                 updatePart: updatePart
             },

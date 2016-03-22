@@ -20,22 +20,6 @@
             get bar() {
                 return context.bar;
             },
-            bounds: {
-                bpm: {
-                    get min() { return 40; },
-                    get max() { return 300; }
-                }
-            },
-            get bpm() {
-                return model.tune ? model.tune.bpm : null;
-            },
-            set bpm(value) {
-                if (value < model.bounds.bpm.min || value > model.bounds.bpm.max) {
-                    return;
-                }
-                model.tune.bpm = value;
-                tuneService.actions.save();
-            },
             loading: false,
             notes: {},
             ready: false,
