@@ -10,6 +10,7 @@
         this.id = options.id;
         this.name = options.name;
         this.parts = [];
+        this.volume = options.volume || 1;
     }
 
     Tune.prototype.serialize = function() {
@@ -19,7 +20,8 @@
             bpm: this.bpm,
             id: this.id,
             name: this.name,
-            parts: this.parts.map(part => part.serialize())
+            parts: this.parts.map(part => part.serialize()),
+            volume: this.volume
         };
     };
 })();

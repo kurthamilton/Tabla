@@ -7,7 +7,9 @@
         let scope = {
             actions: audioService.actions,
             model: audioService.model,
-            notes: []
+            notes: [],
+            tune: null,
+            saveTune: tuneService.actions.save
         };
 
         tuneService.addEventListener('load', onTuneLoaded);
@@ -43,6 +45,7 @@
         }
 
         function onTuneLoaded(tune) {
+            scope.tune = tune;
             bind();
         }
 

@@ -4,7 +4,6 @@
 - Key events for play position: home, backwards/forwards with cursor, associate with selected note.
 - multi-select notes / copy & paste
 - form validation
-- volume controls
 - don't save defaults
 - move serialize methods to service
 - save note collection as is

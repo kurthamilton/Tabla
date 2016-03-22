@@ -81,3 +81,25 @@ body {
     box-shadow: 0px 0px 0px 1px #42429A;
     cursor: pointer;
 }
+
+/* mixer */
+.mixer {
+    display: flex;
+}
+.channel {
+    width: 100px;
+}
+.channel .heading {
+    border-bottom: 1px solid #BBB;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    text-align: center;
+}
+.channel .fader {
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.channel .fader input {
+    -webkit-appearance: slider-vertical;
+    height: 100px;
+}

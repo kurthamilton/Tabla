@@ -209,6 +209,27 @@
                         <div rv-each-note="notes">{ note.note }{ note.octave }</div>
                     </div>
                 </form>
+                <div class="buffer">
+                    <h3>Mixer</h3>
+                    <div class="mixer">
+                        <div class="channel" rv-each-part="tune.parts">
+                            <div class="heading">
+                                { part.name }
+                            </div>
+                            <div class="fader">
+                                <input type="range" min="0" max="1" step="0.01" rv-value="part.volume" rv-on-change="saveTune" />
+                            </div>
+                        </div>
+                        <div class="channel">
+                            <div class="heading">
+                                Master
+                            </div>
+                            <div class="fader">
+                                <input type="range" min="0" max="1" step="0.01" rv-value="tune.volume" rv-on-change="saveTune" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="loading" rv-show="model.loading">
                 <br/>

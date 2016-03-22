@@ -203,7 +203,7 @@
                         stopNote(model.notes[partIndex][i], partIndex);
                     }
                     model.notes[partIndex][i] = note;
-                    playNote(note, partIndex, part.volume);
+                    playNote(note, partIndex, part.tune.volume * part.volume);
                 }
             });
 
