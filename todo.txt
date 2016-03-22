@@ -1,4 +1,3 @@
-- bug when trying to reload instruments on part add / delete
 - Preload notes
 - Edit tune details
 - Set note length
@@ -11,9 +10,7 @@
 - save note collection as is
 - hide tunes list if empty
 - custom instruments
-- only reload relevant instruments on part add/delete/edit
-- reload instrument on sound changed
 - style tab content
 - pitch bend
-- handle case where last part is delete
+- handle case where last part is deleted
 - confirm part delete

@@ -30,6 +30,10 @@
                 return noteCollection.getFrets(position);
             };
 
+            this.index = function() {
+                return part.tune.parts.findIndex(p => p.id === part.id);
+            };
+
             this.serialize = function() {
                 return {
                     id: part.id,

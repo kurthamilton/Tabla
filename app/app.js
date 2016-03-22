@@ -12,8 +12,13 @@
     }
 
     function configure() {
+        midiConfig();
         rivetsConfig();
         requireConfig();
+    }
+
+    function midiConfig() {
+        MIDI.soundfontUrl = './assets/midi/';
     }
 
     function requireConfig() {

@@ -74,16 +74,11 @@
         }
 
         function deletePart() {
-            tuneService.actions.deletePart(getPartIndex());
+            tuneService.actions.deletePart(scope.model.part);
         }
 
         function deleteTune() {
             tuneService.actions.delete(scope.tune.id);
-        }
-
-        function getPartIndex() {
-            let model = tuneService.model;
-            return model.tune.parts.findIndex(p => p.id === model.part.id);
         }
 
         function loadTune() {
@@ -95,12 +90,7 @@
         }
 
         function updatePart() {
-            let part = scope.model.part;
-            let editPart = scope.editPart;
-            part.instrumentName = editPart.instrumentName;
-            part.name = editPart.name;
-            part.sound = editPart.sound;
-            tuneService.actions.save();
+            tuneService.actions.updatePart(scope.model.part.index(), scope.editPart);
         }
     }
 })(rivets);

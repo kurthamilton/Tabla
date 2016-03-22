@@ -30,9 +30,6 @@
                 return model.tune ? model.tune.bpm : null;
             },
             set bpm(value) {
-                if (!model.tune) {
-                    return;
-                }
                 if (value < model.bounds.bpm.min || value > model.bounds.bpm.max) {
                     return;
                 }
@@ -47,7 +44,10 @@
             }
         };
 
-        tuneService.addEventListener(['load', 'part.added', 'part.deleted'], loadInstruments);
+        tuneService.addEventListener('load', () => loadInstruments());
+        tuneService.addEventListener('part.added', () => loadInstrument(model.tune.parts.length - 1));
+        tuneService.addEventListener('part.updated', (e) => loadInstrument(e.index));
+        tuneService.addEventListener('part.deleted', (e) => removeInstrument(e.index));
 
         return {
             actions: {
@@ -63,6 +63,92 @@
             model: model
         };
 
+        // instrument functions
+        function loadInstrument(partIndex, callback) {
+            model.loading = true;
+            model.ready = false;
+
+            let part = model.tune.parts[partIndex];
+            let sound = part.sound;
+
+            let load = MIDI.supports ? MIDI.loadResource : MIDI.loadPlugin;
+            loadInstrumentScript(sound, () => {
+                load({
+                    instrument: sound,
+                    onsuccess: function() {
+                        setMidiChannel(partIndex);
+                        onInstrumentLoaded(part, partIndex);
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    }
+                });
+            });
+        }
+
+        function loadInstruments(partIndexes) {
+            model.ready = false;
+
+            if (!model.tune) {
+                return;
+            }
+
+            partIndexes = partIndexes || model.tune.parts.map((part, i) => i);
+
+            if (!Array.isArray(partIndexes)) {
+                partIndexes = [partIndexes];
+            }
+
+            if (!MIDI.supports) {
+                // if midi isn't loaded, set up midi with first instrument, then load other instruments
+                loadInstrument(0, () => partIndexes.filter(i => i > 0)
+                                                   .forEach(partIndex => loadInstrument(partIndex))
+                );
+            } else {
+                partIndexes.forEach(partIndex => loadInstrument(partIndex));
+            }
+        }
+
+        function loadInstrumentScript(sound, callback) {
+            utils.loadScript(`${MIDI.soundfontUrl}${sound}-ogg.js`, callback);
+        }
+
+        function onInstrumentLoaded(part, partIndex) {
+            instruments[partIndex] = instrumentFactory.get(part.instrumentName);
+
+            let ready = true;
+            model.tune.parts.forEach((part, partIndex) => {
+                if (!instruments.hasOwnProperty(partIndex)) {
+                    return (ready = false);
+                }
+            });
+
+            if (!ready) {
+                return;
+            }
+
+            model.loading = false;
+            model.ready = true;
+            trigger('ready');
+        }
+
+        function removeInstrument(partIndex) {
+            delete instruments[partIndex];
+
+            // move subsequent instruments down one place
+            while (instruments.hasOwnProperty(++partIndex)) {
+                instruments[partIndex - 1] = instruments[partIndex];
+                delete instruments[partIndex];
+                setMidiChannel(partIndex - 1);
+            }
+        }
+
+        function setMidiChannel(partIndex) {
+            let sound = model.tune.parts[partIndex].sound;
+            MIDI.programChange(partIndex, MIDI.GM.byName[sound].number);
+        }
+
+        // play functions
         function incrementQuaver() {
             context.quaver++;
             if (context.quaver > 3) {
@@ -78,39 +164,6 @@
             }
 
             trigger('increment');
-        }
-
-        function loadInstruments() {
-            model.ready = false;
-            instruments = {};
-
-            let tune = tuneService.model.tune;
-            if (!tune) {
-                return;
-            }
-
-            model.loading = true;
-            let loadedParts = [];
-            tune.parts.forEach((part, partIndex) => {
-                let sound = part.sound;
-                instruments[partIndex] = instrumentFactory.get(part.instrumentName);
-                utils.loadScript(`./assets/midi/${sound}-ogg.js`, function() {
-                    MIDI.loadPlugin({
-                        instrument: sound,
-                        onsuccess: () => loadInstrument(partIndex, sound)
-                    });
-                });
-            });
-
-            function loadInstrument(partIndex, sound) {
-                MIDI.programChange(partIndex, MIDI.GM.byName[sound].number);
-                loadedParts.push(partIndex);
-                if (loadedParts.length === tune.parts.length) {
-                    model.loading = false;
-                    model.ready = true;
-                    trigger('ready');
-                }
-            }
         }
 
         function play() {

@@ -18,7 +18,8 @@
                 deletePart: deletePart,
                 load: loadTune,
                 save: saveTune,
-                selectPart: selectPart
+                selectPart: selectPart,
+                updatePart: updatePart
             },
             addEventListener: function(event, callback) {
                 eventService.addEventListener(TuneService, event, callback);
@@ -70,12 +71,12 @@
             });
         }
 
-        function deletePart(index) {
+        function deletePart(part) {
+            let index = part.index();
             let tune = model.tune;
-            let id = tune.parts[index].id;
             tune.parts.splice(index, 1);
 
-            if (id === model.part.id) {
+            if (part.id === model.part.id) {
                 if (index >= tune.parts.length) {
                     index = tune.parts.length - 1;
                 }
@@ -123,6 +124,24 @@
             model.tune = tune;
             setActivePart(tune ? tune.parts[0] : null);
             trigger('load', tune);
+        }
+
+        function updatePart(index, options) {
+            if (!model.tune) {
+                return;
+            }
+
+            let part = model.tune.parts[index];
+            if (!part) {
+                return;
+            }
+
+            part.instrumentName = options.instrumentName || part.instrumentName;
+            part.name = options.name || part.instrumentName;
+            part.sound = options.sound || part.sound;
+
+            trigger('part.updated', { index: index });
+            saveTune();
         }
 
         // event handlers
