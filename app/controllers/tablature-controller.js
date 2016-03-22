@@ -12,7 +12,7 @@
             selectedNote: null
         };
 
-        tuneService.addEventListener('load', onTuneLoaded);
+        tuneService.addEventListener('part.selected', onPartSelected);
         audioService.addEventListener('reset', resetPlayPosition);
         audioService.addEventListener('increment', incrementPlayPosition);
 
@@ -102,8 +102,8 @@
             });
         }
 
-        function onTuneLoaded(tune) {
-            scope.part = tune ? tune.parts[0] : null;
+        function onPartSelected(part) {
+            scope.part = part;
             bind();
         }
 
