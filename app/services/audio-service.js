@@ -195,7 +195,7 @@
         }
 
         function quaverInterval() {
-            let secondsPerBeat = 60 / model.bpm;
+            let secondsPerBeat = 60 / model.tune.bpm;
             let secondsPerQuaver = secondsPerBeat / 4;
             return 1000 * secondsPerQuaver;
         }
