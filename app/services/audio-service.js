@@ -8,7 +8,6 @@
             bar: 0,
             crotchet: 0,
             handle: null,
-            playing: false,
             quaver: 0
         };
 
@@ -22,6 +21,7 @@
             },
             loading: false,
             notes: {},
+            playing: false,
             ready: false,
             get tune() {
                 return tuneService.model.tune;
@@ -151,7 +151,7 @@
         }
 
         function play() {
-            if (!context.playing) {
+            if (!model.playing) {
                 return;
             }
 
@@ -208,29 +208,29 @@
         }
 
         function resume() {
-            if (context.playing) {
+            if (model.playing) {
                 return;
             }
-            context.playing = true;
+            model.playing = true;
             play();
         }
 
         function start() {
-            if (context.playing) {
+            if (model.playing) {
                 return;
             }
             reset();
-            context.playing = true;
+            model.playing = true;
             play();
         }
 
         function stop() {
-            if (!context.playing) {
+            if (!model.playing) {
                 return;
             }
             stopNotes();
             clearTimeout(context.handle);
-            context.playing = false;
+            model.playing = false;
         }
 
         function stopNote(note, channel) {
@@ -253,7 +253,7 @@
         }
 
         function toggle() {
-            if (context.playing) {
+            if (model.playing) {
                 stop();
             } else {
                 resume();

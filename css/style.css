@@ -43,6 +43,9 @@ body {
     background-color: #EEE;
     padding: 5px;
 }
+.part-options__component {
+    padding-left: 10px;
+}
 input[type="range"].bpm-slider {
     display: inline;
     height: 10px;

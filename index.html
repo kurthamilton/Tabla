@@ -85,10 +85,16 @@
                     <!-- part options bar -->
                     <div class="buffer-sm">
                         <div class="part-options clearfix">
-                            <div class="pull-left">
+                            <div class="pull-left part-options__component">
                                 BPM <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" /> { model.tune.bpm }
                             </div>
-                            <div class="pull-right">
+                            <div class="pull-left part-options__component btn-group" rv-show="audioModel.ready">
+                                <a href="#" class="btn" role="button"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></a>
+                                <a href="#" class="btn" role="button" rv-hide="audioModel.playing"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+                                <a href="#" class="btn" role="button" rv-show="audioModel.playing"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></a>
+                                <a href="#" class="btn" role="button" rv-show="audioModel.playing"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
+                            </div>
+                            <div class="pull-right part-options__component">
                                 <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit</a>
                                 <a href="#" rv-on-click="actions.deletePart">Delete</a>
                             </div>
@@ -188,7 +194,7 @@
             </div>
         </section>
         <!--tablature-->
-        <section id="tablature" class="buffer-sm" rv-show="model.ready">
+        <section id="tablature" class="buffer" rv-show="model.ready">
             <div class="bars">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">

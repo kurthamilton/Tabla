@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/instrument-factory', 'services/tune-service'], TunesController);
+    define(['services/instrument-factory', 'services/audio-service', 'services/tune-service'], TunesController);
 
-    function TunesController(instrumentFactory, tuneService) {
+    function TunesController(instrumentFactory, audioService, tuneService) {
         let scope = {
             actions: {
                 addPart: addPart,
@@ -21,6 +21,7 @@
                 selectPart: selectPart,
                 updatePart: updatePart
             },
+            audioModel: audioService.model,
             editPart: null,
             instruments: instrumentFactory.available(),
             model: tuneService.model,
