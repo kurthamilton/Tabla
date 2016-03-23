@@ -100,6 +100,9 @@
 
         function updatePart() {
             tuneService.actions.updatePart(scope.model.part.index(), scope.editPart);
+            // close edit modal
+            // todo: do this better
+            window.location.hash = '#';
         }
     }
 })(rivets);

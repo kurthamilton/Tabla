@@ -1,6 +1,7 @@
 BUGS
 - handle case where last part is deleted
 - new frets show in different part on first selection
+- handle long part names in mixer
 
 OPTIMIZATION
 - Preload notes when playing

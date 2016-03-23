@@ -112,6 +112,7 @@ input[type="range"].bpm-slider {
 .channel {
     border: 1px solid #BBB;
     margin-left: -1px;
+    width: 50px;
 }
 .channel .heading {
     border-bottom: 1px solid #BBB;
@@ -124,5 +125,4 @@ input[type="range"].bpm-slider {
 .channel .fader input {
     -webkit-appearance: slider-vertical;
     height: 100px;
-    width: 50px;
 }
