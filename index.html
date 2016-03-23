@@ -83,7 +83,7 @@
                         <li role="presentation"><a href="#add-part"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
                     </ul>
                     <!-- part options bar -->
-                    <div class="buffer-sm">
+                    <div class="tab-content">
                         <div class="part-options clearfix">
                             <div class="pull-left part-options__component">
                                 BPM <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" /> { model.tune.bpm }
@@ -199,7 +199,7 @@
             </div>
         </section>
         <!--tablature-->
-        <section id="tablature" class="buffer" rv-show="model.ready">
+        <section id="tablature" class="tab-content" rv-show="model.ready">
             <div class="bars">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
@@ -211,7 +211,7 @@
             </div>
         </section>
         <!--audio-->
-        <section id="audio" class="buffer">
+        <section id="audio" class="tab-content">
             <div rv-show="model.ready">
                 <div class="buffer">
                     <div class="mixer">
