@@ -1,16 +1,33 @@
-- Preload notes
-- Edit tune details
-- Set note length
-- Key events for play position: home, backwards/forwards with cursor, associate with selected note.
-- multi-select notes / copy & paste
-- form validation
+BUGS
+- handle case where last part is deleted
+- new frets show in different part on first selection
+
+OPTIMIZATION
+- Preload notes when playing
 - don't save defaults
+
+CODE
 - move serialize methods to service
 - save note collection as is
+
+UI
+- Edit tune details
 - hide tunes list if empty
-- custom instruments
 - style tab content
-- pitch bend
-- handle case where last part is deleted
+- display volume levels
+
+UX
+- Key events for play position: home, backwards/forwards with cursor
+- associate play position with selected note
+- skip between bars with play controls
+- multi-select notes / copy & paste
+- form validation
 - confirm part delete
 - set bpm by typing (editable div?)
+- timeout on continuing fret number (e.g. editing a 2 -> 3 should just become a 3 instead of 23 after x seconds)
+
+FUNCTIONALITY
+- custom instruments
+- pitch bend / hammer on / pull off
+- add / remove bars - what if removing a bar with notes?
+- Set note length / add rest notes
