@@ -19,7 +19,11 @@
                 },
                 save: tuneService.actions.save,
                 selectPart: selectPart,
-                updatePart: updatePart
+                updatePart: updatePart,
+                updateTuneName: function(e, scope) {
+                    updateTuneName(e.target.textContent);
+                    e.target.textContent = scope.model.tune.name;
+                }
             },
             audioActions: audioService.actions,
             audioModel: audioService.model,
@@ -103,6 +107,12 @@
             // close edit modal
             // todo: do this better
             window.location.hash = '#';
+        }
+
+        function updateTuneName(name) {
+            tuneService.actions.updateTune({
+                name: name
+            });
         }
     }
 })(rivets);

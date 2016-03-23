@@ -11,9 +11,7 @@
             <!-- tune -->
             <div class="buffer-top" rv-show="model.tune">
                 <!-- tune details -->
-                <div>
-                    <h3>{ model.tune.name }</h3>
-                </div>
+                <h3 contenteditable="true" rv-on-blur="actions.updateTuneName">{ model.tune.name }</h3>
                 <!-- tune parts -->
                 <div class="buffer-top">
                     <!-- tabs -->

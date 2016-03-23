@@ -19,7 +19,8 @@
                 load: loadTune,
                 save: saveTune,
                 selectPart: selectPart,
-                updatePart: updatePart
+                updatePart: updatePart,
+                updateTune: updateTune
             },
             addEventListener: function(event, callback) {
                 eventService.addEventListener(TuneService, event, callback);
@@ -142,6 +143,25 @@
 
             trigger('part.updated', { index: index });
             saveTune();
+        }
+
+        function updateTune(options) {
+            if (!model.tune) {
+                return;
+            }
+
+            if (options.name && model.tune.name !== options.name) {
+                model.tune.name = options.name;
+
+                // update tunes object with updated name
+                let i = model.tunes.findIndex(t => t.id === model.tune.id);
+                model.tunes[i].name = options.name;
+            }
+
+            utils.async(() => {
+                saveTune();
+                saveTunes();
+            });
         }
 
         // event handlers

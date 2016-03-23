@@ -12,7 +12,6 @@ CODE
 - save note collection as is
 
 UI
-- Edit tune details
 - hide tunes list if empty
 - hide rivets templates while loading - show overlay?
 
@@ -24,6 +23,7 @@ UX
 - form validation
 - set bpm by typing (editable div?)
 - timeout on continuing fret number (e.g. editing a 2 -> 3 should just become a 3 instead of 23 after x seconds)
+- add feedback messages
 
 FUNCTIONALITY
 - custom instruments
