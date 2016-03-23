@@ -35,10 +35,10 @@
 
         return {
             actions: {
+                pause: pause,
                 resume: resume,
                 reset: reset,
                 start: start,
-                stop: stop,
                 toggle: toggle
             },
             addEventListener: function(event, callback) {
@@ -150,6 +150,15 @@
             trigger('increment');
         }
 
+        function pause() {
+            if (!model.playing) {
+                return;
+            }
+            stopNotes();
+            clearTimeout(context.handle);
+            model.playing = false;
+        }
+
         function play() {
             if (!model.playing) {
                 return;
@@ -224,15 +233,6 @@
             play();
         }
 
-        function stop() {
-            if (!model.playing) {
-                return;
-            }
-            stopNotes();
-            clearTimeout(context.handle);
-            model.playing = false;
-        }
-
         function stopNote(note, channel) {
             let midiNote = scaleService.midiNote(note.note, note.octave);
             MIDI.noteOff(channel, midiNote);
@@ -254,7 +254,7 @@
 
         function toggle() {
             if (model.playing) {
-                stop();
+                pause();
             } else {
                 resume();
             }

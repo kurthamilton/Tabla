@@ -88,11 +88,16 @@
                             <div class="pull-left part-options__component">
                                 BPM <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" /> { model.tune.bpm }
                             </div>
-                            <div class="pull-left part-options__component btn-group" rv-show="audioModel.ready">
-                                <a href="#" class="btn" role="button"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></a>
-                                <a href="#" class="btn" role="button" rv-hide="audioModel.playing"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
-                                <a href="#" class="btn" role="button" rv-show="audioModel.playing"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></a>
-                                <a href="#" class="btn" role="button" rv-show="audioModel.playing"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
+                            <div id="play-controls" class="pull-left part-options__component btn-group btn-group-xs" rv-show="audioModel.ready">
+                                <a href="#" class="btn" role="button" rv-on-click="audioActions.reset">
+                                    <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+                                </a>
+                                <a href="#" class="btn" role="button" rv-hide="audioModel.playing" rv-on-click="audioActions.resume">
+                                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                </a>
+                                <a href="#" class="btn" role="button" rv-show="audioModel.playing" rv-on-click="audioActions.pause">
+                                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                                </a>
                             </div>
                             <div class="pull-right part-options__component">
                                 <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit</a>
@@ -208,18 +213,7 @@
         <!--audio-->
         <section id="audio" class="buffer">
             <div rv-show="model.ready">
-                <form class="form-inline">
-                    <div class="buffer-sm">
-                        <button type="button" rv-on-click="actions.start">Start</button>
-                        <button type="button" rv-on-click="actions.resume">Resume</button>
-                        <button type="button" rv-on-click="actions.stop">Stop</button>
-                    </div>
-                    <div>
-                        <div rv-each-note="notes">{ note.note }{ note.octave }</div>
-                    </div>
-                </form>
                 <div class="buffer">
-                    <h3>Mixer</h3>
                     <div class="mixer">
                         <div class="channel" rv-each-part="tune.parts">
                             <div class="heading">

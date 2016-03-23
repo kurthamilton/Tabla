@@ -21,6 +21,7 @@
                 selectPart: selectPart,
                 updatePart: updatePart
             },
+            audioActions: audioService.actions,
             audioModel: audioService.model,
             editPart: null,
             instruments: instrumentFactory.available(),
