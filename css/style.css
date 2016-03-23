@@ -35,7 +35,7 @@ body {
     border-right: 1px solid #DDD;
     padding: 10px 20px;
 }
-.tab-content:last-of-type {
+.tab-content--last {
     border-bottom: 1px solid #DDD;    /* border colour matches bootstrap tab */
 }
 

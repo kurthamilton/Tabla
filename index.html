@@ -8,6 +8,48 @@
         <!--tunes-->
         <section id="tunes" class="buffer-top">
             <a href="#tunes-manager">Tunes</a>
+            <!-- tune -->
+            <div class="buffer-top" rv-show="model.tune">
+                <!-- tune details -->
+                <div>
+                    <h3>{ model.tune.name }</h3>
+                </div>
+                <!-- tune parts -->
+                <div class="buffer-top">
+                    <!-- tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" rv-each-part="model.tune.parts" rv-class-active="part.id | eq model.part.id">
+                            <a href="#" rv-on-click="actions.selectPart">{ part.name }</a>
+                        </li>
+                        <li role="presentation"><a href="#add-part"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+                    </ul>
+                    <!-- part options bar -->
+                    <div class="tab-content">
+                        <div class="part-options clearfix">
+                            <div class="pull-left part-options__component">
+                                BPM <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" /> { model.tune.bpm }
+                            </div>
+                            <div id="play-controls" class="pull-left part-options__component btn-group btn-group-xs" rv-show="audioModel.ready">
+                                <a href="#" class="btn" role="button" rv-on-click="audioActions.reset">
+                                    <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+                                </a>
+                                <a href="#" class="btn" role="button" rv-hide="audioModel.playing" rv-on-click="audioActions.resume">
+                                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                </a>
+                                <a href="#" class="btn" role="button" rv-show="audioModel.playing" rv-on-click="audioActions.pause">
+                                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <div class="pull-right part-options__component">
+                                <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit</a>
+                                <a href="#" rv-on-click="actions.deletePart">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODALS -->
             <!-- tunes modal -->
             <div id="tunes-manager" class="modal fade in">
                 <div class="modal-dialog">
@@ -21,11 +63,7 @@
                             <div>
                                 <table class="table">
                                     <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
+                                        <tr><th>Name</th><th></th><th></th></tr>
                                     </thead>
                                     <tbody>
                                         <tr rv-each-tune="model.tunes" rv-class-active="tune.id | eq model.tune.id">
@@ -67,128 +105,88 @@
                     </div>
                 </div>
             </div>
-            <!-- tune -->
-            <div class="buffer-top" rv-show="model.tune">
-                <!-- tune details -->
-                <div>
-                    { model.tune.name }
-                </div>
-                <!-- tune parts -->
-                <div class="buffer-top">
-                    <!-- tabs -->
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" rv-each-part="model.tune.parts" rv-class-active="part.id | eq model.part.id">
-                            <a href="#" rv-on-click="actions.selectPart">{ part.name }</a>
-                        </li>
-                        <li role="presentation"><a href="#add-part"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-                    </ul>
-                    <!-- part options bar -->
-                    <div class="tab-content">
-                        <div class="part-options clearfix">
-                            <div class="pull-left part-options__component">
-                                BPM <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" /> { model.tune.bpm }
-                            </div>
-                            <div id="play-controls" class="pull-left part-options__component btn-group btn-group-xs" rv-show="audioModel.ready">
-                                <a href="#" class="btn" role="button" rv-on-click="audioActions.reset">
-                                    <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-                                </a>
-                                <a href="#" class="btn" role="button" rv-hide="audioModel.playing" rv-on-click="audioActions.resume">
-                                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                </a>
-                                <a href="#" class="btn" role="button" rv-show="audioModel.playing" rv-on-click="audioActions.pause">
-                                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-                                </a>
-                            </div>
-                            <div class="pull-right part-options__component">
-                                <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit</a>
-                                <a href="#" rv-on-click="actions.deletePart">Delete</a>
-                            </div>
+            <!-- add part modal -->
+            <div id="add-part" class="modal fade in">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <h4 class="modal-title">Add part</h4>
                         </div>
-                    </div>
-                    <!-- add part modal -->
-                    <div id="add-part" class="modal fade in">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <a class="close" href="#"><span aria-hidden="true">x</span></a>
-                                    <h4 class="modal-title">Add part</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-horizontal">
-                                        <div>
-                                            <div class="form-group">
-                                                <label for="new-part-instrument" class="col-sm-2 control-label">Instrument</label>
-                                                <div class="col-sm-10">
-                                                    <select id="new-part-instrument" class="form-control" required
-                                                        rv-value="newPart.instrumentName" rv-on-change="newPart.selectInstrument">
-                                                        <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="new-part-sound" class="col-sm-2 control-label">Sound</label>
-                                                <div class="col-sm-10">
-                                                    <select id="new-part-sound" class="form-control" required rv-value="newPart.sound">
-                                                        <option rv-each-sound="newPart.sounds" rv-value="sound">{ sound }</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="new-part-name" class="col-sm-2 control-label">Name</label>
-                                                <div class="col-sm-10">
-                                                    <input id="new-part-name" type="string" class="form-control" placeholder="Defaults to the instrument if not specified" rv-value="newPart.name" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-offset-2 col-sm-10">
-                                                    <button type="button" href="#" rv-on-click="actions.addPart">Add</button>
-                                                </div>
-                                            </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="new-part-instrument" class="col-sm-2 control-label">Instrument</label>
+                                        <div class="col-sm-10">
+                                            <select id="new-part-instrument" class="form-control" required
+                                                rv-value="newPart.instrumentName" rv-on-change="newPart.selectInstrument">
+                                                <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-part-sound" class="col-sm-2 control-label">Sound</label>
+                                        <div class="col-sm-10">
+                                            <select id="new-part-sound" class="form-control" required rv-value="newPart.sound">
+                                                <option rv-each-sound="newPart.sounds" rv-value="sound">{ sound }</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-part-name" class="col-sm-2 control-label">Name</label>
+                                        <div class="col-sm-10">
+                                            <input id="new-part-name" type="string" class="form-control" placeholder="Defaults to the instrument if not specified" rv-value="newPart.name" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="button" href="#" rv-on-click="actions.addPart">Add</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- edit part modal -->
-                    <div id="edit-part" class="modal fade in">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <a class="close" href="#"><span aria-hidden="true">x</span></a>
-                                    <h4 class="modal-title">Edit part</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-horizontal">
-                                        <div>
-                                            <div class="form-group">
-                                                <label for="edit-part-instrument" class="col-sm-2 control-label">Instrument</label>
-                                                <div class="col-sm-10">
-                                                    <select id="edit-part-instrument" class="form-control" required
-                                                        rv-value="editPart.instrumentName" rv-on-change="editPart.selectInstrument">
-                                                        <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="edit-part-sound" class="col-sm-2 control-label">Sound</label>
-                                                <div class="col-sm-10">
-                                                    <select id="edit-part-sound" class="form-control" required rv-value="editPart.sound">
-                                                        <option rv-each-sound="editPart.sounds" rv-value="sound">{ sound }</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="edit-part-name" class="col-sm-2 control-label">Name</label>
-                                                <div class="col-sm-10">
-                                                    <input id="edit-part-name" type="string" class="form-control" rv-value="editPart.name" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-offset-2 col-sm-10">
-                                                    <button type="button" href="#" rv-on-click="actions.updatePart">Update</button>
-                                                </div>
-                                            </div>
+                </div>
+            </div>
+            <!-- edit part modal -->
+            <div id="edit-part" class="modal fade in">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <h4 class="modal-title">Edit part</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="edit-part-instrument" class="col-sm-2 control-label">Instrument</label>
+                                        <div class="col-sm-10">
+                                            <select id="edit-part-instrument" class="form-control" required
+                                                rv-value="editPart.instrumentName" rv-on-change="editPart.selectInstrument">
+                                                <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-part-sound" class="col-sm-2 control-label">Sound</label>
+                                        <div class="col-sm-10">
+                                            <select id="edit-part-sound" class="form-control" required rv-value="editPart.sound">
+                                                <option rv-each-sound="editPart.sounds" rv-value="sound">{ sound }</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit-part-name" class="col-sm-2 control-label">Name</label>
+                                        <div class="col-sm-10">
+                                            <input id="edit-part-name" type="string" class="form-control" rv-value="editPart.name" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="button" href="#" rv-on-click="actions.updatePart">Update</button>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +209,7 @@
             </div>
         </section>
         <!--audio-->
-        <section id="audio" class="tab-content">
+        <section id="audio" class="tab-content tab-content--last">
             <div rv-show="model.ready">
                 <div class="buffer">
                     <div class="mixer">
