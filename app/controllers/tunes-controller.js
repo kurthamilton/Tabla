@@ -43,12 +43,16 @@
 
             this.selectInstrument = selectInstrument;
 
-            selectInstrument();
+            populateSounds();
 
             function selectInstrument() {
+                populateSounds();
+                viewModel.sound = sounds.length > 0 ? sounds[0] : '';
+            }
+
+            function populateSounds() {
                 sounds.splice(0, sounds.length);
                 sounds.push(...instrumentFactory.sounds(viewModel.instrumentName));
-                viewModel.sound = sounds.length > 0 ? sounds[0] : '';
             }
         }
 
