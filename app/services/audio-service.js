@@ -164,10 +164,11 @@
                 return;
             }
 
+            // firstly, schedule next play to keep time to the best of our capabilities
+            context.handle = setTimeout(play, quaverInterval());
+
             playNotes();
             incrementQuaver();
-
-            context.handle = setTimeout(play, quaverInterval());
         }
 
         function playNote(note, channel, volume) {

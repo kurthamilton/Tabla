@@ -30,3 +30,4 @@ FUNCTIONALITY
 - pitch bend / hammer on / pull off
 - add / remove bars - what if removing a bar with notes?
 - Set note length / add rest notes
+- import / export. Sync?
