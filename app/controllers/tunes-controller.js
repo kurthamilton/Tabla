@@ -77,7 +77,9 @@
         }
 
         function deletePart() {
-            tuneService.actions.deletePart(scope.model.part);
+            if (confirm('Are you sure you want to delete this part?')) {
+                tuneService.actions.deletePart(scope.model.part);
+            }
         }
 
         function deleteTune() {

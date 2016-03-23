@@ -21,7 +21,6 @@ UX
 - skip between bars with play controls
 - multi-select notes / copy & paste
 - form validation
-- confirm part delete
 - set bpm by typing (editable div?)
 - timeout on continuing fret number (e.g. editing a 2 -> 3 should just become a 3 instead of 23 after x seconds)
 
