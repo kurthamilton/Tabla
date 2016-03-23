@@ -106,16 +106,17 @@ input[type="range"].bpm-slider {
 /* mixer */
 .mixer {
     display: flex;
+    font-size: 9px;
+    text-align: center;
 }
 .channel {
-    width: 100px;
+    border: 1px solid #BBB;
+    margin-left: -1px;
 }
 .channel .heading {
     border-bottom: 1px solid #BBB;
-    padding-bottom: 5px;
-    padding-top: 5px;
-    text-align: center;
 }
+.channel .heading,
 .channel .fader {
     padding-bottom: 5px;
     padding-top: 5px;
@@ -123,4 +124,5 @@ input[type="range"].bpm-slider {
 .channel .fader input {
     -webkit-appearance: slider-vertical;
     height: 100px;
+    width: 50px;
 }

@@ -32,11 +32,24 @@
     }
 
     function rivetsConfig() {
+        // cherry-picked from https://gist.github.com/der-On/cdafe908847e2b882691
         rivets.formatters.default = function(value, args) {
             return (typeof value !== 'undefined' && value !== null) ? value : args;
         };
         rivets.formatters.eq = function(value, args) {
             return value === args;
+        };
+        rivets.formatters.round = function(value, decimals) {
+            if (decimals) {
+                var exp = Math.pow(10, decimals);
+                return Math.round(value * exp) / exp;
+            }
+            return Math.round(value);
+        };
+
+        // operators
+        rivets.formatters['*'] = function(value, multiplier) {
+            return value * multiplier;
         };
     }
 })(rivets);

@@ -13,7 +13,6 @@ CODE
 UI
 - Edit tune details
 - hide tunes list if empty
-- display volume levels
 - hide rivets templates while loading - show overlay?
 
 UX
