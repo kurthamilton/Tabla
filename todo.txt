@@ -15,6 +15,7 @@ UI
 - hide tunes list if empty
 - style tab content
 - display volume levels
+- hide rivets templates while loading - show overlay?
 
 UX
 - Key events for play position: home, backwards/forwards with cursor
