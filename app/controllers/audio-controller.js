@@ -30,7 +30,8 @@
             document.addEventListener('keydown', function(e) {
                 // todo: the hash check is to prevent playing while the tune modal is open.
                 // This is a flimsy check and should be improved
-                if (!scope.model.ready || window.location.hash !== '') {
+                // The active element check is to prevent collision with input key behaviour
+                if (!scope.model.ready || window.location.hash !== '' || document.activeElement !== document.body) {
                     return;
                 }
 

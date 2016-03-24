@@ -17,13 +17,11 @@
                 onPartEditing: function() {
                     scope.editPart = new EditPartViewModel(scope.model.part);
                 },
+                onTuneNameBlur: onTuneNameBlur,
+                onTuneNameKeyPress: onTuneNameKeyPress,
                 save: tuneService.actions.save,
                 selectPart: selectPart,
-                updatePart: updatePart,
-                updateTuneName: function(e, scope) {
-                    updateTuneName(e.target.textContent);
-                    e.target.textContent = scope.model.tune.name;
-                }
+                updatePart: updatePart
             },
             audioActions: audioService.actions,
             audioModel: audioService.model,
@@ -98,6 +96,21 @@
             tuneService.actions.load(scope.tune.id);
         }
 
+        function onTuneNameBlur(e, scope) {
+            tuneService.actions.updateTune({
+                name: e.target.textContent
+            });
+            e.target.textContent = scope.model.tune.name;
+        }
+
+        function onTuneNameKeyPress(e) {
+            // "submit" the tune name
+            if (e.keyCode === 13) {
+                e.target.blur();
+                e.preventDefault();
+            }
+        }
+
         function selectPart(e, scope) {
             tuneService.actions.selectPart(scope.index);
         }
@@ -107,12 +120,6 @@
             // close edit modal
             // todo: do this better
             window.location.hash = '#';
-        }
-
-        function updateTuneName(name) {
-            tuneService.actions.updateTune({
-                name: name
-            });
         }
     }
 })(rivets);

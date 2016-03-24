@@ -2,6 +2,7 @@ BUGS
 - handle case where last part is deleted
 - new frets show in different part on first selection
 - handle long part names in mixer
+- Tune title continues editing on keypress after blur
 
 OPTIMIZATION
 - Preload notes when playing
