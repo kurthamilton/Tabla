@@ -217,10 +217,14 @@
         }
 
         function setFret(fret) {
+            let n = scope.selectedNote;
+            let modelNote = scope.model.bars[n.bar].crotchets[n.crotchet].quavers[n.quaver].strings[n.string];
+
             if (fret === null || isNaN(fret) === true) {
                 scope.selectedNoteElement.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
                 scope.part.deleteNote(scope.selectedNote);
+                modelNote.fret = null;
                 save();
                 return true;
             }
@@ -230,6 +234,7 @@
                 scope.selectedNoteElement.innerHTML = fret;
                 scope.selectedNote.fret = fret;
                 scope.part.addNote(scope.selectedNote);
+                modelNote.fret = fret;
                 save();
                 return true;
             }
