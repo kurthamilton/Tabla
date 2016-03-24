@@ -48,7 +48,7 @@
                 // set a new timer
                 element.dataset.active = setTimeout(function() {
                     delete element.dataset.active;
-                }, options.timout);
+                }, options.timeout);
             },
             sibling: function(element, direction, className, parentClassName) {
                 // todo: accept parentClassName as array or string

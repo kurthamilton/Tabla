@@ -12,6 +12,9 @@
         tuneService.addEventListener('part.selected', onPartSelected);
 
         return {
+            actions: {
+                setNote: setNote
+            },
             model: model
         };
 
@@ -74,6 +77,15 @@
                 strings.push({ index: i, fret: frets[i] });
             }
             return strings;
+        }
+
+        function setNote(note) {
+            if (!tuneService.actions.setNote(note)) {
+                return false;
+            }
+            let modelNote = model.bars[note.bar].crotchets[note.crotchet].quavers[note.quaver].strings[note.string];
+            modelNote.fret = note.fret;
+            return true;
         }
     }
 })();

@@ -19,6 +19,7 @@
                 load: loadTune,
                 save: saveTune,
                 selectPart: selectPart,
+                setNote: setNote,
                 updatePart: updatePart,
                 updateTune: updateTune
             },
@@ -125,6 +126,28 @@
             model.tune = tune;
             setActivePart(tune ? tune.parts[0] : null);
             trigger('load', tune);
+        }
+
+        function setNote(note) {
+            if (!model.part) {
+                return false;
+            }
+
+            let fret = note.fret;
+            if (fret === null || isNaN(fret) === true) {
+                model.part.deleteNote(note);
+                utils.async(() => saveTune());
+                return true;
+            }
+
+            // todo: configurable bounds
+            if (fret >= 0 && fret <= 24) {
+                model.part.addNote(note);
+                utils.async(() => saveTune());
+                return true;
+            }
+
+            return false;
         }
 
         function updatePart(index, options) {

@@ -10,7 +10,6 @@ OPTIMIZATION
 CODE
 - move serialize methods to service
 - save note collection as is
-- move tablatureController.setFret into services
 
 UI
 - hide tunes list if empty

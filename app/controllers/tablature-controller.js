@@ -50,9 +50,9 @@
                 if (e.keyCode >= 48 && e.keyCode <= 57) {
                     // The typed number
                     let number = e.keyCode - 48;
-
+                    let active = domUtils.isActive(scope.selectedNoteElement);
                     // Append the typed number to the current content if it is active, else set the typed number
-                    let fret = parseInt(`${domUtils.isActive(scope.selectedNoteElement) ? scope.selectedNoteElement.textContent : ''}${number}`);
+                    let fret = parseInt(`${active ? scope.selectedNote.fret : ''}${number}`);
                     if (!setFret(fret)) {
                         // Set the fret to the current number if not successful.
                         setFret(number);
@@ -74,8 +74,9 @@
                 }
                 else if (e.keyCode === 8) {
                     // backspace
-                    let existing = scope.selectedNoteElement.textContent;
-                    if (isNaN(parseInt(existing)) === false) {
+                    let existing = scope.selectedNote.fret;
+                    if (existing !== null) {
+                        existing = existing.toString();
                         let fret = parseInt(existing.substring(0, existing.length - 1));
                         setFret(fret);
                     }
@@ -192,11 +193,15 @@
             let quaverElement = domUtils.closestClass(stringElement, 'quaver');
             let crotchetElement = domUtils.closestClass(quaverElement, 'crotchet');
             let barElement = domUtils.closestClass(crotchetElement, 'bar');
+            let fret = parseInt(stringElement.textContent);
+            if (isNaN(fret)) {
+                fret = null;
+            }
 
             return new Note({
                 bar: domUtils.indexInParent(barElement, 'bar'),
                 crotchet: domUtils.indexInParent(crotchetElement, 'crotchet'),
-                fret: null,
+                fret: fret,
                 quaver: domUtils.indexInParent(quaverElement, 'quaver'),
                 string: domUtils.indexInParent(stringElement, 'string')
             });
@@ -212,33 +217,18 @@
             scope.selectedNote = null;
         }
 
-        function save() {
-            utils.async(() => tuneService.actions.save());
-        }
-
         function setFret(fret) {
-            let n = scope.selectedNote;
-            let modelNote = scope.model.bars[n.bar].crotchets[n.crotchet].quavers[n.quaver].strings[n.string];
-
-            if (fret === null || isNaN(fret) === true) {
-                scope.selectedNoteElement.innerHTML = '&nbsp;';
-                scope.selectedNote.fret = null;
-                scope.part.deleteNote(scope.selectedNote);
-                modelNote.fret = null;
-                save();
-                return true;
+            if (fret === undefined || isNaN(fret) === true) {
+                fret = null;
             }
 
-            // todo: configurable bounds
-            if (fret >= 0 && fret <= 24) {
-                scope.selectedNoteElement.innerHTML = fret;
-                scope.selectedNote.fret = fret;
-                scope.part.addNote(scope.selectedNote);
-                modelNote.fret = fret;
-                save();
-                return true;
+            scope.selectedNote.fret = fret;
+            if (!tablatureService.actions.setNote(scope.selectedNote)) {
+                return false;
             }
-            return false;
+
+            scope.selectedNoteElement.innerHTML = (fret === null) ? '&nbsp;' : fret;
+            return true;
         }
 
         function getSiblingQuaver(element, direction) {
