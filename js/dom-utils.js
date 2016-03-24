@@ -29,6 +29,27 @@
                 }
                 return index;
             },
+            isActive: function(element) {
+                return element && element.dataset.active;
+            },
+            setActive: function(element, options) {
+                if (!element) {
+                    return;
+                }
+
+                options = options || {};
+                options.timeout = options.timeout || 2000;
+
+                // remove existing timer
+                let active = element.dataset.active;
+                if (active) {
+                    clearTimeout(active);
+                }
+                // set a new timer
+                element.dataset.active = setTimeout(function() {
+                    delete element.dataset.active;
+                }, options.timout);
+            },
             sibling: function(element, direction, className, parentClassName) {
                 // todo: accept parentClassName as array or string
 

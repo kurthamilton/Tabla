@@ -8,7 +8,7 @@
             model: tablatureService.model,
             part: null,
             playPosition: null,
-            selected: null,
+            selectedNoteElement: null,
             selectedNote: null
         };
 
@@ -42,24 +42,29 @@
 
         function bindKeys() {
             document.addEventListener('keypress', function(e) {
-                if (!scope.selected || e.shiftKey === true) {
+                if (!scope.selectedNoteElement || e.shiftKey === true) {
                     return;
                 }
 
                 // 0 - 9
                 if (e.keyCode >= 48 && e.keyCode <= 57) {
-                    // Append the typed number to the current content
+                    // The typed number
                     let number = e.keyCode - 48;
-                    let fret = parseInt(`${scope.selected.textContent}${number}`);
+
+                    // Append the typed number to the current content if it is active, else set the typed number
+                    let fret = parseInt(`${domUtils.isActive(scope.selectedNoteElement) ? scope.selectedNoteElement.textContent : ''}${number}`);
                     if (!setFret(fret)) {
                         // Set the fret to the current number if not successful.
                         setFret(number);
                     }
+
+                    // Set a timer on the note element to flag it as active
+                    domUtils.setActive(scope.selectedNoteElement);
                 }
             });
 
             document.addEventListener('keydown', function(e) {
-                if (!scope.selected) {
+                if (!scope.selectedNoteElement) {
                     return;
                 }
 
@@ -69,8 +74,9 @@
                 }
                 else if (e.keyCode === 8) {
                     // backspace
-                    if (isNaN(parseInt(scope.selected.textContent)) === false) {
-                        let fret = parseInt(scope.selected.textContent.substring(0, scope.selected.textContent.length - 1));
+                    let existing = scope.selectedNoteElement.textContent;
+                    if (isNaN(parseInt(existing)) === false) {
+                        let fret = parseInt(existing.substring(0, existing.length - 1));
                         setFret(fret);
                     }
                     e.preventDefault();
@@ -132,10 +138,10 @@
             let target = null;
             if (Math.abs(direction) === 1) {
                 // move by 1 string if direction is 1 or -1
-                target = domUtils.sibling(scope.selected, direction, 'string');
+                target = domUtils.sibling(scope.selectedNoteElement, direction, 'string');
             } else if (Math.abs(direction) === 2) {
                 // move to top string if direction is -2, else to bottom string
-                let strings = scope.selected.parentElement.querySelectorAll('.string');
+                let strings = scope.selectedNoteElement.parentElement.querySelectorAll('.string');
                 target = strings[direction === -2 ? 0 : strings.length - 1];
             }
 
@@ -147,14 +153,14 @@
             let sibling = null;
             if (Math.abs(direction) === 1) {
                 // move by 1 quaver if direction is 1 or -1
-                sibling = getSiblingQuaver(scope.selected, direction);
+                sibling = getSiblingQuaver(scope.selectedNoteElement, direction);
             } else if (Math.abs(direction) === 2) {
                 // move by 1 crotchet if direction is 2 or -2
                 if (direction < 0 && scope.selectedNote.quaver > 0) {
                     // stay within same crotchet if tabbing backwards from an advanced position within a crotchet
-                    sibling = domUtils.closestClass(scope.selected, 'crotchet');
+                    sibling = domUtils.closestClass(scope.selectedNoteElement, 'crotchet');
                 } else {
-                    sibling = getSiblingCrotchet(scope.selected, direction);
+                    sibling = getSiblingCrotchet(scope.selectedNoteElement, direction);
                 }
             }
 
@@ -162,7 +168,7 @@
                 return;
             }
 
-            let index = domUtils.indexInParent(scope.selected, 'string');
+            let index = domUtils.indexInParent(scope.selectedNoteElement, 'string');
             let target = sibling.querySelectorAll('.string')[index];
             selectString(target);
         }
@@ -175,7 +181,7 @@
             cancelStringSelect();
 
             target.classList.add('selected');
-            scope.selected = target;
+            scope.selectedNoteElement = target;
             scope.selectedNote = getNote(target);
 
             return true;
@@ -197,12 +203,12 @@
         }
 
         function cancelStringSelect() {
-            if (!scope.selected) {
+            if (!scope.selectedNoteElement) {
                 return;
             }
 
-            scope.selected.classList.remove('selected');
-            scope.selected = null;
+            scope.selectedNoteElement.classList.remove('selected');
+            scope.selectedNoteElement = null;
             scope.selectedNote = null;
         }
 
@@ -212,7 +218,7 @@
 
         function setFret(fret) {
             if (fret === null || isNaN(fret) === true) {
-                scope.selected.innerHTML = '&nbsp;';
+                scope.selectedNoteElement.innerHTML = '&nbsp;';
                 scope.selectedNote.fret = null;
                 scope.part.deleteNote(scope.selectedNote);
                 save();
@@ -221,7 +227,7 @@
 
             // todo: configurable bounds
             if (fret >= 0 && fret <= 24) {
-                scope.selected.innerHTML = fret;
+                scope.selectedNoteElement.innerHTML = fret;
                 scope.selectedNote.fret = fret;
                 scope.part.addNote(scope.selectedNote);
                 save();
