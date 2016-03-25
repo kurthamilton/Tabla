@@ -26,7 +26,6 @@ UX
 - set bpm by typing (editable div?)
 - add feedback messages
 - undo / redo: just notes?
-- disable play controls while loading rather than hiding
 
 FUNCTIONALITY
 - custom instruments
