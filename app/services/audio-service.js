@@ -38,6 +38,7 @@
                 pause: pause,
                 resume: resume,
                 reset: reset,
+                setPlayPosition: setPlayPosition,
                 start: start,
                 toggle: toggle
             },
@@ -134,20 +135,25 @@
 
         // play functions
         function incrementQuaver() {
-            context.quaver++;
-            if (context.quaver > 3) {
-                context.crotchet++;
-                context.quaver = 0;
+            let position = {
+                bar: context.bar,
+                crotchet: context.crotchet,
+                quaver: context.quaver + 1
+            };
+
+            if (position.quaver > 3) {
+                position.crotchet++;
+                position.quaver = 0;
             }
-            if (context.crotchet >= model.tune.beatsPerBar) {
-                context.bar++;
-                context.crotchet = 0;
+            if (position.crotchet >= model.tune.beatsPerBar) {
+                position.bar++;
+                position.crotchet = 0;
             }
-            if (context.bar >= tablatureService.model.bars.length) {
-                context.bar = 0;
+            if (position.bar >= tablatureService.model.bars.length) {
+                position.bar = 0;
             }
 
-            trigger('increment');
+            setPlayPosition(position);
         }
 
         function pause() {
@@ -211,10 +217,7 @@
         }
 
         function reset() {
-            context.bar = 0;
-            context.crotchet = 0;
-            context.quaver = 0;
-            trigger('reset');
+            setPlayPosition({});
         }
 
         function resume() {
@@ -223,6 +226,18 @@
             }
             model.playing = true;
             play();
+        }
+
+        function setPlayPosition(position) {
+            context.bar = position.bar || 0;
+            context.crotchet = position.crotchet || 0;
+            context.quaver = position.quaver || 0;
+
+            trigger('play-position.changed', {
+                bar: context.bar,
+                crotchet: context.crotchet,
+                quaver: context.quaver
+            });
         }
 
         function start() {

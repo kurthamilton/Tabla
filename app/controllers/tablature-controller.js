@@ -13,8 +13,7 @@
         };
 
         tuneService.addEventListener('part.selected', onPartSelected);
-        audioService.addEventListener('reset', resetPlayPosition);
-        audioService.addEventListener('increment', incrementPlayPosition);
+        audioService.addEventListener('play-position.changed', onPlayPositionChanged);
 
         return {
             load: function() {
@@ -115,26 +114,6 @@
         }
 
         // dom functions
-        function incrementPlayPosition() {
-            if (scope.playPosition) {
-                scope.playPosition.classList.remove('play-position');
-                scope.playPosition = getSiblingQuaver(scope.playPosition, 1);
-            }
-
-            if (!scope.playPosition) {
-                scope.playPosition = document.querySelector('.quaver');
-            }
-
-            scope.playPosition.classList.add('play-position');
-        }
-
-        function resetPlayPosition() {
-            if (scope.playPosition) {
-                scope.playPosition.classList.remove('play-position');
-            }
-            scope.playPosition = null;
-        }
-
         function moveVertically(direction) {
             let target = null;
             if (Math.abs(direction) === 1) {
@@ -174,6 +153,16 @@
             selectString(target);
         }
 
+        function onPlayPositionChanged(position) {
+            if (scope.playPosition) {
+                scope.playPosition.classList.remove('play-position');
+            }
+
+            scope.playPosition = getQuaver(position);
+
+            scope.playPosition.classList.add('play-position');
+        }
+
         function selectString(target) {
             if (!target || !domUtils.hasClass(target, 'string')) {
                 return false;
@@ -184,6 +173,10 @@
             target.classList.add('selected');
             scope.selectedNoteElement = target;
             scope.selectedNote = getNote(target);
+
+            if (scope.selectedNote) {
+                audioService.actions.setPlayPosition(scope.selectedNote);
+            }
 
             return true;
         }
@@ -217,13 +210,9 @@
             scope.selectedNote = null;
         }
 
-        function setFret(fret) {
-            if (fret === undefined || isNaN(fret) === true) {
-                fret = null;
-            }
-
-            scope.selectedNote.fret = fret;
-            return tablatureService.actions.setNote(scope.selectedNote);
+        function getQuaver(position) {
+            return document.querySelector(
+                `.bar:nth-child(${position.bar + 1}) .crotchet:nth-child(${position.crotchet + 1}) .quaver:nth-child(${position.quaver + 1})`);
         }
 
         function getSiblingQuaver(element, direction) {
@@ -236,6 +225,15 @@
 
         function getSiblingCrotchet(element, direction) {
             return domUtils.sibling(element, direction, 'crotchet', 'bar');
+        }
+
+        function setFret(fret) {
+            if (fret === undefined || isNaN(fret) === true) {
+                fret = null;
+            }
+
+            scope.selectedNote.fret = fret;
+            return tablatureService.actions.setNote(scope.selectedNote);
         }
     }
 })(rivets);

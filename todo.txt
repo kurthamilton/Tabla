@@ -7,6 +7,7 @@ BUGS
 OPTIMIZATION
 - Preload notes when playing
 - don't save defaults
+- index quavers in tablature controller
 
 CODE
 - move serialize methods to service
@@ -19,13 +20,13 @@ UI
 
 UX
 - Key events for play position: home, backwards/forwards with cursor
-- associate play position with selected note
 - skip between bars with play controls
 - multi-select notes / copy & paste
 - form validation
 - set bpm by typing (editable div?)
 - add feedback messages
 - undo / redo: just notes?
+- disable play controls while loading rather than hiding
 
 FUNCTIONALITY
 - custom instruments
