@@ -25,6 +25,7 @@ UX
 - form validation
 - set bpm by typing (editable div?)
 - add feedback messages
+- undo / redo: just notes?
 
 FUNCTIONALITY
 - custom instruments
