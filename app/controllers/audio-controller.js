@@ -38,6 +38,7 @@
                 if (e.keyCode === 32) {
                     // space
                     audioService.actions.toggle();
+                    e.preventDefault();
                 } else if (e.keyCode === 36) {
                     // home
                     // todo: reset cursor.

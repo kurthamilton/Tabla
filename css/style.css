@@ -83,6 +83,12 @@ input[type="range"].bpm-slider {
     border-left: 1px solid #42429A;
     margin-left: -1px;
 }
+@keyframes play-position-blink {
+   50% { border-color: #9191CC; }
+}
+.quaver.play-position {
+    animation: play-position-blink .5s step-end infinite alternate;
+}
 .string {
     font-size: 10px;
     position: relative;
