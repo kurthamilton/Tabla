@@ -35,6 +35,8 @@
 
         return {
             actions: {
+                decrementBar: () => incrementBar(-1),
+                incrementBar: () => incrementBar(1),
                 pause: pause,
                 resume: resume,
                 reset: reset,
@@ -134,13 +136,31 @@
         }
 
         // play functions
-        function incrementQuaver() {
-            let position = {
+        function getPosition() {
+            return {
                 bar: context.bar,
                 crotchet: context.crotchet,
-                quaver: context.quaver + 1
+                quaver: context.quaver
             };
+        }
 
+        function incrementBar(number) {
+            let position = getPosition();
+
+            position.bar += number;
+            if (position.bar >= tablatureService.model.bars.length) {
+                position.bar = 0;
+            } else if (position.bar < 0) {
+                position.bar = tablatureService.model.bars.length - 1;
+            }
+
+            setPlayPosition(position);
+        }
+
+        function incrementQuaver() {
+            let position = getPosition();
+
+            position.quaver++;
             if (position.quaver > 3) {
                 position.crotchet++;
                 position.quaver = 0;

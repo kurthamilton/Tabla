@@ -30,10 +30,15 @@
                                 <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" />
                                 { model.tune.bpm }
                             </div>
+                            <!-- play controls -->
                             <div id="play-controls" class="pull-left part-options__component btn-group btn-group-xs">
                                 <button class="btn btn-default" type="button"
                                     rv-enabled="audioModel.ready" rv-on-click="audioActions.reset">
                                     <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-default" type="button"
+                                    rv-enabled="audioModel.ready" rv-on-click="audioActions.decrementBar">
+                                    <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
                                 </button>
                                 <button class="btn btn-default" type="button"
                                     rv-enabled="audioModel.ready" rv-hide="audioModel.playing" rv-on-click="audioActions.resume">
@@ -42,6 +47,10 @@
                                 <button class="btn btn-default" type="button"
                                     rv-enabled="audioModel.ready" rv-show="audioModel.playing" rv-on-click="audioActions.pause">
                                     <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-default" type="button"
+                                    rv-enabled="audioModel.ready" rv-on-click="audioActions.incrementBar">
+                                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
                                 </button>
                             </div>
                             <div class="pull-right part-options__component">
