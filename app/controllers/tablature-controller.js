@@ -223,12 +223,7 @@
             }
 
             scope.selectedNote.fret = fret;
-            if (!tablatureService.actions.setNote(scope.selectedNote)) {
-                return false;
-            }
-
-            scope.selectedNoteElement.innerHTML = (fret === null) ? '&nbsp;' : fret;
-            return true;
+            return tablatureService.actions.setNote(scope.selectedNote);
         }
 
         function getSiblingQuaver(element, direction) {
