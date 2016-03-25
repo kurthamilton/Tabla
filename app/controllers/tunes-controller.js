@@ -88,11 +88,13 @@
             }
         }
 
-        function deleteTune() {
-            tuneService.actions.delete(scope.tune.id);
+        function deleteTune(e, scope) {
+            if (confirm('Are you sure you want to delete this tune?')) {
+                tuneService.actions.delete(scope.tune.id);
+            }
         }
 
-        function loadTune() {
+        function loadTune(e, scope) {
             tuneService.actions.load(scope.tune.id);
         }
 
