@@ -19,7 +19,7 @@ UI
 - indicate editable content fields
 
 UX
-- Key events for play position: home, backwards/forwards with cursor
+- Key events for play position: backwards/forwards with cursor
 - multi-select notes / copy & paste
 - form validation
 - set bpm by typing (editable div?)

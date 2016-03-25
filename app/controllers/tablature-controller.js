@@ -46,9 +46,9 @@
                 }
 
                 // 0 - 9
-                if (e.keyCode >= 48 && e.keyCode <= 57) {
+                if (e.charCode >= 48 && e.charCode <= 57) {
                     // The typed number
-                    let number = e.keyCode - 48;
+                    let number = e.charCode - 48;
                     let active = domUtils.isActive(scope.selectedNoteElement);
                     // Append the typed number to the current content if it is active, else set the typed number
                     let fret = parseInt(`${active ? scope.selectedNote.fret : ''}${number}`);
@@ -103,8 +103,6 @@
                     moveHorizontally(e.shiftKey === true ? -2 : 2);
                     e.preventDefault();
                 }
-
-                //console.log(e.keyCode);
             });
         }
 

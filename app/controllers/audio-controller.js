@@ -41,7 +41,8 @@
                     e.preventDefault();
                 } else if (e.keyCode === 36) {
                     // home
-                    // todo: reset cursor.
+                    audioService.actions.reset();
+                    e.preventDefault();
                 }
             });
         }
