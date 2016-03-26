@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['models/note-collection'], PartWrapper);
+    define(['services/instrument-factory', 'models/note-collection'], PartWrapper);
 
-    function PartWrapper(NoteCollection) {
+    function PartWrapper(instrumentFactory, NoteCollection) {
         /**
          * An instrument's part in a tune
          */
@@ -12,6 +12,7 @@
             let noteCollection = new NoteCollection();
 
             this.id = options.id;
+            this.instrument = instrumentFactory.get(options.instrumentName);
             this.instrumentName = options.instrumentName;
             this.name = options.name || options.instrumentName;
             this.sound = options.sound;

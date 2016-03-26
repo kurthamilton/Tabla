@@ -106,50 +106,25 @@
             });
         }
 
+        function cancelStringSelect() {
+            scope.selectedNoteElement = null;
+            scope.selectedNote = null;
+        }
+
+        function moveHorizontally(direction) {
+            tablatureService.actions.moveSelectedNote(tablatureService.orientations.horizontal, direction);
+        }
+
+        function moveVertically(direction) {
+            tablatureService.actions.moveSelectedNote(tablatureService.orientations.vertical, direction);
+        }
+
         function onPartSelected(part) {
             scope.part = part;
             bind();
         }
 
         // dom functions
-        function moveVertically(direction) {
-            let target = null;
-            if (Math.abs(direction) === 1) {
-                // move by 1 string if direction is 1 or -1
-                target = domUtils.sibling(scope.selectedNoteElement, direction, 'string');
-            } else if (Math.abs(direction) === 2) {
-                // move to top string if direction is -2, else to bottom string
-                let strings = scope.selectedNoteElement.parentElement.querySelectorAll('.string');
-                target = strings[direction === -2 ? 0 : strings.length - 1];
-            }
-
-            selectString(target);
-        }
-
-        function moveHorizontally(direction) {
-            // todo: enum for direction
-            let sibling = null;
-            if (Math.abs(direction) === 1) {
-                // move by 1 quaver if direction is 1 or -1
-                sibling = getSiblingQuaver(scope.selectedNoteElement, direction);
-            } else if (Math.abs(direction) === 2) {
-                // move by 1 crotchet if direction is 2 or -2
-                if (direction < 0 && scope.selectedNote.quaver > 0) {
-                    // stay within same crotchet if tabbing backwards from an advanced position within a crotchet
-                    sibling = domUtils.closestClass(scope.selectedNoteElement, 'crotchet');
-                } else {
-                    sibling = getSiblingCrotchet(scope.selectedNoteElement, direction);
-                }
-            }
-
-            if (!sibling) {
-                return;
-            }
-
-            let index = domUtils.indexInParent(scope.selectedNoteElement, 'string');
-            let target = sibling.querySelectorAll('.string')[index];
-            selectString(target);
-        }
 
         function onPlayPositionChanged(position) {
             if (scope.playPosition) {
@@ -159,24 +134,6 @@
             scope.playPosition = getQuaver(position);
 
             scope.playPosition.classList.add('play-position');
-        }
-
-        function selectString(target) {
-            if (!target || !domUtils.hasClass(target, 'string')) {
-                return false;
-            }
-
-            cancelStringSelect();
-
-            target.classList.add('selected');
-            scope.selectedNoteElement = target;
-            scope.selectedNote = getNote(target);
-
-            if (scope.selectedNote) {
-                audioService.actions.setPlayPosition(scope.selectedNote);
-            }
-
-            return true;
         }
 
         function getNote(target) {
@@ -198,31 +155,27 @@
             });
         }
 
-        function cancelStringSelect() {
-            if (!scope.selectedNoteElement) {
-                return;
-            }
-
-            scope.selectedNoteElement.classList.remove('selected');
-            scope.selectedNoteElement = null;
-            scope.selectedNote = null;
-        }
-
         function getQuaver(position) {
             return document.querySelector(
                 `.bar:nth-child(${position.bar + 1}) .crotchet:nth-child(${position.crotchet + 1}) .quaver:nth-child(${position.quaver + 1})`);
         }
 
-        function getSiblingQuaver(element, direction) {
-            let quaver = domUtils.sibling(element, direction, 'quaver', 'crotchet');
-            if (quaver) {
-                return quaver;
+        function selectString(target) {
+            if (!target || !domUtils.hasClass(target, 'string')) {
+                return false;
             }
-            return domUtils.sibling(element, direction, 'quaver', 'bar');
-        }
 
-        function getSiblingCrotchet(element, direction) {
-            return domUtils.sibling(element, direction, 'crotchet', 'bar');
+            cancelStringSelect();
+
+            scope.selectedNoteElement = target;
+            scope.selectedNote = getNote(target);
+
+            if (scope.selectedNote) {
+                tablatureService.actions.selectNote(scope.selectedNote);
+                audioService.actions.setPlayPosition(scope.selectedNote);
+            }
+
+            return true;
         }
 
         function setFret(fret) {

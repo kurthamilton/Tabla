@@ -2,6 +2,7 @@ BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
 - Tune title continues editing on keypress after blur
+- Selected note lost when switching parts
 
 OPTIMIZATION
 - Preload notes when playing
