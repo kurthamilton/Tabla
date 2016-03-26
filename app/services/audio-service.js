@@ -1,9 +1,9 @@
 (function(MIDI) {
     'use strict';
 
-    define(['utils', 'services/event-service', 'services/instrument-factory', 'services/scale-service', 'services/tablature-service', 'services/tune-service'], AudioService);
+    define(['utils', 'services/event-service', 'services/instrument-factory', 'services/scale-service', 'services/tune-service'], AudioService);
 
-    function AudioService(utils, eventService, instrumentFactory, scaleService, tablatureService, tuneService) {
+    function AudioService(utils, eventService, instrumentFactory, scaleService, tuneService) {
         let context = {
             bar: 0,
             crotchet: 0,
@@ -148,10 +148,10 @@
             let position = getPosition();
 
             position.bar += number;
-            if (position.bar >= tablatureService.model.bars.length) {
+            if (position.bar >= model.tune.numberOfBars) {
                 position.bar = 0;
             } else if (position.bar < 0) {
-                position.bar = tablatureService.model.bars.length - 1;
+                position.bar = model.tune.numberOfBars - 1;
             }
 
             setPlayPosition(position);
@@ -169,7 +169,7 @@
                 position.bar++;
                 position.crotchet = 0;
             }
-            if (position.bar >= tablatureService.model.bars.length) {
+            if (position.bar >= model.tune.numberOfBars) {
                 position.bar = 0;
             }
 
