@@ -5,15 +5,10 @@
 
     function TablatureController(domUtils, utils, Note, audioService, tablatureService, tuneService) {
         let scope = {
-            model: tablatureService.model,
-            part: null,
-            playPosition: null,
-            selectedNoteElement: null,
-            selectedNote: null
+            model: tablatureService.model
         };
 
         tuneService.addEventListener('part.selected', onPartSelected);
-        audioService.addEventListener('play-position.changed', onPlayPositionChanged);
 
         return {
             load: function() {
@@ -33,15 +28,14 @@
 
         function bindClick() {
             document.addEventListener('click', function(e) {
-                if (!selectString(e.target)) {
-                    cancelStringSelect();
-                }
+                selectString(e.target);
             });
         }
 
         function bindKeys() {
             document.addEventListener('keypress', function(e) {
-                if (!scope.selectedNoteElement || e.shiftKey === true) {
+                let selectedNote = tablatureService.model.selectedNote;
+                if (!selectedNote || e.shiftKey === true) {
                     return;
                 }
 
@@ -49,21 +43,28 @@
                 if (e.charCode >= 48 && e.charCode <= 57) {
                     // The typed number
                     let number = e.charCode - 48;
-                    let active = domUtils.isActive(scope.selectedNoteElement);
+                    let active = selectedNote.active;
                     // Append the typed number to the current content if it is active, else set the typed number
-                    let fret = parseInt(`${active ? scope.selectedNote.fret : ''}${number}`);
+                    let fret = parseInt(`${active && selectedNote.fret ? selectedNote.fret : ''}${number}`);
                     if (!setFret(fret)) {
                         // Set the fret to the current number if not successful.
                         setFret(number);
                     }
 
-                    // Set a timer on the note element to flag it as active
-                    domUtils.setActive(scope.selectedNoteElement);
+                    // Manage active timer. Clear current timer and set a new one
+                    if (active) {
+                        // clear current active timer
+                        clearTimeout(active);
+                    }
+                    selectedNote.active = setTimeout(function() {
+                        clearTimeout(selectedNote.active);
+                    }, 2000);
                 }
             });
 
             document.addEventListener('keydown', function(e) {
-                if (!scope.selectedNoteElement) {
+                let selectedNote = tablatureService.model.selectedNote;
+                if (!selectedNote) {
                     return;
                 }
 
@@ -73,7 +74,7 @@
                 }
                 else if (e.keyCode === 8) {
                     // backspace
-                    let existing = scope.selectedNote.fret;
+                    let existing = selectedNote.fret;
                     if (existing !== null) {
                         existing = existing.toString();
                         let fret = parseInt(existing.substring(0, existing.length - 1));
@@ -83,60 +84,47 @@
                 }
                 else if (e.keyCode === 37) {
                     // left arrow
-                    moveHorizontally(-1);
+                    moveSelectedNote(tablatureService.orientations.horizontal, -1);
                 }
                 else if (e.keyCode === 38) {
                     // up arrow - move all the way to top if ctrl
-                    moveVertically(e.ctrlKey === true ? -2 : -1);
+                    moveSelectedNote(tablatureService.orientations.vertical, e.ctrlKey === true ? -2 : -1);
                     e.preventDefault();
                 }
                 else if (e.keyCode === 40) {
                     // down arrow - move all the way to down if ctrl
-                    moveVertically(e.ctrlKey === true ? 2 : 1);
+                    moveSelectedNote(tablatureService.orientations.vertical, e.ctrlKey === true ? 2 : 1);
                     e.preventDefault();
                 }
                 else if (e.keyCode === 39) {
                     // right arrow
-                    moveHorizontally(1);
+                    moveSelectedNote(tablatureService.orientations.horizontal, 1);
                 } else if (e.keyCode === 9) {
                     // tab forwards and backwards through crotchets
-                    moveHorizontally(e.shiftKey === true ? -2 : 2);
+                    moveSelectedNote(tablatureService.orientations.horizontal, e.shiftKey === true ? -2 : 2);
                     e.preventDefault();
                 }
             });
         }
 
-        function cancelStringSelect() {
-            scope.selectedNoteElement = null;
-            scope.selectedNote = null;
+        function moveSelectedNote(orientation, direction) {
+            tablatureService.actions.moveSelectedNote(orientation, direction);
         }
 
-        function moveHorizontally(direction) {
-            tablatureService.actions.moveSelectedNote(tablatureService.orientations.horizontal, direction);
-        }
-
-        function moveVertically(direction) {
-            tablatureService.actions.moveSelectedNote(tablatureService.orientations.vertical, direction);
-        }
-
-        function onPartSelected(part) {
-            scope.part = part;
+        function onPartSelected() {
             bind();
         }
 
-        // dom functions
-
-        function onPlayPositionChanged(position) {
-            if (scope.playPosition) {
-                scope.playPosition.classList.remove('play-position');
-            }
-
-            scope.playPosition = getQuaver(position);
-
-            scope.playPosition.classList.add('play-position');
+        function setFret(fret) {
+            return tablatureService.actions.setFret(fret);
         }
 
+        // dom functions
         function getNote(target) {
+            if (!target) {
+                return null;
+            }
+
             let stringElement = domUtils.closestClass(target, 'string');
             let quaverElement = domUtils.closestClass(stringElement, 'quaver');
             let crotchetElement = domUtils.closestClass(quaverElement, 'crotchet');
@@ -155,36 +143,13 @@
             });
         }
 
-        function getQuaver(position) {
-            return document.querySelector(
-                `.bar:nth-child(${position.bar + 1}) .crotchet:nth-child(${position.crotchet + 1}) .quaver:nth-child(${position.quaver + 1})`);
-        }
-
         function selectString(target) {
             if (!target || !domUtils.hasClass(target, 'string')) {
-                return false;
+                target = null;
             }
 
-            cancelStringSelect();
-
-            scope.selectedNoteElement = target;
-            scope.selectedNote = getNote(target);
-
-            if (scope.selectedNote) {
-                tablatureService.actions.selectNote(scope.selectedNote);
-                audioService.actions.setPlayPosition(scope.selectedNote);
-            }
-
-            return true;
-        }
-
-        function setFret(fret) {
-            if (fret === undefined || isNaN(fret) === true) {
-                fret = null;
-            }
-
-            scope.selectedNote.fret = fret;
-            return tablatureService.actions.setNote(scope.selectedNote);
+            let note = getNote(target);
+            tablatureService.actions.selectNote(note);
         }
     }
 })(rivets);

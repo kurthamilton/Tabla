@@ -1,27 +1,29 @@
 (function() {
     'use strict';
 
-    define(['services/tune-service'], TablatureService);
+    define(['services/audio-service', 'services/tune-service'], TablatureService);
 
-    function TablatureService(tuneService) {
+    function TablatureService(audioService, tuneService) {
         const orientations = {
             horizontal: 1,
             vertical: 2
         };
 
         let model = {
-            activeNote: null,
             bars: null,
-            ready: false
+            playPosition: null,
+            ready: false,
+            selectedNote: null
         };
 
+        audioService.addEventListener('play-position.changed', onPlayPositionChanged);
         tuneService.addEventListener('part.selected', onPartSelected);
 
         return {
             actions: {
                 moveSelectedNote: moveSelectedNote,
                 selectNote: selectNote,
-                setNote: setNote
+                setFret: setFret
             },
             model: model,
             orientations: orientations
@@ -34,18 +36,41 @@
             model.ready = model.bars.length > 0;
         }
 
+        function onPlayPositionChanged(position) {
+            if (model.playPosition) {
+                getQuaver(model.playPosition).playPosition = false;
+            }
+
+            getQuaver(position).playPosition = true;
+            model.playPosition = position;
+        }
+
         // model methods
         function cancelSelectedNote() {
-            if (!model.activeNote) {
+            if (!model.selectedNote) {
                 return;
             }
 
-            let string = getString(model.activeNote);
+            let string = getString(model.selectedNote);
             if (!string) {
                 return;
             }
 
             string.active = false;
+        }
+
+        function copyNote(options) {
+            if (!options) {
+                return null;
+            }
+
+            return {
+                bar: options.bar,
+                crotchet: options.crotchet,
+                fret: options.fret,
+                quaver: options.quaver,
+                string: options.string
+            };
         }
 
         function getBars(part) {
@@ -76,6 +101,10 @@
             return crotchets;
         }
 
+        function getQuaver(position) {
+            return model.bars[position.bar].crotchets[position.crotchet].quavers[position.quaver];
+        }
+
         function getQuavers(part, bar, crotchet, numberOfQuavers) {
             let quavers = [];
             for (let i = 0; i < numberOfQuavers; i++) {
@@ -88,7 +117,7 @@
         }
 
         function getString(note) {
-            return model.bars[note.bar].crotchets[note.crotchet].quavers[note.quaver].strings[note.string];
+            return getQuaver(note).strings[note.string];
         }
 
         function getStrings(part, bar, crotchet, quaver) {
@@ -105,11 +134,11 @@
         }
 
         function moveSelectedNote(orientation, direction) {
-            if (!model.activeNote) {
+            if (!model.selectedNote) {
                 return;
             }
 
-            let note = model.activeNote;
+            let note = model.selectedNote;
 
             cancelSelectedNote();
 
@@ -154,14 +183,34 @@
         function selectNote(note) {
             cancelSelectedNote();
 
-            model.activeNote = note;
+            model.selectedNote = copyNote(note);
 
             if (!note) {
                 return false;
             }
 
             getString(note).active = true;
+
+            if (!audioService.model.playing) {
+                audioService.actions.setPlayPosition(note);
+            }
+
             return true;
+        }
+
+        function setFret(fret) {
+            if (!model.selectedNote) {
+                return;
+            }
+
+            if (fret === undefined || isNaN(fret) === true) {
+                fret = null;
+            }
+
+            let note = copyNote(model.selectedNote);
+            note.fret = fret;
+            model.selectedNote.fret = fret;
+            return setNote(note);
         }
 
         function setNote(note) {

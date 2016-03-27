@@ -140,7 +140,6 @@
                 return true;
             }
 
-            // todo: configurable bounds
             if (fret >= 0 && fret <= 24) {
                 model.part.addNote(note);
                 utils.async(() => saveTune());

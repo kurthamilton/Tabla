@@ -4,15 +4,17 @@ BUGS
 - Tune title continues editing on keypress after blur
 - Selected note lost when switching parts
 
-OPTIMIZATION
+OPTIMISATION
 - Preload notes when playing
 - don't save defaults
 - index quavers in tablature controller
+- optimise tablature service move selected note
 
 CODE
 - move serialize methods to service
 - save note collection as is
 - reuse audio service increment logic
+- configurable instrument fret count in tune service set note
 
 UI
 - hide tunes list if empty

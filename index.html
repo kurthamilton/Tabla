@@ -213,7 +213,7 @@
             <div class="bars">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
-                        <div class="quaver" rv-each-quaver="crotchet.quavers">
+                        <div class="quaver" rv-each-quaver="crotchet.quavers" rv-class-play-position="quaver.playPosition">
                             <div class="string" rv-each-string="quaver.strings" rv-class-selected="string.active">{ string.fret | default '&nbsp' }</div>
                         </div>
                     </div>

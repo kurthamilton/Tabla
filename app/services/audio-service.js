@@ -169,7 +169,7 @@
                 position.bar++;
                 position.crotchet = 0;
             }
-            if (position.bar >= model.tune.numberOfBars) {
+            if (position.bar >= model.tune.bars) {
                 position.bar = 0;
             }
 
