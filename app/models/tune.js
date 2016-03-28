@@ -33,16 +33,40 @@
             });
         }
 
-        Tune.prototype.offsetPosition = function(position, offset) {
+        // Compare 2 positions. Returns 0 if positions are equal, -1 if x < y, 1 if x > y.
+        Tune.prototype.positionCompare = function(x, y) {
+            if (x.bar === y.bar && x.crotchet === y.crotchet && x.quaver === y.quaver) {
+                return 0;
+            }
+
+            if (x.bar !== y.bar) {
+                return x.bar < y.bar ? -1 : 1;
+            }
+            if (x.crotchet !== y.crotchet) {
+                return x.crotchet < y.crotchet ? -1 : 1;
+            }
+            if (x.quaver !== y.quaver) {
+                return x.quaver < y.quaver ? -1 : 1;
+            }
+
+            return null;
+        };
+
+        // Offsets the position by the offset. Set loop to false when 0 should not be passed through
+        Tune.prototype.offsetPosition = function(position, offset, loop) {
             let tune = this;
+
+            if (loop === undefined) {
+                loop = true;
+            }
 
             if (offset.quaver) {
                 position.quaver += offset.quaver || 0;
                 if (position.quaver < 0) {
-                    tune.offsetPosition(position, { crotchet: -1 });
+                    tune.offsetPosition(position, { crotchet: -1 }, loop);
                     position.quaver = 3;
                 } else if (position.quaver > 3) {
-                    tune.offsetPosition(position, { crotchet: 1 });
+                    tune.offsetPosition(position, { crotchet: 1 }, loop);
                     position.quaver = 0;
                 }
             }
@@ -50,20 +74,22 @@
             if (offset.crotchet) {
                 position.crotchet += offset.crotchet || 0;
                 if (position.crotchet < 0) {
-                    tune.offsetPosition(position, { bar: -1 });
+                    tune.offsetPosition(position, { bar: -1 }, loop);
                     position.crotchet = tune.bars[position.bar].beats - 1;
                 } else if (position.crotchet >= tune.bars[position.bar].beats) {
-                    tune.offsetPosition(position, { bar: 1 });
+                    tune.offsetPosition(position, { bar: 1 }, loop);
                     position.crotchet = 0;
                 }
             }
 
             if (offset.bar) {
                 position.bar += offset.bar || 0;
-                if (position.bar < 0) {
-                    position.bar = tune.bars.length - 1;
-                } else if (position.bar >= tune.bars.length) {
-                    position.bar = 0;
+                if (loop) {
+                    if (position.bar < 0) {
+                        position.bar = tune.bars.length - 1;
+                    } else if (position.bar >= tune.bars.length) {
+                        position.bar = 0;
+                    }
                 }
             }
         };

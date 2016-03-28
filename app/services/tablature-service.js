@@ -6,10 +6,16 @@
     function TablatureService(audioService, tuneService) {
         let model = {
             bars: null,
+            get part() {
+                return tuneService.model.part;
+            },
             playPosition: null,
             ready: false,
             selectedNote: null,
-            selectedRange: null
+            selectedRangeNoteOffset: null,
+            get tune() {
+                return tuneService.model.tune;
+            }
         };
 
         audioService.addEventListener('play-position.changed', onPlayPositionChanged);
@@ -18,7 +24,9 @@
         return {
             actions: {
                 moveSelectedNote: moveSelectedNote,
+                moveSelectedRangeNoteOffset: moveSelectedRangeNoteOffset,
                 selectNote: selectNote,
+                selectRangeNoteOffset: selectRangeNoteOffset,
                 setFret: setFret
             },
             model: model
@@ -52,6 +60,19 @@
             }
 
             string.active = false;
+
+            cancelSelectedRange();
+        }
+
+        function cancelSelectedRange() {
+            let existing = getSelectedRange();
+            if (!existing) {
+                return;
+            }
+
+            existing.forEach(note => getString(note).inRange = false);
+
+            model.selectedRangeNoteOffset = null;
         }
 
         function copyNote(options) {
@@ -112,6 +133,45 @@
             return quavers;
         }
 
+        function getSelectedRange() {
+            if (!model.selectedNote) {
+                return null;
+            }
+
+            let range = [];
+
+            if (!model.selectedRangeNoteOffset) {
+                range.push(model.selectedNote);
+                return range;
+            }
+
+            let minString = Math.min(model.selectedNote.string, model.selectedRangeNoteOffset.string);
+            let maxString = Math.max(model.selectedNote.string, model.selectedRangeNoteOffset.string);
+
+            // compare the selected note position and the selected range note offset position
+            let compare = model.tune.positionCompare(model.selectedNote, model.selectedRangeNoteOffset);
+            // set the start note to whichever note comes before the other
+            let start = compare < 0 ? model.selectedNote : model.selectedRangeNoteOffset;
+            // set the end note to whichever note comes after the other
+            let end = compare < 0 ? model.selectedRangeNoteOffset : model.selectedNote;
+
+            // set the start position
+            let position = copyNote(start);
+
+            // advance the start position until it is after the end position
+            while (model.tune.positionCompare(position, end) <= 0) {
+                // move through the strings in the current position
+                for (let string = minString; string <= maxString; string++) {
+                    position.string = string;
+                    range.push(copyNote(position));
+                }
+                // advance the position by 1 quaver
+                model.tune.offsetPosition(position, { quaver: 1 }, false);
+            }
+
+            return range;
+        }
+
         function getString(note) {
             return getQuaver(note).strings[note.string];
         }
@@ -135,8 +195,18 @@
             }
 
             let note = copyNote(model.selectedNote);
-            tuneService.model.part.offsetNote(note, offset);
+            model.part.offsetNote(note, offset);
             selectNote(note);
+        }
+
+        function moveSelectedRangeNoteOffset(offset) {
+            if (!model.selectedRangeNoteOffset) {
+                model.selectedRangeNoteOffset = copyNote(model.selectedNote);
+            }
+
+            let note = copyNote(model.selectedRangeNoteOffset);
+            model.part.offsetNote(note, offset);
+            selectRangeNoteOffset(note);
         }
 
         function selectNote(note) {
@@ -155,6 +225,14 @@
             }
 
             return true;
+        }
+
+        function selectRangeNoteOffset(note) {
+            cancelSelectedRange();
+
+            model.selectedRangeNoteOffset = note;
+            let range = getSelectedRange();
+            range.forEach(note => getString(note).inRange = true);
         }
 
         function setFret(fret) {

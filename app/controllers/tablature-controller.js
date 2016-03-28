@@ -8,6 +8,8 @@
             model: tablatureService.model
         };
 
+        let shiftPressed = false;
+
         tuneService.addEventListener('part.selected', onPartSelected);
 
         return {
@@ -28,14 +30,19 @@
 
         function bindClick() {
             document.addEventListener('click', function(e) {
-                selectString(e.target);
+                if (shiftPressed === true) {
+                    selectRangeOffset(e.target);
+                    e.preventDefault();
+                } else {
+                    selectString(e.target);
+                }
             });
         }
 
         function bindKeys() {
             document.addEventListener('keypress', function(e) {
                 let selectedNote = tablatureService.model.selectedNote;
-                if (!selectedNote || e.shiftKey === true) {
+                if (!selectedNote || shiftPressed === true) {
                     return;
                 }
 
@@ -66,6 +73,10 @@
                 let selectedNote = tablatureService.model.selectedNote;
                 if (!selectedNote) {
                     return;
+                }
+
+                if (e.shiftKey) {
+                    shiftPressed = true;
                 }
 
                 if (e.keyCode === 46) {
@@ -101,8 +112,19 @@
                     moveSelectedNoteHorizontally(1);
                 } else if (e.keyCode === 9) {
                     // tab forwards and backwards
-                    moveSelectedNoteHorizontally(e.shiftKey === true ? -2 : 2);
+                    moveSelectedNoteHorizontally(shiftPressed === true ? -2 : 2);
                     e.preventDefault();
+                }
+            });
+
+            document.addEventListener('keyup', function(e) {
+                let selectedNote = tablatureService.model.selectedNote;
+                if (!selectedNote) {
+                    return;
+                }
+
+                if (!e.shiftKey) {
+                    shiftPressed = false;
                 }
             });
         }
@@ -112,9 +134,14 @@
             if (Math.abs(amount) === 1) {
                 offset.quaver = amount;
             } else {
-                offset.bar = amount < 0 ? -1 : 1;
+                offset.crotchet = amount < 0 ? -1 : 1;
             }
-            tablatureService.actions.moveSelectedNote(offset);
+
+            if (shiftPressed === true && offset.quaver) {
+                tablatureService.actions.moveSelectedRangeNoteOffset(offset);
+            } else {
+                tablatureService.actions.moveSelectedNote(offset);
+            }
         }
 
         function moveSelectedNoteVertically(amount) {
@@ -125,7 +152,12 @@
                 let string = tablatureService.model.selectedNote.string;
                 offset.string = amount < 0 ? -1 * string : tuneService.model.part.instrument.strings.length - string;
             }
-            tablatureService.actions.moveSelectedNote(offset);
+
+            if (shiftPressed === true) {
+                tablatureService.actions.moveSelectedRangeNoteOffset(offset);
+            } else {
+                tablatureService.actions.moveSelectedNote(offset);
+            }
         }
 
         function onPartSelected() {
@@ -158,6 +190,15 @@
                 quaver: domUtils.indexInParent(quaverElement, 'quaver'),
                 string: domUtils.indexInParent(stringElement, 'string')
             });
+        }
+
+        function selectRangeOffset(target) {
+            if (!target || !domUtils.hasClass(target, 'string')) {
+                return;
+            }
+
+            let note = getNote(target);
+            tablatureService.actions.selectRangeNoteOffset(note);
         }
 
         function selectString(target) {

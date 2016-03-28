@@ -3,6 +3,7 @@ BUGS
 - handle long part names in mixer
 - Tune title continues editing on keypress after blur
 - Selected note lost when switching parts
+- Selected range does not work through 0
 
 OPTIMISATION
 - Preload notes when playing
@@ -12,7 +13,6 @@ OPTIMISATION
 
 CODE
 - save note collection as is
-- reuse audio service increment logic
 - configurable instrument fret count in tune service set note
 
 UI
