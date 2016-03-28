@@ -33,6 +33,41 @@
             });
         }
 
+        Tune.prototype.offsetPosition = function(position, offset) {
+            let tune = this;
+
+            if (offset.quaver) {
+                position.quaver += offset.quaver || 0;
+                if (position.quaver < 0) {
+                    tune.offsetPosition(position, { crotchet: -1 });
+                    position.quaver = 3;
+                } else if (position.quaver > 3) {
+                    tune.offsetPosition(position, { crotchet: 1 });
+                    position.quaver = 0;
+                }
+            }
+
+            if (offset.crotchet) {
+                position.crotchet += offset.crotchet || 0;
+                if (position.crotchet < 0) {
+                    tune.offsetPosition(position, { bar: -1 });
+                    position.crotchet = tune.bars[position.bar].beats - 1;
+                } else if (position.crotchet >= tune.bars[position.bar].beats) {
+                    tune.offsetPosition(position, { bar: 1 });
+                    position.crotchet = 0;
+                }
+            }
+
+            if (offset.bar) {
+                position.bar += offset.bar || 0;
+                if (position.bar < 0) {
+                    position.bar = tune.bars.length - 1;
+                } else if (position.bar >= tune.bars.length) {
+                    position.bar = 0;
+                }
+            }
+        };
+
         Tune.prototype.serialize = function() {
             return {
                 bars: this.bars.map(bar => bar.serialize()),

@@ -45,6 +45,21 @@
             };
         }
 
+        Part.prototype.offsetNote = function (note, offset) {
+            this.tune.offsetPosition(note, offset);
+
+            note.string += offset.string || 0;
+
+            // sanitise
+            let instrument = this.instrument;
+
+            if (note.string < 0) {
+                note.string = 0;
+            } else if (note.string >= instrument.strings.length) {
+                note.string = instrument.strings.length - 1;
+            }
+        };
+
         function deserializeNotes(options) {
             let notes = new NoteCollection();
             if (options) {

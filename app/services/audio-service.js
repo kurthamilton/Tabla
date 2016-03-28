@@ -146,33 +146,17 @@
 
         function incrementBar(number) {
             let position = getPosition();
-
-            position.bar += number;
-            if (position.bar >= model.tune.bars.length) {
-                position.bar = 0;
-            } else if (position.bar < 0) {
-                position.bar = model.tune.bars.length - 1;
-            }
-
+            model.tune.offsetPosition(position, {
+                bar: number
+            });
             setPlayPosition(position);
         }
 
         function incrementQuaver() {
             let position = getPosition();
-
-            position.quaver++;
-            if (position.quaver > 3) {
-                position.crotchet++;
-                position.quaver = 0;
-            }
-            if (position.crotchet >= model.tune.bars[position.bar].beats) {
-                position.bar++;
-                position.crotchet = 0;
-            }
-            if (position.bar >= model.tune.bars.length) {
-                position.bar = 0;
-            }
-
+            model.tune.offsetPosition(position, {
+                quaver: 1
+            });
             setPlayPosition(position);
         }
 

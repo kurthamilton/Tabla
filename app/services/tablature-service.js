@@ -135,44 +135,8 @@
             }
 
             let note = copyNote(model.selectedNote);
-            offsetNote(note, offset);
+            tuneService.model.part.offsetNote(note, offset);
             selectNote(note);
-        }
-
-        function offsetNote(note, offset) {
-            note.string += offset.string || 0;
-            note.bar += offset.bar || 0;
-            note.quaver += offset.quaver || 0;
-            note.crotchet += offset.crotchet || 0;
-
-            // sanitise offset note
-            let tune = tuneService.model.tune;
-            let instrument = tuneService.model.part.instrument;
-
-            if (note.quaver < 0) {
-                note.crotchet--;
-                note.quaver = 3;
-            } else if (note.quaver > 3) {
-                note.crotchet++;
-                note.quaver = 0;
-            }
-            if (note.crotchet < 0) {
-                note.bar--;
-                note.crotchet = tune.bars[note.bar].beats - 1;
-            } else if (note.crotchet >= tune.bars[note.bar].beats) {
-                note.bar++;
-                note.crotchet = 0;
-            }
-            if (note.bar < 0) {
-                note.bar = tune.bars.length - 1;
-            } else if (note.bar >= tune.bars.length) {
-                note.bar = 0;
-            }
-            if (note.string < 0) {
-                note.string = 0;
-            } else if (note.string >= instrument.strings.length) {
-                note.string = instrument.strings.length - 1;
-            }
         }
 
         function selectNote(note) {
