@@ -75,21 +75,22 @@
                 return bars;
             }
 
-            for (let i = 0; i < part.tune.bars; i++) {
+            part.tune.bars.forEach(bar =>
                 bars.push({
-                    crotchets: getCrotchets(part, i),
-                    index: i
-                });
-            }
+                    crotchets: getCrotchets(part, bar),
+                    index: bar.index
+                })
+            );
+
             return bars;
         }
 
         function getCrotchets(part, bar) {
             let crotchets = [];
-            for (let i = 0; i < part.tune.beatsPerBar; i++) {
+            for (let i = 0; i < bar.beats; i++) {
                 crotchets.push({
                     index: i,
-                    quavers: getQuavers(part, bar, i, 4)
+                    quavers: getQuavers(part, bar.index, i, 4)
                 });
 
             }

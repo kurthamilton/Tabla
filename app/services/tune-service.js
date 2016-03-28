@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['utils', 'models/note', 'models/part', 'models/tune','services/event-service', 'services/instrument-factory', 'services/storage-service'], TuneService);
+    define(['utils', 'models/part', 'models/tune','services/event-service', 'services/instrument-factory', 'services/storage-service'], TuneService);
 
-    function TuneService(utils, Note, Part, Tune, eventService, instrumentFactory, storageService) {
+    function TuneService(utils, Part, Tune, eventService, instrumentFactory, storageService) {
         let model = {
             part: null,         // the active part object
             tune: null,         // the active tune object
@@ -192,24 +192,11 @@
         }
 
         // storage functions
-        function deserializePart(object, tune) {
-            let part = new Part(object);
-            part.tune = tune;
-            object.notes.forEach(note => part.addNote(new Note(note)));
-            return part;
-        }
-
-        function deserializeTune(object) {
-            let tune = new Tune(object);
-            object.parts.forEach(part => tune.parts.push(deserializePart(part, tune)));
-            return tune;
-        }
-
         function loadTune(id) {
             let saved = storageService.get(`tune.${id}`);
             let tune = null;
             if (saved) {
-                tune = deserializeTune(saved);
+                tune = new Tune(saved);
             }
             setActiveTune(tune);
             utils.async(() => saveTunes());

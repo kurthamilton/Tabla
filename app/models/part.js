@@ -1,15 +1,13 @@
 (function() {
     'use strict';
 
-    define(['services/instrument-factory', 'models/note-collection'], PartWrapper);
-
-    function PartWrapper(instrumentFactory, NoteCollection) {
+    define(['services/instrument-factory', 'models/note', 'models/note-collection'], function (instrumentFactory, Note, NoteCollection) {
         /**
          * An instrument's part in a tune
          */
         function Part(options) {
             let part = this;
-            let noteCollection = new NoteCollection();
+            let noteCollection = deserializeNotes(options.notes);
 
             this.id = options.id;
             this.instrument = instrumentFactory.get(options.instrumentName);
@@ -47,6 +45,14 @@
             };
         }
 
+        function deserializeNotes(options) {
+            let notes = new NoteCollection();
+            if (options) {
+                options.forEach(note => notes.add(new Note(note)));
+            }
+            return notes;
+        }
+
         return Part;
-    }
+    });
 })();
