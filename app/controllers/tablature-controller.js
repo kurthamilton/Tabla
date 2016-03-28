@@ -84,31 +84,48 @@
                 }
                 else if (e.keyCode === 37) {
                     // left arrow
-                    moveSelectedNote(tablatureService.orientations.horizontal, -1);
+                    moveSelectedNoteHorizontally(-1);
                 }
                 else if (e.keyCode === 38) {
                     // up arrow - move all the way to top if ctrl
-                    moveSelectedNote(tablatureService.orientations.vertical, e.ctrlKey === true ? -2 : -1);
+                    moveSelectedNoteVertically(e.ctrlKey === true ? -2 : -1);
                     e.preventDefault();
                 }
                 else if (e.keyCode === 40) {
                     // down arrow - move all the way to down if ctrl
-                    moveSelectedNote(tablatureService.orientations.vertical, e.ctrlKey === true ? 2 : 1);
+                    moveSelectedNoteVertically(e.ctrlKey === true ? 2 : 1);
                     e.preventDefault();
                 }
                 else if (e.keyCode === 39) {
                     // right arrow
-                    moveSelectedNote(tablatureService.orientations.horizontal, 1);
+                    moveSelectedNoteHorizontally(1);
                 } else if (e.keyCode === 9) {
-                    // tab forwards and backwards through crotchets
-                    moveSelectedNote(tablatureService.orientations.horizontal, e.shiftKey === true ? -2 : 2);
+                    // tab forwards and backwards
+                    moveSelectedNoteHorizontally(e.shiftKey === true ? -2 : 2);
                     e.preventDefault();
                 }
             });
         }
 
-        function moveSelectedNote(orientation, direction) {
-            tablatureService.actions.moveSelectedNote(orientation, direction);
+        function moveSelectedNoteHorizontally(amount) {
+            let offset = {};
+            if (Math.abs(amount) === 1) {
+                offset.quaver = amount;
+            } else {
+                offset.bar = amount < 0 ? -1 : 1;
+            }
+            tablatureService.actions.moveSelectedNote(offset);
+        }
+
+        function moveSelectedNoteVertically(amount) {
+            let offset = {};
+            if (Math.abs(amount) === 1) {
+                offset.string = amount;
+            } else {
+                let string = tablatureService.model.selectedNote.string;
+                offset.string = amount < 0 ? -1 * string : tuneService.model.part.instrument.strings.length - string;
+            }
+            tablatureService.actions.moveSelectedNote(offset);
         }
 
         function onPartSelected() {

@@ -4,16 +4,12 @@
     define(['services/audio-service', 'services/tune-service'], TablatureService);
 
     function TablatureService(audioService, tuneService) {
-        const orientations = {
-            horizontal: 1,
-            vertical: 2
-        };
-
         let model = {
             bars: null,
             playPosition: null,
             ready: false,
-            selectedNote: null
+            selectedNote: null,
+            selectedRange: null
         };
 
         audioService.addEventListener('play-position.changed', onPlayPositionChanged);
@@ -25,8 +21,7 @@
                 selectNote: selectNote,
                 setFret: setFret
             },
-            model: model,
-            orientations: orientations
+            model: model
         };
 
         function onPartSelected(part) {
@@ -133,51 +128,47 @@
             return strings;
         }
 
-        function moveSelectedNote(orientation, direction) {
+        function moveSelectedNote(offset) {
             if (!model.selectedNote) {
                 return;
             }
 
-            let note = model.selectedNote;
-
-            cancelSelectedNote();
-
-            if (orientation === orientations.vertical) {
-                if (Math.abs(direction) === 1) {
-                    note.string += direction;
-                }
-                if (Math.abs(direction) > 1 || note.string < 0 || note.string >= tuneService.model.part.instrument.strings.length) {
-                    note.string = direction < 0 ? 0 : tuneService.model.part.instrument.strings.length - 1;
-                }
-            } else if (orientation === orientations.horizontal) {
-                if (Math.abs(direction) === 1) {
-                    note.quaver += direction;
-                } else if (Math.abs(direction) === 2) {
-                    note.bar += (direction > 0 ? 1 : -1);
-                }
-
-                if (note.quaver < 0) {
-                    note.crotchet--;
-                    note.quaver = 3;
-                } else if (note.quaver > 3) {
-                    note.crotchet++;
-                    note.quaver = 0;
-                }
-                if (note.crotchet < 0) {
-                    note.bar--;
-                    note.crotchet = tuneService.model.tune.beatsPerBar - 1;
-                } else if (note.crotchet >= tuneService.model.tune.beatsPerBar) {
-                    note.bar++;
-                    note.crotchet = 0;
-                }
-                if (note.bar < 0) {
-                    note.bar = tuneService.model.tune.bars - 1;
-                } else if (note.bar >= tuneService.model.tune.bars) {
-                    note.bar = 0;
-                }
-            }
-
+            let note = copyNote(model.selectedNote);
+            offsetNote(note, offset);
             selectNote(note);
+        }
+
+        function offsetNote(note, offset) {
+            note.string += offset.string || 0;
+            note.bar += offset.bar || 0;
+            note.quaver += offset.quaver || 0;
+            note.crotchet += offset.crotchet || 0;
+
+            // sanitise offset note
+            if (note.quaver < 0) {
+                note.crotchet--;
+                note.quaver = 3;
+            } else if (note.quaver > 3) {
+                note.crotchet++;
+                note.quaver = 0;
+            }
+            if (note.crotchet < 0) {
+                note.bar--;
+                note.crotchet = tuneService.model.tune.beatsPerBar - 1;
+            } else if (note.crotchet >= tuneService.model.tune.beatsPerBar) {
+                note.bar++;
+                note.crotchet = 0;
+            }
+            if (note.bar < 0) {
+                note.bar = tuneService.model.tune.bars - 1;
+            } else if (note.bar >= tuneService.model.tune.bars) {
+                note.bar = 0;
+            }
+            if (note.string < 0) {
+                note.string = 0;
+            } else if (note.string >= tuneService.model.part.instrument.strings.length) {
+                note.string = tuneService.model.part.instrument.strings.length - 1;
+            }
         }
 
         function selectNote(note) {
