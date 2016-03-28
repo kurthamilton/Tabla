@@ -15,7 +15,7 @@
         function deserializeBars(options) {
             let bars = [];
 
-            let numberOfBars = options ? options.bars.length : 16;
+            let numberOfBars = options ? options.length : 16;
             for (let i = 0; i < numberOfBars; i++) {
                 bars.push(new Bar(options ? options[i] : {
                     index: i

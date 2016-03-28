@@ -146,6 +146,9 @@
             note.crotchet += offset.crotchet || 0;
 
             // sanitise offset note
+            let tune = tuneService.model.tune;
+            let instrument = tuneService.model.part.instrument;
+
             if (note.quaver < 0) {
                 note.crotchet--;
                 note.quaver = 3;
@@ -155,20 +158,20 @@
             }
             if (note.crotchet < 0) {
                 note.bar--;
-                note.crotchet = tuneService.model.tune.beatsPerBar - 1;
-            } else if (note.crotchet >= tuneService.model.tune.beatsPerBar) {
+                note.crotchet = tune.bars[note.bar].beats - 1;
+            } else if (note.crotchet >= tune.bars[note.bar].beats) {
                 note.bar++;
                 note.crotchet = 0;
             }
             if (note.bar < 0) {
-                note.bar = tuneService.model.tune.bars - 1;
-            } else if (note.bar >= tuneService.model.tune.bars) {
+                note.bar = tune.bars.length - 1;
+            } else if (note.bar >= tune.bars.length) {
                 note.bar = 0;
             }
             if (note.string < 0) {
                 note.string = 0;
-            } else if (note.string >= tuneService.model.part.instrument.strings.length) {
-                note.string = tuneService.model.part.instrument.strings.length - 1;
+            } else if (note.string >= instrument.strings.length) {
+                note.string = instrument.strings.length - 1;
             }
         }
 

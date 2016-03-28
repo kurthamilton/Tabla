@@ -148,10 +148,10 @@
             let position = getPosition();
 
             position.bar += number;
-            if (position.bar >= model.tune.numberOfBars) {
+            if (position.bar >= model.tune.bars.length) {
                 position.bar = 0;
             } else if (position.bar < 0) {
-                position.bar = model.tune.numberOfBars - 1;
+                position.bar = model.tune.bars.length - 1;
             }
 
             setPlayPosition(position);
@@ -165,11 +165,11 @@
                 position.crotchet++;
                 position.quaver = 0;
             }
-            if (position.crotchet >= model.tune.beatsPerBar) {
+            if (position.crotchet >= model.tune.bars[position.bar].beats) {
                 position.bar++;
                 position.crotchet = 0;
             }
-            if (position.bar >= model.tune.bars) {
+            if (position.bar >= model.tune.bars.length) {
                 position.bar = 0;
             }
 
