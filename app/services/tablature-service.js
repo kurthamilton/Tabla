@@ -6,6 +6,7 @@
     function TablatureService(audioService, tuneService) {
         let model = {
             bars: null,
+            copiedRange: null,
             get part() {
                 return tuneService.model.part;
             },
@@ -23,8 +24,11 @@
 
         return {
             actions: {
+                copySelectedRange: copySelectedRange,
+                emptyClipboard: emptyClipboard,
                 moveSelectedNote: moveSelectedNote,
                 moveSelectedRangeNoteOffset: moveSelectedRangeNoteOffset,
+                pasteCopiedRange: pasteCopiedRange,
                 selectNote: selectNote,
                 selectRangeNoteOffset: selectRangeNoteOffset,
                 setFret: setFret
@@ -74,12 +78,15 @@
                 return;
             }
 
-            existing.forEach(note => getString(note).inRange = false);
+            existing.forEach(note => {
+                let string = getString(note);
+                string.inRange = false;
+            });
 
             model.selectedRangeNoteOffset = null;
         }
 
-        function copyNote(options) {
+        function cloneNote(options) {
             if (!options) {
                 return null;
             }
@@ -91,6 +98,29 @@
                 quaver: options.quaver,
                 string: options.string
             };
+        }
+
+        function copySelectedRange() {
+            emptyClipboard();
+
+            let range = getSelectedRange();
+            if (!range) {
+                return;
+            }
+
+            model.copiedRange = range;
+
+            range.forEach(note => getString(note).copied = true);
+        }
+
+        function emptyClipboard() {
+            let range = model.copiedRange;
+            if (!range) {
+                return;
+            }
+
+            range.forEach(note => getString(note).copied = false);
+            model.copiedRange = null;
         }
 
         function getBars(part) {
@@ -164,14 +194,15 @@
             let end = compare < 0 ? model.selectedRangeNoteOffset : model.selectedNote;
 
             // set the start position
-            let position = copyNote(start);
+            let position = cloneNote(start);
 
             // advance the start position until it is after the end position
             while (model.tune.positionCompare(position, end) <= 0) {
                 // move through the strings in the current position
                 for (let string = minString; string <= maxString; string++) {
                     position.string = string;
-                    range.push(copyNote(position));
+                    position.fret = getString(position).fret;
+                    range.push(cloneNote(position));
                 }
                 // advance the position by 1 quaver
                 model.tune.offsetPosition(position, { quaver: 1 }, false);
@@ -202,25 +233,36 @@
                 return;
             }
 
-            let note = copyNote(model.selectedNote);
+            let note = cloneNote(model.selectedNote);
             model.part.offsetNote(note, offset);
             selectNote(note);
         }
 
         function moveSelectedRangeNoteOffset(offset) {
             if (!model.selectedRangeNoteOffset) {
-                model.selectedRangeNoteOffset = copyNote(model.selectedNote);
+                model.selectedRangeNoteOffset = cloneNote(model.selectedNote);
             }
 
-            let note = copyNote(model.selectedRangeNoteOffset);
+            let note = cloneNote(model.selectedRangeNoteOffset);
             model.part.offsetNote(note, offset);
             selectRangeNoteOffset(note);
+        }
+
+        function pasteCopiedRange() {
+            if (!model.copiedRange) {
+                return;
+            }
+
+            let note = cloneNote(model.selectedNote);
+            for (let i = 0; i < model.copiedRange.length; i++) {
+                console.log(model.copiedRange[i]);
+            }
         }
 
         function selectNote(note) {
             cancelSelectedNote();
 
-            model.selectedNote = copyNote(note);
+            model.selectedNote = cloneNote(note);
 
             if (!note) {
                 return false;
@@ -252,7 +294,7 @@
                 fret = null;
             }
 
-            let note = copyNote(model.selectedNote);
+            let note = cloneNote(model.selectedNote);
             note.fret = fret;
             model.selectedNote.fret = fret;
             return setNote(note);

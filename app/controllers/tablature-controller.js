@@ -71,6 +71,11 @@
             });
 
             document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 27) {
+                    // escape
+                    tablatureService.actions.emptyClipboard();
+                }
+
                 let selectedNote = tablatureService.model.selectedNote;
                 if (!selectedNote) {
                     return;
@@ -127,6 +132,16 @@
                         quaver: -1 * selectedNote.quaver
                     });
                     e.preventDefault();
+                } else if (e.keyCode === 67) {
+                    // c
+                    if (e.ctrlKey) {
+                        tablatureService.actions.copySelectedRange();
+                    }
+                } else if (e.keyCode === 86) {
+                    // v
+                    if (e.ctrlKey) {
+                        tablatureService.actions.pasteCopiedRange();
+                    }
                 }
             });
 

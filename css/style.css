@@ -114,6 +114,9 @@ input[type="range"].bpm-slider {
 .string.selected-range {
     background-color: #DADAF3;
 }
+.string.copied {
+    outline: 1px dashed #DDD;
+}
 .string:hover,
 .string.selected {
     background-color: transparent;
