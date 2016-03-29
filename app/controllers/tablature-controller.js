@@ -119,6 +119,14 @@
                     // tab forwards and backwards
                     moveSelectedNoteHorizontally({ crotchet: shiftPressed === true ? -1 : 1 });
                     e.preventDefault();
+                } else if (e.keyCode === 36) {
+                    // home
+                    moveSelectedNoteHorizontally({
+                        bar: -1 * selectedNote.bar,
+                        crotchet: -1 * selectedNote.crotchet,
+                        quaver: -1 * selectedNote.quaver
+                    });
+                    e.preventDefault();
                 }
             });
 

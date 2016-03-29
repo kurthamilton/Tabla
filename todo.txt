@@ -24,7 +24,6 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- Home key sets play position (and by extension, the play position)
 - multi-select notes / copy & paste
 - form validation
 - set bpm by typing (editable div?)

@@ -39,10 +39,6 @@
                     // space
                     audioService.actions.toggle();
                     e.preventDefault();
-                } else if (e.keyCode === 36) {
-                    // home
-                    audioService.actions.reset();
-                    e.preventDefault();
                 }
             });
         }
