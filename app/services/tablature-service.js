@@ -35,6 +35,10 @@
         function onPartSelected(part) {
             model.ready = false;
 
+            if (model.selectedNote && model.selectedNote.string >= part.instrument.strings.length) {
+                model.selectedNote.string = part.instrument.strings.length - 1;
+            }
+
             model.bars = getBars(part);
             model.ready = model.bars.length > 0;
         }
@@ -59,7 +63,7 @@
                 return;
             }
 
-            string.active = false;
+            string.selected = false;
 
             cancelSelectedRange();
         }
@@ -127,7 +131,11 @@
             for (let i = 0; i < numberOfQuavers; i++) {
                 quavers.push({
                     index: i,
-                    strings: getStrings(part, bar, crotchet, i)
+                    strings: getStrings(part, {
+                        bar: bar,
+                        crotchet: crotchet,
+                        quaver: i
+                    })
                 });
             }
             return quavers;
@@ -176,15 +184,15 @@
             return getQuaver(note).strings[note.string];
         }
 
-        function getStrings(part, bar, crotchet, quaver) {
+        function getStrings(part, position) {
             let strings = [];
-            let frets = part.getFrets({
-                bar: bar,
-                crotchet: crotchet,
-                quaver: quaver
-            }) || {};
+            let frets = part.getFrets(position) || {};
             for (let i = 0; i < part.instrument.strings.length; i++) {
-                strings.push({ index: i, fret: frets[i] });
+                let string = { index: i, fret: frets[i] };
+                if (model.selectedNote && model.tune.positionCompare(model.selectedNote, position) === 0 && model.selectedNote.string === i) {
+                    string.selected = true;
+                }
+                strings.push(string);
             }
             return strings;
         }
@@ -218,7 +226,7 @@
                 return false;
             }
 
-            getString(note).active = true;
+            getString(note).selected = true;
 
             if (!audioService.model.playing) {
                 audioService.actions.setPlayPosition(note);

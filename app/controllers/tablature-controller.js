@@ -9,6 +9,7 @@
         };
 
         let shiftPressed = false;
+        let viewBinding = null;
 
         tuneService.addEventListener('part.selected', onPartSelected);
 
@@ -20,7 +21,7 @@
 
         function bind() {
             let view = document.getElementById('tablature');
-            rivets.bind(view, scope);
+            return rivets.bind(view, scope);
         }
 
         function bindEvents() {
@@ -50,7 +51,7 @@
                 if (e.charCode >= 48 && e.charCode <= 57) {
                     // The typed number
                     let number = e.charCode - 48;
-                    let active = selectedNote.active;
+                    let active = selectedNote.selected;
                     // Append the typed number to the current content if it is active, else set the typed number
                     let fret = parseInt(`${active && selectedNote.fret ? selectedNote.fret : ''}${number}`);
                     if (!setFret(fret)) {
@@ -158,7 +159,9 @@
         }
 
         function onPartSelected() {
-            bind();
+            if (!viewBinding) {
+                viewBinding = bind();
+            }
         }
 
         function setFret(fret) {
