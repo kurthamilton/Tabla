@@ -4,6 +4,8 @@ BUGS
 - Tune title continues editing on keypress after blur
 - Selected note lost when switching parts
 - Selected range does not work through 0
+- Bottom border of selected note disappears with selected range
+- Shift-ctrl-cursor not working as expected
 
 OPTIMISATION
 - Preload notes when playing
@@ -22,6 +24,7 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
+- Home key sets play position (and by extension, the play position)
 - multi-select notes / copy & paste
 - form validation
 - set bpm by typing (editable div?)

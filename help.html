@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <h1>Help</h1>
+
+        <nav>
+            <a href="#creating-tunes">Creating Tunes</a>
+            <a href="#managing-parts">Managing Parts</a>
+            <a href="#adding-notes">Adding Notes</a>
+        </nav>
+
+        <div id="creating-tunes">
+            <h3>Creating Tunes</h3>
+        </div>
+        <div id="managing-parts">
+            <h3>Managing Parts</h3>
+        </div>
+        <div id="adding-notes">
+            <h3>Adding Notes</h3>
+            <p>
+                The tab grid is divided into a collection of bars, which in turn are divided into crotchets (a single note / beat) and quavers (a quarter-note).
+                Each horizontal line represents a string of the part's instrument.
+            </p>
+            <p>
+                Notes can be added to a part by clicking on a quaver on a string and typing the fret number. If a note already exists, it will be overwritten.
+                If a fret number too large for the instrument has been typed, the last number typed will be entered.
+            </p>
+            <h4>Navigating the grid</h4>
+            <p>
+                The following keys can be used when the grid is selected:
+                <ul>
+                    <li>Numeric - add a fret number</li>
+                    <li>Delete - delete a fret number</li>
+                    <li>Backspace - Remove the last digit of a fret number</li>
+                    <li>Cursor - to move up / down / left /right by 1 position</li>
+                    <li>Ctrl-cursor - Skip vertically to the first or last string. Skip horizontally by 1 bar.</li>
+                    <li>Tab / shift-tab - Skip forwards / backwards by 1 crotchet</li>
+                </ul>
+            </p>
+            <h4>Selecting a range</h4>
+            <p>
+                A range of notes can be selected by using the shift key when the grid is selected. Shift-click or shift-cursor to highlight a range.
+            </p>
+        </div>
+    </body>
+</html>

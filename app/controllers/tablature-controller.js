@@ -95,24 +95,28 @@
                 }
                 else if (e.keyCode === 37) {
                     // left arrow
-                    moveSelectedNoteHorizontally(-1);
+                    let offset = {};
+                    offset[e.ctrlKey === true ? 'bar' : 'quaver'] = -1;
+                    moveSelectedNoteHorizontally(offset);
+                    e.preventDefault();
                 }
                 else if (e.keyCode === 38) {
                     // up arrow - move all the way to top if ctrl
                     moveSelectedNoteVertically(e.ctrlKey === true ? -2 : -1);
                     e.preventDefault();
-                }
-                else if (e.keyCode === 40) {
+                } else if (e.keyCode === 39) {
+                    // right arrow
+                    let offset = {};
+                    offset[e.ctrlKey === true ? 'bar' : 'quaver'] = 1;
+                    moveSelectedNoteHorizontally(offset);
+                    e.preventDefault();
+                } else if (e.keyCode === 40) {
                     // down arrow - move all the way to down if ctrl
                     moveSelectedNoteVertically(e.ctrlKey === true ? 2 : 1);
                     e.preventDefault();
-                }
-                else if (e.keyCode === 39) {
-                    // right arrow
-                    moveSelectedNoteHorizontally(1);
                 } else if (e.keyCode === 9) {
                     // tab forwards and backwards
-                    moveSelectedNoteHorizontally(shiftPressed === true ? -2 : 2);
+                    moveSelectedNoteHorizontally({ crotchet: shiftPressed === true ? -1 : 1 });
                     e.preventDefault();
                 }
             });
@@ -129,14 +133,7 @@
             });
         }
 
-        function moveSelectedNoteHorizontally(amount) {
-            let offset = {};
-            if (Math.abs(amount) === 1) {
-                offset.quaver = amount;
-            } else {
-                offset.crotchet = amount < 0 ? -1 : 1;
-            }
-
+        function moveSelectedNoteHorizontally(offset) {
             if (shiftPressed === true && offset.quaver) {
                 tablatureService.actions.moveSelectedRangeNoteOffset(offset);
             } else {
