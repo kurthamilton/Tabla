@@ -115,6 +115,8 @@
 
         function selectPart(e, scope) {
             tuneService.actions.selectPart(scope.index);
+            // don't let the click bubble so that tab selections are preserved
+            e.stopPropagation();
         }
 
         function updatePart() {

@@ -2,7 +2,6 @@ BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
 - Tune title continues editing on keypress after blur
-- Selected note lost when switching parts - this is because the click event isn't a string element
 - Selected range does not work through 0
 - Bottom border of selected note disappears with selected range
 - Shift-ctrl-cursor not working as expected
