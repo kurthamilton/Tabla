@@ -26,6 +26,10 @@
         }
 
         function deserializeParts(options, tune) {
+            if (!options) {
+                return [];
+            }
+
             return options.map(object => {
                 object.tune = tune;
                 let part = new Part(object);
