@@ -119,8 +119,8 @@ input[type="range"].bpm-slider {
 }
 .string:hover,
 .string.selected {
-    background-color: transparent;
-    box-shadow: 0px 0px 0px 1px #42429A;
+    background-color: #F5F5F5;
+    box-shadow: 0 0 0 1px #DADAF3;
     cursor: pointer;
 }
 

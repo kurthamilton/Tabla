@@ -9,6 +9,7 @@
         };
 
         let shiftPressed = false;
+        let mousePressed = false;
         let viewBinding = null;
 
         tuneService.addEventListener('part.selected', onPartSelected);
@@ -30,12 +31,28 @@
         }
 
         function bindClick() {
-            document.addEventListener('click', function(e) {
-                if (shiftPressed === true) {
+            document.addEventListener('mousedown', function(e) {
+                // Left mouse button. Not IE friendly
+                if (e.which === 1) {
+                    mousePressed = true;
+
+                    if (shiftPressed === true) {
+                        selectRangeOffset(e.target);
+                        e.preventDefault();
+                    } else {
+                        selectString(e.target);
+                    }
+                }
+            });
+            document.addEventListener('mouseover', function(e) {
+                if (mousePressed === true && tablatureService.model.selectedNote) {
                     selectRangeOffset(e.target);
-                    e.preventDefault();
-                } else {
-                    selectString(e.target);
+                }
+            });
+            document.addEventListener('mouseup', function(e) {
+                // Left mouse button. Not IE friendly
+                if (e.which === 1) {
+                    mousePressed = false;
                 }
             });
         }
@@ -51,7 +68,7 @@
                 if (e.charCode >= 48 && e.charCode <= 57) {
                     // The typed number
                     let number = e.charCode - 48;
-                    let active = selectedNote.selected;
+                    let active = selectedNote.active;
                     // Append the typed number to the current content if it is active, else set the typed number
                     let fret = parseInt(`${active && selectedNote.fret ? selectedNote.fret : ''}${number}`);
                     if (!setFret(fret)) {
