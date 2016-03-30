@@ -65,24 +65,20 @@
         };
 
         // Offsets the position by the offset. Set loop to false when 0 should not be passed through
-        Tune.prototype.offsetPosition = function(position, offset, loop) {
+        Tune.prototype.offsetPosition = function(position, offset, constrain) {
             if (!offset) {
                 return;
             }
 
             let tune = this;
 
-            if (loop === undefined) {
-                loop = true;
-            }
-
             if (offset.quaver) {
                 position.quaver += offset.quaver || 0;
                 if (position.quaver < 0) {
-                    tune.offsetPosition(position, { crotchet: -1 }, loop);
+                    tune.offsetPosition(position, { crotchet: -1 }, constrain);
                     position.quaver = 3;
                 } else if (position.quaver > 3) {
-                    tune.offsetPosition(position, { crotchet: 1 }, loop);
+                    tune.offsetPosition(position, { crotchet: 1 }, constrain);
                     position.quaver = 0;
                 }
             }
@@ -90,22 +86,25 @@
             if (offset.crotchet) {
                 position.crotchet += offset.crotchet || 0;
                 if (position.crotchet < 0) {
-                    tune.offsetPosition(position, { bar: -1 }, loop);
+                    tune.offsetPosition(position, { bar: -1 }, constrain);
                     position.crotchet = tune.bars[position.bar].beats - 1;
                 } else if (position.crotchet >= tune.bars[position.bar].beats) {
-                    tune.offsetPosition(position, { bar: 1 }, loop);
+                    tune.offsetPosition(position, { bar: 1 }, constrain);
                     position.crotchet = 0;
                 }
             }
 
             if (offset.bar) {
                 position.bar += offset.bar || 0;
-                if (loop) {
-                    if (position.bar < 0) {
-                        position.bar = tune.bars.length - 1;
-                    } else if (position.bar >= tune.bars.length) {
-                        position.bar = 0;
-                    }
+
+                if (constrain) {
+                    return;
+                }
+
+                if (position.bar < 0) {
+                    position.bar = tune.bars.length - 1;
+                } else if (position.bar >= tune.bars.length) {
+                    position.bar = 0;
                 }
             }
         };

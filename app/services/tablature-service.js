@@ -215,7 +215,7 @@
                     range.push(cloneNote(position));
                 }
                 // advance the position by 1 quaver
-                model.tune.offsetPosition(position, { quaver: 1 }, false);
+                model.tune.offsetPosition(position, { quaver: 1 }, true);
             }
 
             return range;
@@ -267,7 +267,7 @@
             let prev = model.copiedRange[0];
             model.copiedRange.forEach((note, i) => {
                 let offset = model.part.getOffset(prev, note);
-                model.part.offsetNote(offsetNote, offset);
+                model.part.offsetNote(offsetNote, offset, true);
                 setFret(offsetNote, note.fret);
                 prev = note;
             });
@@ -318,7 +318,11 @@
             if (!tuneService.actions.setNote(note)) {
                 return false;
             }
-            getString(note).fret = note.fret;
+            let string = getString(note);
+            if (!string) {
+                return false;
+            }
+            string.fret = note.fret;
             return true;
         }
     }

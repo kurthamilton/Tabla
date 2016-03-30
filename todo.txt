@@ -6,7 +6,6 @@ BUGS
 - Bottom border of selected note disappears with selected range
 - Shift-ctrl-cursor not working as expected
 - Copied range styling
-- Pasted notes aren't relative if pasting onto a different string
 
 OPTIMISATION
 - Preload notes when playing

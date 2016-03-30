@@ -51,16 +51,20 @@
             return offset;
         };
 
-        Part.prototype.offsetNote = function (note, offset) {
+        Part.prototype.offsetNote = function (note, offset, constrain) {
             if (!offset) {
                 return;
             }
 
-            this.tune.offsetPosition(note, offset);
+            this.tune.offsetPosition(note, offset, constrain);
 
             note.string += offset.string || 0;
 
-            // sanitise
+            if (constrain) {
+                return;
+            }
+
+            // constrain
             let instrument = this.instrument;
 
             if (note.string < 0) {
