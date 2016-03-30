@@ -120,7 +120,7 @@
                     // left arrow
                     let offset = {};
                     offset[e.ctrlKey === true ? 'bar' : 'quaver'] = -1;
-                    moveSelectedNoteHorizontally(offset);
+                    moveSelectedNoteHorizontally(offset, shiftPressed);
                     e.preventDefault();
                 }
                 else if (e.keyCode === 38) {
@@ -131,7 +131,7 @@
                     // right arrow
                     let offset = {};
                     offset[e.ctrlKey === true ? 'bar' : 'quaver'] = 1;
-                    moveSelectedNoteHorizontally(offset);
+                    moveSelectedNoteHorizontally(offset, shiftPressed);
                     e.preventDefault();
                 } else if (e.keyCode === 40) {
                     // down arrow - move all the way to down if ctrl
@@ -147,7 +147,7 @@
                         bar: -1 * selectedNote.bar,
                         crotchet: -1 * selectedNote.crotchet,
                         quaver: -1 * selectedNote.quaver
-                    });
+                    }, shiftPressed);
                     e.preventDefault();
                 } else if (e.keyCode === 67) {
                     // c
@@ -174,8 +174,8 @@
             });
         }
 
-        function moveSelectedNoteHorizontally(offset) {
-            if (shiftPressed === true && offset.quaver) {
+        function moveSelectedNoteHorizontally(offset, range) {
+            if (range === true) {
                 tablatureService.actions.moveSelectedRangeNoteOffset(offset);
             } else {
                 tablatureService.actions.moveSelectedNote(offset);
@@ -187,7 +187,7 @@
             if (Math.abs(amount) === 1) {
                 offset.string = amount;
             } else {
-                let string = tablatureService.model.selectedNote.string;
+                let string = ((shiftPressed === true && tablatureService.model.selectedRangeNoteOffset) ? tablatureService.model.selectedRangeNoteOffset.string : tablatureService.model.selectedNote.string);
                 offset.string = amount < 0 ? -1 * string : tuneService.model.part.instrument.strings.length - string;
             }
 

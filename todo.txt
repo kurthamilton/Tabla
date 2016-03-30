@@ -1,9 +1,6 @@
 BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
-- Selected range does not work through 0
-- Bottom border of selected note disappears with selected range
-- Shift-ctrl-cursor not working as expected
 - Copied range styling
 
 OPTIMISATION
