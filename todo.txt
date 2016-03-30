@@ -21,7 +21,6 @@ CODE
 UI
 - hide tunes list if empty
 - hide rivets templates while loading - show overlay?
-- indicate editable content fields
 
 UX
 - Key events for play position: backwards/forwards with cursor

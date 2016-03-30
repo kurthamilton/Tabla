@@ -13,7 +13,10 @@
             <div class="buffer-top" rv-show="model.tune">
                 <!-- tune details -->
                 <h3>
-                    <input class="no-border full-width" rv-value="model.tune.name" rv-on-keypress="actions.blurOnEnter" />
+                    <div class="input-group input-group--unobtrusive">
+                        <span class="glyphicon glyphicon-pencil input-group-addon" aria-hidden="true"></span>
+                        <input class="full-width" rv-value="model.tune.name" rv-on-keypress="actions.blurOnEnter" />
+                    </div>
                 </h3>
                 <!-- tune parts -->
                 <div class="buffer-top">
@@ -22,7 +25,7 @@
                         <li role="presentation" rv-each-part="model.tune.parts" rv-class-active="part.id | eq model.part.id">
                             <a href="#" rv-on-click="actions.selectPart">{ part.name }</a>
                         </li>
-                        <li role="presentation"><a href="#add-part"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+                        <li role="presentation" title="Add part"><a href="#add-part"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
                     </ul>
                     <!-- part options bar -->
                     <div class="tab-content">
