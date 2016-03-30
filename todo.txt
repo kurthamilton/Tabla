@@ -2,6 +2,7 @@ BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
 - Copied range styling
+- Styling when no tune is selected (create tune and immediately delete to recreate)
 
 OPTIMISATION
 - Preload notes when playing
@@ -18,10 +19,11 @@ CODE
 UI
 - hide tunes list if empty
 - hide rivets templates while loading - show overlay?
+- label alignment in md (new tune)
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- form validation
+- form validation - add part, edit part, tune name, bpm
 - add feedback messages
 - undo / redo: just notes?
 

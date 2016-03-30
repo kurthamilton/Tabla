@@ -43,6 +43,12 @@ body {
     color: #DDD;
 }
 
+/* validation */
+.form-group.required .control-label:after {
+  content: "*";
+  color: #CA4848;
+}
+
 /* modal */
 .modal {
     background-color: rgba(0, 0, 0, 0.8);

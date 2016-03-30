@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/instrument-factory', 'services/audio-service', 'services/tune-service'], TunesController);
+    define(['services/instrument-factory', 'services/audio-service', 'services/tune-service', 'services/validation-service'], TunesController);
 
-    function TunesController(instrumentFactory, audioService, tuneService) {
+    function TunesController(instrumentFactory, audioService, tuneService, validationService) {
         let scope = {
             actions: {
                 addPart: addPart,
@@ -85,7 +85,12 @@
         }
 
         function createTune() {
-            tuneService.actions.create(scope.newTune);
+            if (validationService.validateForm(document.getElementById('create-tune'))) {
+                tuneService.actions.create(scope.newTune);
+
+                scope.newTune.name = '';
+                scope.newTune.instrumentName = '';
+            }
         }
 
         function deletePart() {
