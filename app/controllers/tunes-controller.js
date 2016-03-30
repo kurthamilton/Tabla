@@ -7,6 +7,7 @@
         let scope = {
             actions: {
                 addPart: addPart,
+                blurOnEnter: blurOnEnter,
                 closeModal: function() {
                     window.location.hash = '#';
                 },
@@ -17,8 +18,6 @@
                 onPartEditing: function() {
                     scope.editPart = new EditPartViewModel(scope.model.part);
                 },
-                onTuneNameBlur: onTuneNameBlur,
-                onTuneNameKeyPress: onTuneNameKeyPress,
                 save: tuneService.actions.save,
                 selectPart: selectPart,
                 updatePart: updatePart
@@ -78,6 +77,13 @@
             tuneService.actions.addPart(scope.newPart);
         }
 
+        function blurOnEnter(e) {
+            if (e.keyCode === 13) {
+                e.target.blur();
+                e.preventDefault();
+            }
+        }
+
         function createTune() {
             tuneService.actions.create(scope.newTune);
         }
@@ -96,21 +102,6 @@
 
         function loadTune(e, scope) {
             tuneService.actions.load(scope.tune.id);
-        }
-
-        function onTuneNameBlur(e, scope) {
-            tuneService.actions.updateTune({
-                name: e.target.textContent
-            });
-            e.target.textContent = scope.model.tune.name;
-        }
-
-        function onTuneNameKeyPress(e) {
-            // "submit" the tune name
-            if (e.keyCode === 13) {
-                e.target.blur();
-                e.preventDefault();
-            }
         }
 
         function selectPart(e, scope) {

@@ -1,7 +1,6 @@
 BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
-- Tune title continues editing on keypress after blur
 - Selected range does not work through 0
 - Bottom border of selected note disappears with selected range
 - Shift-ctrl-cursor not working as expected
@@ -27,7 +26,6 @@ UI
 UX
 - Key events for play position: backwards/forwards with cursor
 - form validation
-- set bpm by typing (editable div?)
 - add feedback messages
 - undo / redo: just notes?
 

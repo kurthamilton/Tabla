@@ -21,6 +21,12 @@ body {
 }
 
 /* utilities */
+.full-width {
+    width: 100%;
+}
+.no-border {
+    border: none;
+}
 .no-select {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -65,6 +71,11 @@ input[type="range"].bpm-slider {
     display: inline;
     height: 10px;
     width: 125px;
+}
+.bpm {
+    background-color: #EEE;
+    padding-left: 5px;
+    width: 50px;
 }
 
 /* tab grid */
