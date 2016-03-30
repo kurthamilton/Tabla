@@ -15,7 +15,7 @@
                 <h3>
                     <div class="input-group input-group--unobtrusive">
                         <span class="glyphicon glyphicon-pencil input-group-addon" aria-hidden="true"></span>
-                        <input class="full-width" rv-value="model.tune.name" rv-on-keypress="actions.blurOnEnter" />
+                        <input class="full-width" rv-value="model.tune.name" rv-on-blur="actions.save" rv-on-keypress="actions.blurOnEnter" />
                     </div>
                 </h3>
                 <!-- tune parts -->
@@ -33,7 +33,7 @@
                             <div class="pull-left part-options__component">
                                 BPM
                                 <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" />
-                                <input type="number" min="40" max="300" class="no-border bpm" rv-value="model.tune.bpm" rv-on-keypress="actions.blurOnEnter" />
+                                <input type="number" min="40" max="300" class="no-border bpm" rv-value="model.tune.bpm" rv-on-blur="actions.save" rv-on-keypress="actions.blurOnEnter" />
                             </div>
                             <!-- play controls -->
                             <div id="play-controls" class="pull-left part-options__component btn-group btn-group-xs">
