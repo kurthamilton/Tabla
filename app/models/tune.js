@@ -37,6 +37,14 @@
             });
         }
 
+        Tune.prototype.getOffset = function(position, other) {
+            return {
+                bar: other.bar - position.bar,
+                crotchet: other.crotchet - position.crotchet,
+                quaver: other.quaver - position.quaver
+            };
+        };
+
         // Compare 2 positions. Returns 0 if positions are equal, -1 if x < y, 1 if x > y.
         Tune.prototype.positionCompare = function(x, y) {
             if (x.bar === y.bar && x.crotchet === y.crotchet && x.quaver === y.quaver) {
@@ -58,6 +66,10 @@
 
         // Offsets the position by the offset. Set loop to false when 0 should not be passed through
         Tune.prototype.offsetPosition = function(position, offset, loop) {
+            if (!offset) {
+                return;
+            }
+
             let tune = this;
 
             if (loop === undefined) {

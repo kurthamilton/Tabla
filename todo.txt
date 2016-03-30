@@ -17,6 +17,7 @@ OPTIMISATION
 CODE
 - save note collection as is
 - configurable instrument fret count in tune service set note
+- review range architecture
 
 UI
 - hide tunes list if empty
@@ -25,7 +26,6 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- multi-select notes / copy & paste
 - form validation
 - set bpm by typing (editable div?)
 - add feedback messages

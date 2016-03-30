@@ -87,7 +87,7 @@
 
                 if (e.keyCode === 46) {
                     // delete
-                    setFret(null);
+                    tablatureService.actions.deleteSelectedRange();
                 }
                 else if (e.keyCode === 8) {
                     // backspace

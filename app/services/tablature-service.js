@@ -25,13 +25,14 @@
         return {
             actions: {
                 copySelectedRange: copySelectedRange,
+                deleteSelectedRange: deleteSelectedRange,
                 emptyClipboard: emptyClipboard,
                 moveSelectedNote: moveSelectedNote,
                 moveSelectedRangeNoteOffset: moveSelectedRangeNoteOffset,
                 pasteCopiedRange: pasteCopiedRange,
                 selectNote: selectNote,
                 selectRangeNoteOffset: selectRangeNoteOffset,
-                setFret: setFret
+                setFret: (fret) => setFret(model.selectedNote, fret)
             },
             model: model
         };
@@ -111,6 +112,15 @@
             model.copiedRange = range;
 
             range.forEach(note => getString(note).copied = true);
+        }
+
+        function deleteSelectedRange() {
+            let range = getSelectedRange();
+            if (!range) {
+                return;
+            }
+
+            range.forEach(note => setFret(note, null));
         }
 
         function emptyClipboard() {
@@ -253,10 +263,14 @@
                 return;
             }
 
-            let note = cloneNote(model.selectedNote);
-            for (let i = 0; i < model.copiedRange.length; i++) {
-                console.log(model.copiedRange[i]);
-            }
+            let offsetNote = cloneNote(model.selectedNote);
+            let prev = model.copiedRange[0];
+            model.copiedRange.forEach((note, i) => {
+                let offset = model.part.getOffset(prev, note);
+                model.part.offsetNote(offsetNote, offset);
+                setFret(offsetNote, note.fret);
+                prev = note;
+            });
         }
 
         function selectNote(note) {
@@ -285,8 +299,8 @@
             range.forEach(note => getString(note).inRange = true);
         }
 
-        function setFret(fret) {
-            if (!model.selectedNote) {
+        function setFret(note, fret) {
+            if (!note) {
                 return;
             }
 
@@ -294,7 +308,7 @@
                 fret = null;
             }
 
-            let note = cloneNote(model.selectedNote);
+            note = cloneNote(note);
             note.fret = fret;
             model.selectedNote.fret = fret;
             return setNote(note);

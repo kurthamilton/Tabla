@@ -45,7 +45,17 @@
             };
         }
 
+        Part.prototype.getOffset = function(note, other) {
+            let offset = this.tune.getOffset(note, other);
+            offset.string = other.string - note.string;
+            return offset;
+        };
+
         Part.prototype.offsetNote = function (note, offset) {
+            if (!offset) {
+                return;
+            }
+
             this.tune.offsetPosition(note, offset);
 
             note.string += offset.string || 0;
