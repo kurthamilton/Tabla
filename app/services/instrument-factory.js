@@ -31,13 +31,22 @@
                 guitar.strings.push(new String({ index: 4, note: 'A', octave: 3 }));
                 guitar.strings.push(new String({ index: 5, note: 'E', octave: 3 }));
                 return guitar;
+            },
+            violin: function() {
+                let violin = new Instrument('violin');
+                violin.strings.push(new String({ index: 0, note: 'E', octave: 6 }));
+                violin.strings.push(new String({ index: 1, note: 'A', octave: 5 }));
+                violin.strings.push(new String({ index: 2, note: 'D', octave: 5 }));
+                violin.strings.push(new String({ index: 3, note: 'G', octave: 4 }));
+                return violin;
             }
         };
 
         const instrumentSounds = {
             banjo: ['banjo'],
             bass: ['acoustic_bass', 'electric_bass_finger', 'electric_bass_pick', 'fretless_bass'],
-            guitar: ['acoustic_guitar_nylon', 'acoustic_guitar_steel', 'distortion_guitar', 'electric_guitar_clean', 'electric_guitar_jazz']
+            guitar: ['acoustic_guitar_nylon', 'acoustic_guitar_steel', 'distortion_guitar', 'electric_guitar_clean', 'electric_guitar_jazz'],
+            violin: ['violin']
         };
 
         return {
