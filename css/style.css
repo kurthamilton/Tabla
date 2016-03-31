@@ -146,8 +146,21 @@ input[type="range"].bpm-slider {
 .string.selected-range {
     background-color: #DADAF3;
 }
-.string.copied {
-    outline: 1px dashed #DDD;
+.string.copied-top {
+    border-top: 1px dashed #DDD;
+    margin-top: -1px;
+}
+.string.copied-bottom {
+    border-bottom: 1px dashed #DDD;
+    margin-bottom: -1px;
+}
+.string.copied-left {
+    border-left: 1px dashed #DDD;
+    margin-left: -1px;
+}
+.string.copied-right {
+    border-right: 1px dashed #DDD;
+    margin-right: -1px;
 }
 .string:hover,
 .string.selected {

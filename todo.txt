@@ -1,7 +1,6 @@
 BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
-- Copied range styling
 - refreshing page when in edit part screen loads blank modal
 
 OPTIMISATION

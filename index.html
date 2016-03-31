@@ -224,7 +224,9 @@
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
                         <div class="quaver" rv-each-quaver="crotchet.quavers" rv-class-play-position="quaver.playPosition">
                             <div class="string"
-                                rv-each-string="quaver.strings" rv-class-selected="string.selected" rv-class-selected-range="string.inRange" rv-class-copied="string.copied">{ string.fret | default '&nbsp' }</div>
+                                rv-each-string="quaver.strings" rv-class-selected="string.selected" rv-class-selected-range="string.inRange"
+                                rv-class-copied-left="string.copied.left" rv-class-copied-right="string.copied.right"
+                                rv-class-copied-top="string.copied.top" rv-class-copied-bottom="string.copied.bottom">{ string.fret | default '&nbsp' }</div>
                         </div>
                     </div>
                 </div>

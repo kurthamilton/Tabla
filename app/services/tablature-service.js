@@ -79,7 +79,7 @@
                 return;
             }
 
-            existing.forEach(note => {
+            existing.notes.forEach(note => {
                 let string = getString(note);
                 string.inRange = false;
             });
@@ -109,9 +109,15 @@
                 return;
             }
 
-            model.copiedRange = range;
+            model.copiedRange = range.notes;
 
-            range.forEach(note => getString(note).copied = true);
+            range.notes.forEach(note => {
+                let string = getString(note);
+                string.copied.top = note.string === range.from.string;
+                string.copied.bottom = note.string === range.to.string;
+                string.copied.left = model.tune.positionCompare(note, range.from) === 0;
+                string.copied.right = model.tune.positionCompare(note, range.to) === 0;
+            });
         }
 
         function deleteSelectedRange() {
@@ -120,16 +126,21 @@
                 return;
             }
 
-            range.forEach(note => setFret(note, null));
+            range.notes.forEach(note => setFret(note, null));
         }
 
         function emptyClipboard() {
-            let range = model.copiedRange;
-            if (!range) {
+            if (!model.copiedRange) {
                 return;
             }
 
-            range.forEach(note => getString(note).copied = false);
+            model.copiedRange.forEach(note => {
+                let string = getString(note);
+                string.copied.top = false;
+                string.copied.bottom = false;
+                string.copied.left = false;
+                string.copied.right = false;
+            });
             model.copiedRange = null;
         }
 
@@ -186,10 +197,14 @@
                 return null;
             }
 
-            let range = [];
+            let range = {
+                from: null,
+                to: null,
+                notes: []
+            };
 
             if (!model.selectedRangeNoteOffset) {
-                range.push(model.selectedNote);
+                range.notes.push(model.selectedNote);
                 return range;
             }
 
@@ -203,6 +218,9 @@
             // set the end note to whichever note comes after the other
             let end = compare < 0 ? model.selectedRangeNoteOffset : model.selectedNote;
 
+            range.from = cloneNote(start);
+            range.to = cloneNote(end);
+
             // set the start position
             let position = cloneNote(start);
 
@@ -212,7 +230,7 @@
                 for (let string = minString; string <= maxString; string++) {
                     position.string = string;
                     position.fret = getString(position).fret;
-                    range.push(cloneNote(position));
+                    range.notes.push(cloneNote(position));
                 }
                 // advance the position by 1 quaver
                 model.tune.offsetPosition(position, { quaver: 1 }, true);
@@ -229,7 +247,16 @@
             let strings = [];
             let frets = part.getFrets(position) || {};
             for (let i = 0; i < part.instrument.strings.length; i++) {
-                let string = { index: i, fret: frets[i] };
+                let string = {
+                    index: i,
+                    copied: {
+                        top: false,
+                        bottom: false,
+                        left: false,
+                        right: false
+                    },
+                    fret: frets[i]
+                };
                 if (model.selectedNote && model.tune.positionCompare(model.selectedNote, position) === 0 && model.selectedNote.string === i) {
                     string.selected = true;
                 }
@@ -296,7 +323,7 @@
 
             model.selectedRangeNoteOffset = note;
             let range = getSelectedRange();
-            range.forEach(note => getString(note).inRange = true);
+            range.notes.forEach(note => getString(note).inRange = true);
         }
 
         function setFret(note, fret) {
