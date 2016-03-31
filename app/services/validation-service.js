@@ -5,6 +5,7 @@
 
     function ValidationService() {
         return {
+            validateElement: validateElement,
             validateForm: validateForm
         };
 

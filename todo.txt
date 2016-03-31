@@ -22,7 +22,6 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- form validation - add part, edit part, tune name, bpm
 - add feedback messages
 - undo / redo: just notes?
 

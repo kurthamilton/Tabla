@@ -15,7 +15,7 @@
                 <h3>
                     <div class="input-group input-group--unobtrusive">
                         <span class="glyphicon glyphicon-pencil input-group-addon" aria-hidden="true"></span>
-                        <input class="full-width" rv-value="model.tune.name" rv-on-blur="actions.save" rv-on-keypress="actions.blurOnEnter" />
+                        <input id="tune-name" class="form-control" required rv-value="model.tune.name" rv-on-blur="actions.save" rv-on-keypress="actions.blurOnEnter" />
                     </div>
                 </h3>
                 <!-- tune parts -->
@@ -32,8 +32,10 @@
                         <div class="part-options clearfix">
                             <div class="pull-left part-options__component">
                                 BPM
-                                <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-on-change="actions.save" />
-                                <input type="number" min="40" max="300" class="no-border bpm" rv-value="model.tune.bpm" rv-on-blur="actions.save" rv-on-keypress="actions.blurOnEnter" />
+                                <input type="range" min="40" max="300" step="1" class="bpm-slider" rv-value="model.tune.bpm" rv-title="model.tune.bpm" rv-on-change="actions.save" />
+                                <span class="form-group input-group--unobtrusive">
+                                    <input id="tune-bpm" type="number" required min="40" max="300" class="no-border bpm" rv-value="model.tune.bpm" rv-on-blur="actions.save" rv-on-keypress="actions.blurOnEnter" />
+                                </span>
                             </div>
                             <!-- play controls -->
                             <div id="play-controls" class="pull-left part-options__component btn-group btn-group-xs">
@@ -131,9 +133,9 @@
                             <h4 class="modal-title">Add part</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="form-horizontal">
+                            <div id="new-part" class="form-horizontal">
                                 <div>
-                                    <div class="form-group">
+                                    <div class="form-group required">
                                         <label for="new-part-instrument" class="col-sm-3 control-label">Instrument</label>
                                         <div class="col-sm-9">
                                             <select id="new-part-instrument" class="form-control" required
@@ -145,7 +147,7 @@
                                     <div class="form-group">
                                         <label for="new-part-sound" class="col-sm-3 control-label">Sound</label>
                                         <div class="col-sm-9">
-                                            <select id="new-part-sound" class="form-control" required rv-value="newPart.sound">
+                                            <select id="new-part-sound" class="form-control" rv-value="newPart.sound">
                                                 <option rv-each-sound="newPart.sounds" rv-value="sound">{ sound }</option>
                                             </select>
                                         </div>
@@ -215,11 +217,11 @@
         </section>
         <!--tablature-->
         <section id="tablature" class="tab-content" rv-show="model.ready">
-            <div class="bars">
+            <div class="bars no-select">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
                         <div class="quaver" rv-each-quaver="crotchet.quavers" rv-class-play-position="quaver.playPosition">
-                            <div class="string no-select"
+                            <div class="string"
                                 rv-each-string="quaver.strings" rv-class-selected="string.selected" rv-class-selected-range="string.inRange" rv-class-copied="string.copied">{ string.fret | default '&nbsp' }</div>
                         </div>
                     </div>

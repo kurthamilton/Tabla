@@ -21,12 +21,6 @@ body {
 }
 
 /* utilities */
-.full-width {
-    width: 100%;
-}
-.no-border {
-    border: none;
-}
 .no-select {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -35,18 +29,30 @@ body {
 }
 
 /* input groups */
-.input-group--unobtrusive * {
+.input-group--unobtrusive:not(.has-error) * {
     border: none;
+}
+.input-group--unobtrusive input:not(:focus) {
+    box-shadow: none;
+}
+.input-group .input-group-addon.glyphicon { /* override bootstrap top:1px */
+    top: 0;
 }
 .input-group--unobtrusive .input-group-addon {
     background-color: transparent;
     color: #DDD;
 }
+#tune-name {
+    font-size: inherit;
+}
 
 /* validation */
 .form-group.required .control-label:after {
-  content: "*";
+  content: " *";
   color: #CA4848;
+}
+.form-group.has-error input:not(.form-control) { /* apply bootstrap error styling to inputs that aren't form-controls*/
+    border: 1px solid #a94442;
 }
 
 /* modal */

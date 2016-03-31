@@ -18,7 +18,7 @@
                 onPartEditing: function() {
                     scope.editPart = new EditPartViewModel(scope.model.part);
                 },
-                save: tuneService.actions.save,
+                save: saveTune,
                 selectPart: selectPart,
                 updatePart: updatePart
             },
@@ -42,9 +42,16 @@
             this.sound = options.sound || '';
             let sounds = (this.sounds = []);
 
+            this.reset = reset;
             this.selectInstrument = selectInstrument;
 
             populateSounds();
+
+            function reset() {
+                this.instrumentName = '';
+                this.name = '';
+                this.sound = '';
+            }
 
             function selectInstrument() {
                 populateSounds();
@@ -74,7 +81,11 @@
 
         // actions
         function addPart() {
-            tuneService.actions.addPart(scope.newPart);
+            if (validateNewPart()) {
+                tuneService.actions.addPart(scope.newPart);
+
+                scope.newPart.reset();
+            }
         }
 
         function blurOnEnter(e) {
@@ -109,6 +120,12 @@
             tuneService.actions.load(scope.tune.id);
         }
 
+        function saveTune() {
+            if (validateTune()) {
+                tuneService.actions.save();
+            }
+        }
+
         function selectPart(e, scope) {
             tuneService.actions.selectPart(scope.index);
             // don't let the click bubble so that tab selections are preserved
@@ -120,6 +137,17 @@
             // close edit modal
             // todo: do this better
             window.location.hash = '#';
+        }
+
+        function validateNewPart() {
+            return validationService.validateForm(document.getElementById('add-part'));
+        }
+
+        function validateTune() {
+            let results = [];
+            results.push(validationService.validateElement(document.getElementById('tune-name')));
+            results.push(validationService.validateElement(document.getElementById('tune-bpm')));
+            return results.filter(r => r === false).length === 0;
         }
     }
 })(rivets);
