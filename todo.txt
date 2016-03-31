@@ -1,5 +1,4 @@
 BUGS
-- handle case where last part is deleted
 - handle long part names in mixer
 - refreshing page when in edit part screen loads blank modal
 

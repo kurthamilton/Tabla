@@ -62,7 +62,7 @@
                             </div>
                             <div class="pull-right part-options__component">
                                 <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit</a>
-                                <a href="#" rv-on-click="actions.deletePart">Delete</a>
+                                <a href="#" rv-show="model.tune.parts | length | gt 1" rv-on-click="actions.deletePart">Delete</a>
                             </div>
                         </div>
                     </div>

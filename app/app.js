@@ -42,6 +42,12 @@
         rivets.formatters.eq = function(value, args) {
             return value === args;
         };
+        rivets.formatters.gt = function(value, args) {
+            return value > args;
+        };
+        rivets.formatters.length = function(value) {
+            return Array.isArray(value) ? value.length : 0;
+        };
         rivets.formatters.round = function(value, decimals) {
             if (decimals) {
                 var exp = Math.pow(10, decimals);
