@@ -19,7 +19,6 @@ CODE
 UI
 - hide tunes list if empty
 - hide rivets templates while loading - show overlay?
-- label alignment in md (new tune)
 
 UX
 - Key events for play position: backwards/forwards with cursor

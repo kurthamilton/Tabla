@@ -97,14 +97,14 @@
                                 <h4>Create Tune</h4>
                                 <div>
                                     <div class="form-group required">
-                                        <label for="new-tune-name" class="col-sm-2 control-label">Name</label>
-                                        <div class="col-sm-10">
+                                        <label for="new-tune-name" class="col-sm-3 control-label">Name</label>
+                                        <div class="col-sm-9">
                                             <input id="new-tune-name" type="string" class="form-control" required rv-value="newTune.name" />
                                         </div>
                                     </div>
                                     <div class="form-group required">
-                                        <label for="new-tune-instrument" class="col-sm-2 control-label">Instrument</label>
-                                        <div class="col-sm-10">
+                                        <label for="new-tune-instrument" class="col-sm-3 control-label">Instrument</label>
+                                        <div class="col-sm-9">
                                             <select id="new-tune-instrument" class="form-control" required
                                                 rv-value="newTune.instrumentName">
                                                 <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
@@ -112,7 +112,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-10">
+                                        <div class="col-sm-offset-3 col-sm-9">
                                             <button type="button" rv-on-click="actions.create">Create</button>
                                         </div>
                                     </div>
@@ -134,8 +134,8 @@
                             <div class="form-horizontal">
                                 <div>
                                     <div class="form-group">
-                                        <label for="new-part-instrument" class="col-sm-2 control-label">Instrument</label>
-                                        <div class="col-sm-10">
+                                        <label for="new-part-instrument" class="col-sm-3 control-label">Instrument</label>
+                                        <div class="col-sm-9">
                                             <select id="new-part-instrument" class="form-control" required
                                                 rv-value="newPart.instrumentName" rv-on-change="newPart.selectInstrument">
                                                 <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
@@ -143,21 +143,21 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="new-part-sound" class="col-sm-2 control-label">Sound</label>
-                                        <div class="col-sm-10">
+                                        <label for="new-part-sound" class="col-sm-3 control-label">Sound</label>
+                                        <div class="col-sm-9">
                                             <select id="new-part-sound" class="form-control" required rv-value="newPart.sound">
                                                 <option rv-each-sound="newPart.sounds" rv-value="sound">{ sound }</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="new-part-name" class="col-sm-2 control-label">Name</label>
-                                        <div class="col-sm-10">
+                                        <label for="new-part-name" class="col-sm-3 control-label">Name</label>
+                                        <div class="col-sm-9">
                                             <input id="new-part-name" type="string" class="form-control" placeholder="Defaults to the instrument if not specified" rv-value="newPart.name" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-10">
+                                        <div class="col-sm-offset-3 col-sm-9">
                                             <button type="button" href="#" rv-on-click="actions.addPart">Add</button>
                                         </div>
                                     </div>
@@ -179,8 +179,8 @@
                             <div class="form-horizontal">
                                 <div>
                                     <div class="form-group">
-                                        <label for="edit-part-instrument" class="col-sm-2 control-label">Instrument</label>
-                                        <div class="col-sm-10">
+                                        <label for="edit-part-instrument" class="col-sm-3 control-label">Instrument</label>
+                                        <div class="col-sm-9">
                                             <select id="edit-part-instrument" class="form-control" required
                                                 rv-value="editPart.instrumentName" rv-on-change="editPart.selectInstrument">
                                                 <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
@@ -188,21 +188,21 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="edit-part-sound" class="col-sm-2 control-label">Sound</label>
-                                        <div class="col-sm-10">
+                                        <label for="edit-part-sound" class="col-sm-3 control-label">Sound</label>
+                                        <div class="col-sm-9">
                                             <select id="edit-part-sound" class="form-control" required rv-value="editPart.sound">
                                                 <option rv-each-sound="editPart.sounds" rv-value="sound">{ sound }</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="edit-part-name" class="col-sm-2 control-label">Name</label>
-                                        <div class="col-sm-10">
+                                        <label for="edit-part-name" class="col-sm-3 control-label">Name</label>
+                                        <div class="col-sm-9">
                                             <input id="edit-part-name" type="string" class="form-control" rv-value="editPart.name" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-10">
+                                        <div class="col-sm-offset-3 col-sm-9">
                                             <button type="button" href="#" rv-on-click="actions.updatePart">Update</button>
                                         </div>
                                     </div>
