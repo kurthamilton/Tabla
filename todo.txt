@@ -2,7 +2,6 @@ BUGS
 - handle case where last part is deleted
 - handle long part names in mixer
 - Copied range styling
-- Styling when no tune is selected (create tune and immediately delete to recreate)
 
 OPTIMISATION
 - Preload notes when playing
