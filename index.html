@@ -78,20 +78,22 @@
                             <a class="close" href="#"><span aria-hidden="true">x</span></a>
 
                             <!-- tunes table -->
-                            <h4>Tunes</h4>
-                            <div>
-                                <table class="table">
-                                    <thead>
-                                        <tr><th>Name</th><th></th><th></th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr rv-each-tune="model.tunes" rv-class-active="tune.id | eq model.tune.id">
-                                            <td>{ tune.name }</td>
-                                            <td><a href="#" rv-on-click="actions.load">Load</a></td>
-                                            <td><a href="#tunes-manager" rv-on-click="actions.delete">Delete</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div rv-hide="model.tunes | empty">
+                                <h4>Tunes</h4>
+                                <div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr><th>Name</th><th></th><th></th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr rv-each-tune="model.tunes" rv-class-active="tune.id | eq model.tune.id">
+                                                <td>{ tune.name }</td>
+                                                <td><a href="#" rv-on-click="actions.load">Load</a></td>
+                                                <td><a href="#tunes-manager" rv-on-click="actions.delete">Delete</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <!-- create tune -->

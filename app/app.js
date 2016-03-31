@@ -36,6 +36,9 @@
         rivets.formatters.default = function(value, args) {
             return (typeof value !== 'undefined' && value !== null) ? value : args;
         };
+        rivets.formatters.empty = function(value) {
+            return !value || !Array.isArray(value) || value.length === 0;
+        };
         rivets.formatters.eq = function(value, args) {
             return value === args;
         };

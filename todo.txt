@@ -17,7 +17,6 @@ CODE
 - review range architecture
 
 UI
-- hide tunes list if empty
 - hide rivets templates while loading - show overlay?
 
 UX
