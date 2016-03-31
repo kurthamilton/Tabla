@@ -32,15 +32,15 @@ body {
 .input-group--unobtrusive:not(.has-error) * {
     border: none;
 }
+.input-group--unobtrusive:not(.has-error) .input-group-addon {
+    background-color: transparent;
+    color: #DDD;
+}
 .input-group--unobtrusive input:not(:focus) {
     box-shadow: none;
 }
 .input-group .input-group-addon.glyphicon { /* override bootstrap top:1px */
     top: 0;
-}
-.input-group--unobtrusive .input-group-addon {
-    background-color: transparent;
-    color: #DDD;
 }
 #tune-name {
     font-size: inherit;
