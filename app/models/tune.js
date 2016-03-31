@@ -37,6 +37,18 @@
             });
         }
 
+        Tune.prototype.addBar = function(options) {
+            options = options || {};
+            options.index = this.bars.length;
+            this.bars.push(new Bar(options));
+        };
+
+        Tune.prototype.addBars = function(number, options) {
+            for (let i = 0; i < number; i++) {
+                this.addBar(options);
+            }
+        };
+
         Tune.prototype.getOffset = function(position, other) {
             return {
                 bar: other.bar - position.bar,
@@ -119,6 +131,21 @@
                 parts: this.parts.map(part => part.serialize()),
                 volume: this.volume
             };
+        };
+
+        Tune.prototype.setNumberOfBars = function(number) {
+            if (number <= 1 || number === this.bars.length) {
+                return;
+            }
+
+            if (number > this.bars.length) {
+                this.addBars(number - this.bars.length);
+            } else {
+                while (this.bars.length > number) {
+                    this.bars.pop();
+                }
+            }
+
         };
 
         return Tune;

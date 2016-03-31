@@ -61,8 +61,9 @@
                                 </button>
                             </div>
                             <div class="pull-right part-options__component">
-                                <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit</a>
-                                <a href="#" rv-show="model.tune.parts | length | gt 1" rv-on-click="actions.deletePart">Delete</a>
+                                <a href="#edit-bars" rv-on-click="actions.onBarsEditing">Edit bars</a>
+                                <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit part</a>
+                                <a href="#" rv-show="model.tune.parts | length | gt 1" rv-on-click="actions.deletePart">Delete part</a>
                             </div>
                         </div>
                     </div>
@@ -126,6 +127,32 @@
                     </div>
                 </div>
             </div>
+            <!-- edit bars modal -->
+            <div id="edit-bars" class="modal fade in">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <h4 class="modal-title">Edit bars</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="number-of-bars" class="col-sm-3 control-label">Number of bars</label>
+                                    <div class="col-sm-8">
+                                        <input id="number-of-bars" type="number" required min="1" class="form-control" rv-value="editBars.number" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-8">
+                                        <button type="button" href="#" rv-on-click="actions.updateBars">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- add part modal -->
             <div id="add-part" class="modal fade in">
                 <div class="modal-dialog">
@@ -136,34 +163,32 @@
                         </div>
                         <div class="modal-body">
                             <div id="new-part" class="form-horizontal">
-                                <div>
-                                    <div class="form-group required">
-                                        <label for="new-part-instrument" class="col-sm-3 control-label">Instrument</label>
-                                        <div class="col-sm-9">
-                                            <select id="new-part-instrument" class="form-control" required
-                                                rv-value="newPart.instrumentName" rv-on-change="newPart.selectInstrument">
-                                                <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
-                                            </select>
-                                        </div>
+                                <div class="form-group required">
+                                    <label for="new-part-instrument" class="col-sm-3 control-label">Instrument</label>
+                                    <div class="col-sm-9">
+                                        <select id="new-part-instrument" class="form-control" required
+                                            rv-value="newPart.instrumentName" rv-on-change="newPart.selectInstrument">
+                                            <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
+                                        </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="new-part-sound" class="col-sm-3 control-label">Sound</label>
-                                        <div class="col-sm-9">
-                                            <select id="new-part-sound" class="form-control" rv-value="newPart.sound">
-                                                <option rv-each-sound="newPart.sounds" rv-value="sound">{ sound }</option>
-                                            </select>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-part-sound" class="col-sm-3 control-label">Sound</label>
+                                    <div class="col-sm-9">
+                                        <select id="new-part-sound" class="form-control" rv-value="newPart.sound">
+                                            <option rv-each-sound="newPart.sounds" rv-value="sound">{ sound }</option>
+                                        </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="new-part-name" class="col-sm-3 control-label">Name</label>
-                                        <div class="col-sm-9">
-                                            <input id="new-part-name" type="string" class="form-control" placeholder="Defaults to the instrument if not specified" rv-value="newPart.name" />
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-part-name" class="col-sm-3 control-label">Name</label>
+                                    <div class="col-sm-9">
+                                        <input id="new-part-name" type="string" class="form-control" placeholder="Defaults to the instrument if not specified" rv-value="newPart.name" />
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-3 col-sm-9">
-                                            <button type="button" href="#" rv-on-click="actions.addPart">Add</button>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-9">
+                                        <button type="button" href="#" rv-on-click="actions.addPart">Add</button>
                                     </div>
                                 </div>
                             </div>
@@ -181,34 +206,32 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-horizontal">
-                                <div>
-                                    <div class="form-group">
-                                        <label for="edit-part-instrument" class="col-sm-3 control-label">Instrument</label>
-                                        <div class="col-sm-9">
-                                            <select id="edit-part-instrument" class="form-control" required
-                                                rv-value="editPart.instrumentName" rv-on-change="editPart.selectInstrument">
-                                                <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
-                                            </select>
-                                        </div>
+                                <div class="form-group">
+                                    <label for="edit-part-instrument" class="col-sm-3 control-label">Instrument</label>
+                                    <div class="col-sm-9">
+                                        <select id="edit-part-instrument" class="form-control" required
+                                            rv-value="editPart.instrumentName" rv-on-change="editPart.selectInstrument">
+                                            <option rv-each-instrument="instruments" rv-value="instrument">{ instrument }</option>
+                                        </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="edit-part-sound" class="col-sm-3 control-label">Sound</label>
-                                        <div class="col-sm-9">
-                                            <select id="edit-part-sound" class="form-control" required rv-value="editPart.sound">
-                                                <option rv-each-sound="editPart.sounds" rv-value="sound">{ sound }</option>
-                                            </select>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-part-sound" class="col-sm-3 control-label">Sound</label>
+                                    <div class="col-sm-9">
+                                        <select id="edit-part-sound" class="form-control" required rv-value="editPart.sound">
+                                            <option rv-each-sound="editPart.sounds" rv-value="sound">{ sound }</option>
+                                        </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="edit-part-name" class="col-sm-3 control-label">Name</label>
-                                        <div class="col-sm-9">
-                                            <input id="edit-part-name" type="string" class="form-control" rv-value="editPart.name" />
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-part-name" class="col-sm-3 control-label">Name</label>
+                                    <div class="col-sm-9">
+                                        <input id="edit-part-name" type="string" class="form-control" rv-value="editPart.name" />
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-3 col-sm-9">
-                                            <button type="button" href="#" rv-on-click="actions.updatePart">Update</button>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-9">
+                                        <button type="button" href="#" rv-on-click="actions.updatePart">Update</button>
                                     </div>
                                 </div>
                             </div>

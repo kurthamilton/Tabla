@@ -16,6 +16,7 @@ CODE
 
 UI
 - hide rivets templates while loading - show overlay?
+- show part edit and delete options in tab drop down
 
 UX
 - Key events for play position: backwards/forwards with cursor
@@ -25,6 +26,5 @@ UX
 FUNCTIONALITY
 - custom instruments
 - pitch bend / hammer on / pull off
-- add / remove bars - what if removing a bar with notes?
 - Set note length / add rest notes
 - import / export. Sync?

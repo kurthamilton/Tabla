@@ -20,6 +20,7 @@
                 save: saveTune,
                 selectPart: selectPart,
                 setNote: setNote,
+                updateBars: updateBars,
                 updatePart: updatePart,
                 updateTune: updateTune
             },
@@ -147,6 +148,19 @@
             }
 
             return false;
+        }
+
+        function updateBars(options) {
+             if (!options || !options.number) {
+                 return;
+             }
+             if (options.number < model.tune.bars.length && !confirm('You are about to delete some bars. Are you sure?')) {
+                return;
+            }
+
+            model.tune.setNumberOfBars(options.number);
+            trigger('tune.bars.updated');
+            saveTune();
         }
 
         function updatePart(index, options) {

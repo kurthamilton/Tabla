@@ -15,15 +15,22 @@
                 delete: deleteTune,
                 deletePart: deletePart,
                 load: loadTune,
+                onBarsEditing: function() {
+                    scope.editBars.number = scope.model.tune.bars.length
+                },
                 onPartEditing: function() {
                     scope.editPart = new EditPartViewModel(scope.model.part);
                 },
                 save: saveTune,
                 selectPart: selectPart,
+                updateBars: updateBars,
                 updatePart: updatePart
             },
             audioActions: audioService.actions,
             audioModel: audioService.model,
+            editBars: {
+                number: 0
+            },
             editPart: null,
             instruments: instrumentFactory.available(),
             model: tuneService.model,
@@ -130,6 +137,14 @@
             tuneService.actions.selectPart(scope.index);
             // don't let the click bubble so that tab selections are preserved
             e.stopPropagation();
+        }
+
+        function updateBars(e, scope) {
+            if (validationService.validateForm(document.getElementById('edit-bars'))) {
+                tuneService.actions.updateBars({
+                    number: scope.editBars.number
+                });
+            }
         }
 
         function updatePart() {

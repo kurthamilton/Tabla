@@ -20,8 +20,8 @@
         };
 
         audioService.addEventListener('play-position.changed', onPlayPositionChanged);
+        tuneService.addEventListener('tune.bars.updated', onBarsUpdated);
         tuneService.addEventListener('part.selected', onPartSelected);
-
         return {
             actions: {
                 copySelectedRange: copySelectedRange,
@@ -36,6 +36,10 @@
             },
             model: model
         };
+
+        function onBarsUpdated() {
+            model.bars = getBars(model.part);
+        }
 
         function onPartSelected(part) {
             model.ready = false;
