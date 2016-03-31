@@ -204,6 +204,8 @@
             };
 
             if (!model.selectedRangeNoteOffset) {
+                range.from = model.selectedNote;
+                range.to = model.selectedNote;
                 range.notes.push(model.selectedNote);
                 return range;
             }

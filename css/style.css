@@ -111,7 +111,7 @@ input[type="range"].bpm-slider {
     margin-left: -1px; /*hide double border. It's not possible to use something last :last-child-of-row with flexbox*/
 }
 .crotchet:not(:last-child) {
-    border-right: 1px dashed #BBB;
+    border-right: 1px solid #DDD;
 }
 .crotchet {
     display: flex;
@@ -131,6 +131,7 @@ input[type="range"].bpm-slider {
 }
 .string {
     font-size: 10px;
+    height: 14px;
     position: relative;
     text-align: center;
     width: 12px;
@@ -147,25 +148,21 @@ input[type="range"].bpm-slider {
     background-color: #DADAF3;
 }
 .string.copied-top {
-    border-top: 1px dashed #DDD;
-    margin-top: -1px;
+    border-top: 1px dashed #CCC;
 }
 .string.copied-bottom {
-    border-bottom: 1px dashed #DDD;
-    margin-bottom: -1px;
+    border-bottom: 1px dashed #CCC;
 }
 .string.copied-left {
-    border-left: 1px dashed #DDD;
-    margin-left: -1px;
+    border-left: 1px dashed #CCC;
 }
 .string.copied-right {
-    border-right: 1px dashed #DDD;
-    margin-right: -1px;
+    border-right: 1px dashed #CCC;
 }
 .string:hover,
 .string.selected {
     background-color: #F5F5F5;
-    box-shadow: 0 0 0 1px #DADAF3;
+    border: 1px solid #DADAF3;
     cursor: pointer;
 }
 
