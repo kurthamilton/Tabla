@@ -43,7 +43,16 @@
             return value === args;
         };
         rivets.formatters.gt = function(value, args) {
+            if (value === null) {
+                return false;
+            }
             return value > args;
+        };
+        rivets.formatters.gte = function(value, args) {
+            if (value === null) {
+                return false;
+            }
+            return value >= args;
         };
         rivets.formatters.length = function(value) {
             return Array.isArray(value) ? value.length : 0;

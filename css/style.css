@@ -136,7 +136,7 @@ input[type="range"].bpm-slider {
     text-align: center;
     width: 12px;
 }
-.string:after {
+.string:not(.fretted):after {
     border-bottom: 1px solid #CA4848;
     content: "";
     left: 0;
@@ -159,11 +159,13 @@ input[type="range"].bpm-slider {
 .string.copied-right {
     border-right: 1px dashed #CCC;
 }
-.string:hover,
-.string.selected {
+.string:hover {
     background-color: #F5F5F5;
     border: 1px solid #DADAF3;
     cursor: pointer;
+}
+.string.selected {
+    border: 1px solid #42429A;
 }
 
 /* mixer */
