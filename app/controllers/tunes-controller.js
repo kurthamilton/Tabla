@@ -8,9 +8,6 @@
             actions: {
                 addPart: addPart,
                 blurOnEnter: blurOnEnter,
-                closeModal: function() {
-                    window.location.hash = '#';
-                },
                 create: createTune,
                 delete: deleteTune,
                 deletePart: deletePart,
@@ -108,6 +105,8 @@
 
                 scope.newTune.name = '';
                 scope.newTune.instrumentName = '';
+
+                closeModal();
             }
         }
 
@@ -127,6 +126,10 @@
             tuneService.actions.load(scope.tune.id);
         }
 
+        function closeModal() {
+            window.location.hash = '';
+        }
+
         function saveTune() {
             if (validateTune()) {
                 tuneService.actions.save();
@@ -144,14 +147,13 @@
                 tuneService.actions.updateBars({
                     number: scope.editBars.number
                 });
+                closeModal();
             }
         }
 
         function updatePart() {
             tuneService.actions.updatePart(scope.model.part.index(), scope.editPart);
-            // close edit modal
-            // todo: do this better
-            window.location.hash = '#';
+            closeModal();
         }
 
         function validateNewPart() {
