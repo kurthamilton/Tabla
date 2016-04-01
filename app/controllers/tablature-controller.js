@@ -154,6 +154,12 @@
                     if (e.ctrlKey) {
                         tablatureService.actions.copySelectedRange();
                     }
+                } else if (e.keyCode === 72) {
+                    // h
+                    tablatureService.actions.toggleEffect('hammeron');
+                } else if (e.keyCode === 80) {
+                    // p
+                    tablatureService.actions.toggleEffect('pulloff');
                 } else if (e.keyCode === 86) {
                     // v
                     if (e.ctrlKey) {

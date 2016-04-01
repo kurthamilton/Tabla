@@ -189,15 +189,16 @@
 
         function playNotes() {
             model.tune.parts.forEach((part, partIndex) => {
-                let frets = part.getFrets(context);
-                if (!frets) {
+                let notes = part.getNotes(context);
+                if (!notes) {
                     return;
                 }
 
                 let instrument = instruments[partIndex];
-                for (let i in frets) {
+                for (let i in notes) {
+                    let note = notes[i];
                     let string = instrument.strings[i];
-                    let note = scaleService.noteAtFret(string.note, string.octave, frets[i]);
+                    let scaleNote = scaleService.noteAtFret(string.note, string.octave, notes[i].fret);
                     if (!model.notes.hasOwnProperty(partIndex)) {
                         model.notes[partIndex] = {};
                     }
@@ -206,8 +207,8 @@
                         // stop note on current string
                         stopNote(model.notes[partIndex][i], partIndex);
                     }
-                    model.notes[partIndex][i] = note;
-                    playNote(note, partIndex, part.tune.volume * part.volume);
+                    model.notes[partIndex][i] = scaleNote;
+                    playNote(scaleNote, partIndex, part.tune.volume * part.volume * note.volume());
                 }
             });
 

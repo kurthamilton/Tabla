@@ -32,7 +32,8 @@
                 pasteCopiedRange: pasteCopiedRange,
                 selectNote: selectNote,
                 selectRangeNoteOffset: selectRangeNoteOffset,
-                setFret: (fret) => setFret(model.selectedNote, fret)
+                setFret: (fret) => setFret(model.selectedNote, fret),
+                toggleEffect: (effect) => toggleEffect(model.selectedNote, effect)
             },
             model: model
         };
@@ -251,8 +252,10 @@
 
         function getStrings(part, position) {
             let strings = [];
-            let frets = part.getFrets(position) || {};
+            let notes = part.getNotes(position) || {};
             for (let i = 0; i < part.instrument.strings.length; i++) {
+                let note = notes[i];
+
                 let string = {
                     index: i,
                     copied: {
@@ -261,7 +264,8 @@
                         left: false,
                         right: false
                     },
-                    fret: frets[i]
+                    effects: note ? note.effects : null,
+                    fret: note ? note.fret : null
                 };
                 if (model.selectedNote && model.tune.positionCompare(model.selectedNote, position) === 0 && model.selectedNote.string === i) {
                     string.selected = true;
@@ -357,6 +361,18 @@
             }
             string.fret = note.fret;
             return true;
+        }
+
+        function toggleEffect(note, effect) {
+            tuneService.actions.toggleEffect(note, effect);
+            let string = getString(note);
+            if (!string) {
+                return;
+            }
+
+            if (!string.effects) {
+                string.effects = model.part.getNote(note).effects;
+            }
         }
     }
 })();

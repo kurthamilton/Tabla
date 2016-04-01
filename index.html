@@ -251,7 +251,10 @@
                                 rv-class-selected="string.selected" rv-class-selected-range="string.inRange"
                                 rv-class-fretted="string.fret | gte 0"
                                 rv-class-copied-left="string.copied.left" rv-class-copied-right="string.copied.right"
-                                rv-class-copied-top="string.copied.top" rv-class-copied-bottom="string.copied.bottom">{ string.fret | default &nbsp }</div>
+                                rv-class-copied-top="string.copied.top" rv-class-copied-bottom="string.copied.bottom">
+                                { string.fret | default &nbsp }
+                                <span rv-show="string.effects.hammeron">h</span>
+                            </div>
                         </div>
                     </div>
                 </div>

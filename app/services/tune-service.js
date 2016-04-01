@@ -20,6 +20,7 @@
                 save: saveTune,
                 selectPart: selectPart,
                 setNote: setNote,
+                toggleEffect: toggleEffect,
                 updateBars: updateBars,
                 updatePart: updatePart,
                 updateTune: updateTune
@@ -148,6 +149,23 @@
             }
 
             return false;
+        }
+
+        function toggleEffect(note, effect) {
+            if (!model.part) {
+                return false;
+            }
+
+            let partNote = model.part.getNote(note);
+            if (!partNote) {
+                return;
+            }
+
+            let on = partNote.toggleEffect(effect);
+
+            utils.async(() => saveTune());
+
+            return on;
         }
 
         function updateBars(options) {
