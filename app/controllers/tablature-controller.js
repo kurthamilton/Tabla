@@ -154,17 +154,23 @@
                     if (e.ctrlKey) {
                         tablatureService.actions.copySelectedRange();
                     }
+                } else if (e.keyCode === 86) {
+                    // v
+                    if (e.ctrlKey) {
+                        tablatureService.actions.pasteCopiedRange();
+                    }
                 } else if (e.keyCode === 72) {
                     // h
                     tablatureService.actions.toggleEffect('hammeron');
                 } else if (e.keyCode === 80) {
                     // p
                     tablatureService.actions.toggleEffect('pulloff');
-                } else if (e.keyCode === 86) {
-                    // v
-                    if (e.ctrlKey) {
-                        tablatureService.actions.pasteCopiedRange();
-                    }
+                } else if (e.keyCode === 220) {
+                    // \
+                    tablatureService.actions.toggleEffect('slidedown');
+                } else if (e.keyCode === 191) {
+                    // /
+                    tablatureService.actions.toggleEffect('slideup');
                 }
             });
 
@@ -238,8 +244,18 @@
             });
         }
 
+        function isString(target) {
+            if (!target) {
+                return false;
+            }
+            if (domUtils.hasClass(target, 'string') || domUtils.hasClass(target.parentNode, 'string')) {
+                return true;
+            }
+            return false;
+        }
+
         function selectRangeOffset(target) {
-            if (!target || !domUtils.hasClass(target, 'string')) {
+            if (!isString(target)) {
                 return;
             }
 
@@ -248,7 +264,7 @@
         }
 
         function selectString(target) {
-            if (!target || !domUtils.hasClass(target, 'string')) {
+            if (!isString(target)) {
                 target = null;
             }
 

@@ -1,8 +1,6 @@
 BUGS
 - handle long part names in mixer
 - refreshing page when in edit part screen loads blank modal
-- effect isn't deleted with note delete
-- only allow single effect
 
 OPTIMISATION
 - Preload notes when playing
@@ -20,7 +18,6 @@ UI
 - hide rivets templates while loading - show overlay?
 - show part edit and delete options in tab drop down
 - show string notes
-- effect styling
 
 UX
 - Key events for play position: backwards/forwards with cursor

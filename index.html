@@ -252,8 +252,11 @@
                                 rv-class-fretted="string.fret | gte 0"
                                 rv-class-copied-left="string.copied.left" rv-class-copied-right="string.copied.right"
                                 rv-class-copied-top="string.copied.top" rv-class-copied-bottom="string.copied.bottom">
-                                { string.fret | default &nbsp }
-                                <span rv-show="string.effects.hammeron">h</span>
+                                <span rv-show="string.fret | gte 0">{ string.fret }</span
+                                ><span class="effect" rv-if="string.effect | eq 'hammeron'">h</span
+                                ><span class="effect" rv-if="string.effect | eq 'pulloff'">p</span
+                                ><span class="effect" rv-if="string.effect | eq 'slidedown'">\</span
+                                ><span class="effect" rv-if="string.effect | eq 'slideup'">/</span>
                             </div>
                         </div>
                     </div>

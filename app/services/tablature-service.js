@@ -264,7 +264,7 @@
                         left: false,
                         right: false
                     },
-                    effects: note ? note.effects : null,
+                    effect: note ? note.effect : null,
                     fret: note ? note.fret : null
                 };
                 if (model.selectedNote && model.tune.positionCompare(model.selectedNote, position) === 0 && model.selectedNote.string === i) {
@@ -360,6 +360,9 @@
                 return false;
             }
             string.fret = note.fret;
+            if (note.fret === null) {
+                string.effect = '';
+            }
             return true;
         }
 
@@ -370,9 +373,7 @@
                 return;
             }
 
-            if (!string.effects) {
-                string.effects = model.part.getNote(note).effects;
-            }
+            string.effect = model.part.getNote(note).effect;
         }
     }
 })();

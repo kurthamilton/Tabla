@@ -134,6 +134,7 @@ input[type="range"].bpm-slider {
     height: 14px;
     position: relative;
     text-align: center;
+    white-space: nowrap;
     width: 12px;
 }
 .string:not(.fretted):after {
@@ -166,6 +167,11 @@ input[type="range"].bpm-slider {
 }
 .string.selected {
     border: 1px solid #42429A;
+}
+
+/* effects */
+.effect {
+    font-size: 8px;
 }
 
 /* mixer */
