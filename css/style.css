@@ -44,6 +44,7 @@ body {
 }
 #tune-name {
     font-size: inherit;
+    width: initial;
 }
 
 /* validation */
@@ -53,15 +54,6 @@ body {
 }
 .form-group.has-error input:not(.form-control) { /* apply bootstrap error styling to inputs that aren't form-controls*/
     border: 1px solid #a94442;
-}
-
-/* modal */
-.modal {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-.modal:target {
-    display: block;
-    opacity: 1;
 }
 
 /* tab */

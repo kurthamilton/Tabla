@@ -8,7 +8,7 @@
     <body>
         <!--tunes-->
         <section id="tunes" class="buffer-top">
-            <a href="#tunes-manager">Tunes</a>
+            <a href="#" data-toggle="modal" data-target="#tunes-manager">Tunes</a>
             <!-- tune -->
             <div class="buffer-top" rv-show="model.tune">
                 <!-- tune details -->
@@ -25,7 +25,10 @@
                         <li role="presentation" rv-each-part="model.tune.parts" rv-class-active="part.id | eq model.part.id">
                             <a href="#" rv-on-click="actions.selectPart">{ part.name }</a>
                         </li>
-                        <li role="presentation" title="Add part"><a href="#add-part"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+                        <li role="presentation" title="Add part">
+                            <a href="#" data-toggle="modal" data-target="#add-part">
+                                <span data-toggle="modal" data-target="#add-part" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                        </li>
                     </ul>
                     <!-- part options bar -->
                     <div class="tab-content">
@@ -61,8 +64,8 @@
                                 </button>
                             </div>
                             <div class="pull-right part-options__component">
-                                <a href="#edit-bars" rv-on-click="actions.onBarsEditing">Edit bars</a>
-                                <a href="#edit-part" rv-on-click="actions.onPartEditing">Edit part</a>
+                                <a href="#" data-toggle="modal" data-target="#edit-bars" rv-on-click="actions.onBarsEditing">Edit bars</a>
+                                <a href="#" data-toggle="modal" data-target="#edit-part" rv-on-click="actions.onPartEditing">Edit part</a>
                                 <a href="#" rv-show="model.tune.parts | length | gt 1" rv-on-click="actions.deletePart">Delete part</a>
                             </div>
                         </div>
@@ -72,11 +75,11 @@
 
             <!-- MODALS -->
             <!-- tunes modal -->
-            <div id="tunes-manager" class="modal fade in">
+            <div id="tunes-manager" class="modal fade" role="dialog" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body">
-                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
                             <!-- tunes table -->
                             <div rv-hide="model.tunes | empty">
@@ -128,11 +131,11 @@
                 </div>
             </div>
             <!-- edit bars modal -->
-            <div id="edit-bars" class="modal fade in">
+            <div id="edit-bars" class="modal fade" role="dialog" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">Edit bars</h4>
                         </div>
                         <div class="modal-body">
@@ -154,11 +157,11 @@
                 </div>
             </div>
             <!-- add part modal -->
-            <div id="add-part" class="modal fade in">
+            <div id="add-part" class="modal fade" role="dialog" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">Add part</h4>
                         </div>
                         <div class="modal-body">
@@ -197,11 +200,11 @@
                 </div>
             </div>
             <!-- edit part modal -->
-            <div id="edit-part" class="modal fade in">
+            <div id="edit-part" class="modal fade" role="dialog" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <a class="close" href="#"><span aria-hidden="true">x</span></a>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">Edit part</h4>
                         </div>
                         <div class="modal-body">
@@ -297,6 +300,7 @@
         <!--scripts-->
         <!--framework-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.8.1/rivets.bundled.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/bootstrap.native/1.0.2/bootstrap-native.min.js"></script>
         <!--midi-->
         <script src="js/lib/MIDI.js"></script>
         <script src="js/lib/shim/Base64.js" type="text/javascript"></script>

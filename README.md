@@ -10,6 +10,7 @@ Navigate the fretboard using the cursor and tab keys.
 ## Credits
 * [MIDI.js](https://github.com/mudcube/MIDI.js) - a midi library built on other libraries
 * [Soundfonts](https://github.com/gleitz/midi-js-soundfonts) - a comprehensive set of instrument noises that can be used by MIDI.js
+* [bootstrap.native](https://github.com/thednp/bootstrap.native) - vanilla javascript for bootstrap
 
 ## Browser requirements
 TablatureCreator is currently developed in Chrome for use in Chrome.
