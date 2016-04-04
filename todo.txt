@@ -4,14 +4,11 @@ BUGS
 
 OPTIMISATION
 - Preload notes when playing
-- don't save defaults
-- index quavers in tablature controller
 - optimise tablature service move selected note
 - switch parts is slow
 
 CODE
 - save note collection as is
-- configurable instrument fret count in tune service set note
 - review range architecture
 
 UI

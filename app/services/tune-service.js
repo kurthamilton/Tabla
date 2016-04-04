@@ -142,7 +142,7 @@
                 return true;
             }
 
-            if (fret >= 0 && fret <= 24) {
+            if (fret >= 0 && fret <= model.part.instrument.frets) {
                 model.part.addNote(note);
                 utils.async(() => saveTune());
                 return true;

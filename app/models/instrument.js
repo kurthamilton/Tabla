@@ -3,8 +3,9 @@
 
     define(() => Instrument);
 
-    function Instrument(name) {
-        this.name = name;
+    function Instrument(options) {
+        this.frets = options.frets;
+        this.name = options.name;
         this.strings = [];
     }
 })();

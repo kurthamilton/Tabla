@@ -6,7 +6,7 @@
     function InstrumentFactory(Instrument, String) {
         const instruments = {
             banjo: function() {
-                let banjo = new Instrument('banjo');
+                let banjo = new Instrument({ name: 'banjo', frets: 24 });
                 banjo.strings.push(new String({ index: 0, note: 'D', octave: 5 }));
                 banjo.strings.push(new String({ index: 1, note: 'B', octave: 4 }));
                 banjo.strings.push(new String({ index: 2, note: 'G', octave: 4 }));
@@ -15,7 +15,7 @@
                 return banjo;
             },
             bass: function() {
-                let bass = new Instrument('bass');
+                let bass = new Instrument({ name: 'bass', frets: 24 });
                 bass.strings.push(new String({ index: 0, note: 'G', octave: 3 }));
                 bass.strings.push(new String({ index: 1, note: 'D', octave: 3 }));
                 bass.strings.push(new String({ index: 2, note: 'A', octave: 2 }));
@@ -23,7 +23,7 @@
                 return bass;
             },
             guitar: function() {
-                let guitar = new Instrument('guitar');
+                let guitar = new Instrument({ name: 'guitar', frets: 24 });
                 guitar.strings.push(new String({ index: 0, note: 'E', octave: 5 }));
                 guitar.strings.push(new String({ index: 1, note: 'B', octave: 4 }));
                 guitar.strings.push(new String({ index: 2, note: 'G', octave: 4 }));
@@ -33,7 +33,7 @@
                 return guitar;
             },
             violin: function() {
-                let violin = new Instrument('violin');
+                let violin = new Instrument({ name: 'violin', frets: 24 });
                 violin.strings.push(new String({ index: 0, note: 'E', octave: 6 }));
                 violin.strings.push(new String({ index: 1, note: 'A', octave: 5 }));
                 violin.strings.push(new String({ index: 2, note: 'D', octave: 5 }));
