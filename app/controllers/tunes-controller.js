@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/instrument-factory', 'services/audio-service', 'services/tune-service', 'services/validation-service'], TunesController);
+    define(['utils.dom', 'services/instrument-factory', 'services/audio-service', 'services/tune-service', 'services/validation-service'], TunesController);
 
-    function TunesController(instrumentFactory, audioService, tuneService, validationService) {
+    function TunesController(domUtils, instrumentFactory, audioService, tuneService, validationService) {
         let scope = {
             actions: {
                 addPart: addPart,
@@ -72,7 +72,7 @@
             load: function() {
                 tuneService.load();
                 if (tuneService.model.tunes.length === 0) {
-                    window.location.hash = 'tunes-manager';
+                    domUtils.openModal('#tunes-manager');
                 }
                 bind();
             }
@@ -106,7 +106,7 @@
                 scope.newTune.name = '';
                 scope.newTune.instrumentName = '';
 
-                closeModal();
+                domUtils.closeModal();
             }
         }
 
@@ -126,10 +126,6 @@
             tuneService.actions.load(scope.tune.id);
         }
 
-        function closeModal() {
-            window.location.hash = '';
-        }
-
         function saveTune() {
             if (validateTune()) {
                 tuneService.actions.save();
@@ -147,13 +143,13 @@
                 tuneService.actions.updateBars({
                     number: scope.editBars.number
                 });
-                closeModal();
+                domUtils.closeModal();
             }
         }
 
         function updatePart() {
             tuneService.actions.updatePart(scope.model.part.index(), scope.editPart);
-            closeModal();
+            domUtils.closeModal();
         }
 
         function validateNewPart() {

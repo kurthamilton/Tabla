@@ -1,6 +1,5 @@
 BUGS
 - handle long part names in mixer
-- refreshing page when in edit part screen loads blank modal
 - drop downs don't bind their default value in FF. e.g. in the Create Tune modal, newTune.instrumentName is an empty string if left on the default
 
 OPTIMISATION

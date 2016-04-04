@@ -1,9 +1,9 @@
 (function(rivets) {
     'use strict';
 
-    define(['services/audio-service', 'services/tune-service'], AudioController);
+    define(['utils.dom', 'services/audio-service', 'services/tune-service'], AudioController);
 
-    function AudioController(audioService, tuneService) {
+    function AudioController(domUtils, audioService, tuneService) {
         let scope = {
             actions: audioService.actions,
             model: audioService.model,
@@ -28,10 +28,8 @@
 
         function bindEvents() {
             document.addEventListener('keydown', function(e) {
-                // todo: the hash check is to prevent playing while the tune modal is open.
-                // This is a flimsy check and should be improved
                 // The active element check is to prevent collision with input key behaviour
-                if (!scope.model.ready || window.location.hash !== '' || document.activeElement !== document.body) {
+                if (!scope.model.ready || domUtils.getOpenModal() || document.activeElement !== document.body) {
                     return;
                 }
 

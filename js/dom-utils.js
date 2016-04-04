@@ -5,6 +5,22 @@
 
     function DomUtils() {
         let utils = {
+            /**
+             * Close an open modal by triggering a click on the close button within the open modal
+             */
+            closeModal: function() {
+                let modal = utils.getOpenModal();
+                if (!modal) {
+                    return;
+                }
+
+                let closeButton = modal.querySelector('[data-dismiss="modal"]');
+                if (!closeButton) {
+                    return;
+                }
+
+                closeButton.click();
+            },
             closestClass: function(element, className) {
                 while (element) {
                     if (utils.hasClass(element, className)) {
@@ -14,6 +30,9 @@
                 }
 
                 return element;
+            },
+            getOpenModal: function() {
+                return document.querySelector('.modal.in');
             },
             hasClass: function(element, className) {
                 return element && element.classList && element.classList.contains(className);
@@ -28,6 +47,22 @@
                     element = element.previousSibling;
                 }
                 return index;
+            },
+            /**
+             * Open a modal using the toggle with the given target selector.
+             */
+            openModal: function(targetSelector) {
+                // Cannot open a modal if another modal is already open
+                if (utils.getOpenModal()) {
+                    return;
+                }
+
+                let toggle = document.querySelector(`[data-toggle="modal"][data-target="${targetSelector}"]`);
+                if (!toggle) {
+                    return;
+                }
+
+                toggle.click();
             },
             sibling: function(element, direction, className, parentClassName) {
                 // todo: accept parentClassName as array or string
