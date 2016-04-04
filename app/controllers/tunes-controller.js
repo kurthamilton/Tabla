@@ -144,6 +144,7 @@
                     number: scope.editBars.number
                 });
                 domUtils.closeModal();
+                domUtils.addFeedback('Bars updated');
             }
         }
 

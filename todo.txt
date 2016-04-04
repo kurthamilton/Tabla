@@ -1,6 +1,7 @@
 BUGS
 - handle long part names in mixer
 - drop downs don't bind their default value in FF. e.g. in the Create Tune modal, newTune.instrumentName is an empty string if left on the default
+- alerts don't dismiss
 
 OPTIMISATION
 - Preload notes when playing
