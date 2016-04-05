@@ -83,6 +83,7 @@
         function bind() {
             let view = document.getElementById('tunes');
             rivets.bind(view, scope);
+            view.classList.remove('binding');
         }
 
         // actions

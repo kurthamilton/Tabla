@@ -12,7 +12,6 @@ CODE
 - review range architecture
 
 UI
-- hide rivets templates while loading - show overlay?
 - show part edit and delete options in tab drop down
 
 UX

@@ -7,7 +7,7 @@
     </head>
     <body>
         <!--tunes-->
-        <section id="tunes" class="buffer-top">
+        <section id="tunes" class="buffer-top binding">
             <a href="#" data-toggle="modal" data-target="#tunes-manager">Tunes</a>
             <!-- tune -->
             <div class="buffer-top" rv-show="model.tune">
@@ -244,7 +244,7 @@
             </div>
         </section>
         <!--tablature-->
-        <section id="tablature" class="tab-content" rv-show="model.ready">
+        <section id="tablature" class="tab-content binding" rv-show="model.ready">
             <div id="string-notes">
                 <div class="string string--instrument" rv-each-string="model.part.instrument.strings">{ string.note }</div>
             </div>
@@ -270,7 +270,7 @@
             </div>
         </section>
         <!--audio-->
-        <section id="audio" class="tab-content tab-content--last" rv-show="model.tune">
+        <section id="audio" class="tab-content tab-content--last binding" rv-show="model.tune">
             <div rv-show="model.ready">
                 <div class="buffer">
                     <div class="mixer">

@@ -24,6 +24,7 @@
         function bind() {
             let view = document.getElementById('audio');
             rivets.bind(view, scope);
+            view.classList.remove('binding');
         }
 
         function bindEvents() {

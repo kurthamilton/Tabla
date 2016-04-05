@@ -22,7 +22,9 @@
 
         function bind() {
             let view = document.getElementById('tablature');
-            return rivets.bind(view, scope);
+            let binding = rivets.bind(view, scope);
+            view.classList.remove('binding');
+            return binding;
         }
 
         function bindEvents() {
