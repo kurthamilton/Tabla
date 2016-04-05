@@ -5,7 +5,8 @@
 
     function TablatureController(domUtils, utils, Note, audioService, tablatureService, tuneService) {
         let scope = {
-            model: tablatureService.model
+            model: tablatureService.model,
+            tuneModel: tuneService.model
         };
 
         let shiftPressed = false;
