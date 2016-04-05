@@ -13,11 +13,12 @@
         function addAlert(message, timeout) {
             let clone = domUtils.cloneTemplate('alert-template');
             clone.querySelector('.alert-message').textContent = message;
-            clone = container.appendChild(clone);
+            container.appendChild(clone);
 
             if (timeout > 0) {
+                let alert = container.children[container.children.length - 1];
                 setTimeout(function() {
-                    dismissAlert(clone);
+                    dismissAlert(alert);
                 }, timeout);
             }
         }
