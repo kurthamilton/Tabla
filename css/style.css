@@ -189,3 +189,9 @@ input[type="range"].bpm-slider {
     -webkit-appearance: slider-vertical;
     height: 100px;
 }
+
+/* alerts */
+#alerts {
+    bottom: 0;
+    position: fixed;
+}

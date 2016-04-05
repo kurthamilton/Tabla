@@ -1,7 +1,7 @@
 BUGS
 - handle long part names in mixer
 - drop downs don't bind their default value in FF. e.g. in the Create Tune modal, newTune.instrumentName is an empty string if left on the default
-- alerts don't dismiss
+- alerts don't dismiss on timeout
 
 OPTIMISATION
 - Preload notes when playing
@@ -19,7 +19,7 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- add feedback messages
+- add feedback messages - edit part, delete part, delete tune, load tune
 - undo / redo: just notes?
 
 FUNCTIONALITY

@@ -5,15 +5,9 @@
 
     function DomUtils() {
         let utils = {
-            addFeedback: function(message) {
-                let feedback = document.createElement('div');
-                feedback.classList.add('alert');
-                feedback.classList.add('alert-dismissable');
-                feedback.classList.add('alert-success');
-                feedback.setAttribute('role', 'alert');
-                feedback.innerHTML = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-                feedback.innerHTML += message;
-                document.body.appendChild(feedback);
+            cloneTemplate: function(id) {
+                let template = document.getElementById(id);
+                return document.importNode(template.content, true);
             },
             /**
              * Close an open modal by triggering a click on the close button within the open modal

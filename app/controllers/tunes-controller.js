@@ -1,9 +1,11 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'services/instrument-factory', 'services/audio-service', 'services/tune-service', 'services/validation-service'], TunesController);
+    let dependencies = ['utils.dom', 'services/instrument-factory', 'services/alert-service', 'services/audio-service',
+        'services/tune-service', 'services/validation-service'];
+    define(dependencies, TunesController);
 
-    function TunesController(domUtils, instrumentFactory, audioService, tuneService, validationService) {
+    function TunesController(domUtils, instrumentFactory, alertService, audioService, tuneService, validationService) {
         let scope = {
             actions: {
                 addPart: addPart,
@@ -144,7 +146,7 @@
                     number: scope.editBars.number
                 });
                 domUtils.closeModal();
-                domUtils.addFeedback('Bars updated');
+                alertService.addAlert('Bars updated', 2000);
             }
         }
 

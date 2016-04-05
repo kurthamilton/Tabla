@@ -297,10 +297,24 @@
                 Loading sounds...
             </div>
         </section>
+        <!--alerts-->
+        <div id="alerts">
+            <template id="alert-template">
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="alert-message"></span>
+                </div>
+            </template>
+            <!--dummy element to initialise alerts in bootstrap.native-->
+            <div class="hidden">
+                <button data-dismiss="alert"></button>
+            </div>
+        </div>
         <!--scripts-->
         <!--framework-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.8.1/rivets.bundled.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/bootstrap.native/1.0.2/bootstrap-native.min.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/bootstrap.native/1.0.2/bootstrap-native.min.js"></script>-->
+        <script src="js/lib/bootstrap-native.js"></script>
         <!--midi-->
         <script src="js/lib/MIDI.js"></script>
         <script src="js/lib/shim/Base64.js" type="text/javascript"></script>
