@@ -8,6 +8,7 @@ html {
 
 /* layout */
 body {
+    min-width: 600px;
     padding-left: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
@@ -92,8 +93,16 @@ input[type="range"].bpm-slider {
 }
 
 /* tab grid */
+#tablature {
+    display: flex;
+}
+#string-notes {
+    flex-direction: column;
+}
 .bars, .bar {
     display: flex;
+}
+.bars {
     flex-wrap: wrap;
 }
 .bar {
@@ -129,7 +138,7 @@ input[type="range"].bpm-slider {
     white-space: nowrap;
     width: 12px;
 }
-.string:not(.fretted):after {
+.string:not(.string--instrument):not(.fretted):after {
     border-bottom: 1px solid #CA4848;
     content: "";
     left: 0;

@@ -14,7 +14,6 @@ CODE
 UI
 - hide rivets templates while loading - show overlay?
 - show part edit and delete options in tab drop down
-- show string notes
 
 UX
 - Key events for play position: backwards/forwards with cursor

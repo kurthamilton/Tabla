@@ -245,6 +245,9 @@
         </section>
         <!--tablature-->
         <section id="tablature" class="tab-content" rv-show="model.ready">
+            <div id="string-notes">
+                <div class="string string--instrument" rv-each-string="model.part.instrument.strings">{ string.note }</div>
+            </div>
             <div class="bars no-select">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
                     <div class="crotchet" rv-each-crotchet="bar.crotchets">
