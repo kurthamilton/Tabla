@@ -10,16 +10,19 @@
             addAlert: addAlert
         };
 
-        function addAlert(message, timeout) {
-            let clone = domUtils.cloneTemplate('alert-template');
-            clone.querySelector('.alert-message').textContent = message;
-            container.appendChild(clone);
+        function addAlert(options) {
+            options.type = options.type || 'success';
 
-            if (timeout > 0) {
-                let alert = container.children[container.children.length - 1];
+            let clone = domUtils.cloneTemplate('alert-template');
+            clone.querySelector('.alert-message').textContent = options.message;
+            container.appendChild(clone);
+            let alert = container.children[container.children.length - 1];
+            alert.classList.add(`alert-${options.type}`);
+
+            if (options.timeout > 0) {
                 setTimeout(function() {
                     dismissAlert(alert);
-                }, timeout);
+                }, options.timeout);
             }
         }
 

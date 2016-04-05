@@ -18,7 +18,6 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- add feedback messages - edit part, delete part, delete tune, load tune
 - undo / redo: just notes?
 
 FUNCTIONALITY

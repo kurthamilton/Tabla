@@ -89,8 +89,10 @@
         function addPart() {
             if (validateNewPart()) {
                 tuneService.actions.addPart(scope.newPart);
-
                 scope.newPart.reset();
+
+                domUtils.closeModal();
+                alertService.addAlert({ message: 'Part added', timeout: 2000 });
             }
         }
 
@@ -115,22 +117,26 @@
         function deletePart() {
             if (confirm('Are you sure you want to delete this part?')) {
                 tuneService.actions.deletePart(scope.model.part);
+                alertService.addAlert({ message: 'Part deleted', timeout: 2000 });
             }
         }
 
         function deleteTune(e, scope) {
             if (confirm('Are you sure you want to delete this tune?')) {
                 tuneService.actions.delete(scope.tune.id);
+                alertService.addAlert({ message: 'Tune deleted', timeout: 2000 });
             }
         }
 
         function loadTune(e, scope) {
             tuneService.actions.load(scope.tune.id);
+            domUtils.closeModal();
         }
 
         function saveTune() {
             if (validateTune()) {
                 tuneService.actions.save();
+                alertService.addAlert({ message: 'Tune deleted', timeout: 2000 });
             }
         }
 
@@ -146,13 +152,14 @@
                     number: scope.editBars.number
                 });
                 domUtils.closeModal();
-                alertService.addAlert('Bars updated', 2000);
+                alertService.addAlert({ message: 'Bars updated', timeout: 2000 });
             }
         }
 
         function updatePart() {
             tuneService.actions.updatePart(scope.model.part.index(), scope.editPart);
             domUtils.closeModal();
+            alertService.addAlert({ message: 'Part updated', timeout: 2000 });
         }
 
         function validateNewPart() {
