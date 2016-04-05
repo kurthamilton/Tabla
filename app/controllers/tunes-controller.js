@@ -136,7 +136,7 @@
         function saveTune() {
             if (validateTune()) {
                 tuneService.actions.save();
-                alertService.addAlert({ message: 'Tune deleted', timeout: 2000 });
+                alertService.addAlert({ message: 'Tune updated', timeout: 2000 });
             }
         }
 
