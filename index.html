@@ -246,7 +246,7 @@
         <!--tablature-->
         <section id="tablature" class="tab-content binding" rv-show="model.ready">
             <div id="string-notes">
-                <div class="string string--instrument" rv-each-string="tuneModel.part.instrument.strings">{ string.note }</div>
+                <div class="instrument-string" rv-each-string="tuneModel.part.instrument.strings">{ string.note }</div>
             </div>
             <div class="bars no-select">
                 <div class="bar bar__tab" rv-each-bar="model.bars">
