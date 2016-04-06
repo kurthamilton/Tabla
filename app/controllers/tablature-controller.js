@@ -1,9 +1,11 @@
 (function(rivets) {
     'use strict';
 
-    define(['utils.dom', 'utils', 'models/note', 'services/audio-service', 'services/tablature-service', 'services/tune-service'], TablatureController);
+    let dependencies = ['utils.dom', 'utils', 'models/note', 'services/audio-service', 'services/event-service', 'services/tablature-service', 'services/tune-service'];
 
-    function TablatureController(domUtils, utils, Note, audioService, tablatureService, tuneService) {
+    define(dependencies, TablatureController);
+
+    function TablatureController(domUtils, utils, Note, audioService, eventService, tablatureService, tuneService) {
         let scope = {
             model: tablatureService.model,
             tuneModel: tuneService.model
@@ -168,6 +170,16 @@
                 } else if (e.keyCode === 80) {
                     // p
                     tablatureService.actions.toggleEffect('pulloff');
+                } else if (e.keyCode === 89) {
+                    // y
+                    if (e.ctrlKey) {
+                        eventService.redo();
+                    }
+                } else if (e.keyCode === 90) {
+                    // z
+                    if (e.ctrlKey) {
+                        eventService.undo();
+                    }
                 } else if (e.keyCode === 220) {
                     // \
                     tablatureService.actions.toggleEffect('slidedown');

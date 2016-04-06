@@ -1,6 +1,7 @@
 BUGS
 - handle long part names in mixer
 - drop downs don't bind their default value in FF. e.g. in the Create Tune modal, newTune.instrumentName is an empty string if left on the default
+- finish undo/redo
 
 OPTIMISATION
 - Preload notes when playing
@@ -16,7 +17,6 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
-- undo / redo: just notes?
 
 FUNCTIONALITY
 - custom instruments

@@ -4,9 +4,15 @@
     define(EventService);
 
     function EventService() {
+        let undoActions = [];
+        let redoActions = [];
+
         return {
             addEventListener: addEventListener,
-            trigger: trigger
+            performAction: performAction,
+            redo: redoAction,
+            trigger: trigger,
+            undo: undoAction
         };
 
         /**
@@ -34,6 +40,25 @@
             eventListeners[event].push(callback);
         }
 
+        function performAction(redo, undo) {
+            if (typeof redo === 'function' && typeof(undo) === 'function') {
+                undoActions.push({
+                   redo: redo,
+                   undo: undo
+                });
+            }
+        }
+
+        function redoAction() {
+            if (redoActions.length === 0) {
+                return;
+            }
+
+            let action = redoActions.pop();
+            action.redo();
+            undoActions.push(action);
+        }
+
         function trigger(target, event, ...args) {
             let eventListeners = target._events;
             if (!eventListeners) {
@@ -44,6 +69,16 @@
                 return;
             }
             callbacks.forEach(callback => callback(...args));
+        }
+
+        function undoAction() {
+            if (undoActions.length === 0) {
+                return;
+            }
+
+            let action = undoActions.pop();
+            action.undo();
+            redoActions.push(action);
         }
     }
 })();

@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    define(['services/audio-service', 'services/tune-service'], TablatureService);
+    define(['services/audio-service', 'services/event-service', 'services/tune-service'], TablatureService);
 
-    function TablatureService(audioService, tuneService) {
+    function TablatureService(audioService, eventService, tuneService) {
         let model = {
             bars: null,
             copiedRange: null,
@@ -346,7 +346,25 @@
             }
 
             note = cloneNote(note);
+
+            let selectedNote = model.selectedNote;
+            let undoNote = cloneNote(note);
+            console.log(undoNote);
+            let undo = () => {
+                setNote(undoNote);
+                selectedNote.fret = undoNote.fret;
+            };
+
             note.fret = fret;
+
+            let redoNote = cloneNote(note);
+            let redo = () => {
+                setNote(redoNote);
+                selectedNote.fret = redoNote.fret;
+            };
+
+            eventService.performAction(redo, undo);
+
             model.selectedNote.fret = fret;
             return setNote(note);
         }
