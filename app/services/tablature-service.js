@@ -32,7 +32,7 @@
                 pasteCopiedRange: pasteCopiedRange,
                 selectNote: selectNote,
                 selectRangeNoteOffset: selectRangeNoteOffset,
-                setFret: (fret) => setFret(model.selectedNote, fret),
+                setFret: (fret) => setFretWithUndo(model.selectedNote, fret),
                 toggleEffect: (effect) => toggleEffect(model.selectedNote, effect)
             },
             model: model
@@ -346,27 +346,23 @@
             }
 
             note = cloneNote(note);
-
-            let selectedNote = model.selectedNote;
-            let undoNote = cloneNote(note);
-            console.log(undoNote);
-            let undo = () => {
-                setNote(undoNote);
-                selectedNote.fret = undoNote.fret;
-            };
-
             note.fret = fret;
-
-            let redoNote = cloneNote(note);
-            let redo = () => {
-                setNote(redoNote);
-                selectedNote.fret = redoNote.fret;
-            };
-
-            eventService.performAction(redo, undo);
-
-            model.selectedNote.fret = fret;
             return setNote(note);
+        }
+
+        function setFretWithUndo(note, fret) {
+            if (!note) {
+                return;
+            }
+
+            let undo = () => setFret(note, note.fret);
+            let redo = () => setFret(note, fret);
+
+            let result = setFret(note, fret);
+            if (result) {
+                eventService.performAction(redo, undo);
+            }
+            return result;
         }
 
         function setNote(note) {
