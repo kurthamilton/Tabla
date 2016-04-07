@@ -208,42 +208,31 @@
             return quavers;
         }
 
-        function getSelectedRange() {
-            if (!model.selectedNote) {
+        function getRange(startNote, endNote) {
+            if (!startNote || !endNote) {
                 return null;
             }
 
+            let minString = Math.min(startNote.string, endNote.string);
+            let maxString = Math.max(startNote.string, endNote.string);
+
+            // compare the start and end positions
+            let compare = model.tune.positionCompare(startNote, endNote);
+            if (compare === 0 && startNote.string !== endNote.string) {
+                compare = startNote.string < endNote.string ? -1 : 1;
+            }
+
             let range = {
-                from: null,
-                to: null,
+                from: cloneNote(compare < 0 ? startNote : endNote),
+                to: cloneNote(compare < 0 ? endNote : startNote),
                 notes: []
             };
 
-            if (!model.selectedRangeNoteOffset) {
-                range.from = model.selectedNote;
-                range.to = model.selectedNote;
-                range.notes.push(model.selectedNote);
-                return range;
-            }
-
-            let minString = Math.min(model.selectedNote.string, model.selectedRangeNoteOffset.string);
-            let maxString = Math.max(model.selectedNote.string, model.selectedRangeNoteOffset.string);
-
-            // compare the selected note position and the selected range note offset position
-            let compare = model.tune.positionCompare(model.selectedNote, model.selectedRangeNoteOffset);
-            // set the start note to whichever note comes before the other
-            let start = compare < 0 ? model.selectedNote : model.selectedRangeNoteOffset;
-            // set the end note to whichever note comes after the other
-            let end = compare < 0 ? model.selectedRangeNoteOffset : model.selectedNote;
-
-            range.from = cloneNote(start);
-            range.to = cloneNote(end);
-
             // set the start position
-            let position = cloneNote(start);
+            let position = cloneNote(range.from);
 
             // advance the start position until it is after the end position
-            while (model.tune.positionCompare(position, end) <= 0) {
+            while (model.tune.positionCompare(position, range.to) <= 0) {
                 // move through the strings in the current position
                 for (let string = minString; string <= maxString; string++) {
                     position.string = string;
@@ -255,6 +244,14 @@
             }
 
             return range;
+        }
+
+        function getSelectedRange() {
+            if (!model.selectedNote) {
+                return null;
+            }
+
+            return getRange(model.selectedNote, model.selectedRangeNoteOffset || model.selectedNote);
         }
 
         function getString(note) {
@@ -311,7 +308,17 @@
                 return;
             }
 
-            pasteRange(model.copiedRange, model.selectedNote);
+            let copiedRange = model.copiedRange.slice();
+            let note = cloneNote(model.selectedNote);
+
+            let undo = () => {
+                // todo
+            };
+            let redo = () => pasteRange(copiedRange, note);
+
+            pasteRange(copiedRange, note);
+
+            eventService.performAction(redo, undo);
         }
 
         function pasteRange(range, note) {
@@ -321,7 +328,7 @@
 
             let offsetNote = cloneNote(note);
             let prev = range[0];
-            range.forEach((note, i) => {
+            range.forEach(note => {
                 let offset = model.part.getOffset(prev, note);
                 model.part.offsetNote(offsetNote, offset, true);
                 setFret(offsetNote, note.fret);
