@@ -1,6 +1,7 @@
 BUGS
 - handle long part names in mixer
 - drop downs don't bind their default value in FF. e.g. in the Create Tune modal, newTune.instrumentName is an empty string if left on the default
+- copied range misaligns string lines
 
 OPTIMISATION
 - Preload notes when playing
@@ -13,7 +14,7 @@ CODE
 
 UI
 - show part edit and delete options in tab drop down
-- undo/redo range delete / paste
+- undo/redo range paste
 
 UX
 - Key events for play position: backwards/forwards with cursor

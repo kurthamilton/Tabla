@@ -125,13 +125,24 @@
             });
         }
 
+        function deleteRange(range) {
+            if (!range) {
+                return;
+            }
+            range.notes.forEach(note => setFret(note, null));
+        }
+
         function deleteSelectedRange() {
             let range = getSelectedRange();
             if (!range) {
                 return;
             }
 
-            range.notes.forEach(note => setFret(note, null));
+            let undo = () => range.notes.forEach(note => setFret(note, note.fret));
+            let redo = () => deleteRange(range);
+            eventService.performAction(redo, undo);
+
+            deleteRange(range);
         }
 
         function emptyClipboard() {
@@ -296,13 +307,21 @@
         }
 
         function pasteCopiedRange() {
-            if (!model.copiedRange) {
+            if (!model.copiedRange || !model.selectedNote) {
                 return;
             }
 
-            let offsetNote = cloneNote(model.selectedNote);
-            let prev = model.copiedRange[0];
-            model.copiedRange.forEach((note, i) => {
+            pasteRange(model.copiedRange, model.selectedNote);
+        }
+
+        function pasteRange(range, note) {
+            if (!range || range.length === 0 || !note) {
+                return;
+            }
+
+            let offsetNote = cloneNote(note);
+            let prev = range[0];
+            range.forEach((note, i) => {
                 let offset = model.part.getOffset(prev, note);
                 model.part.offsetNote(offsetNote, offset, true);
                 setFret(offsetNote, note.fret);
