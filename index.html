@@ -64,6 +64,7 @@
                                 </button>
                             </div>
                             <div class="pull-right part-options__component">
+                                <a href="#" data-toggle="modal" data-target="#download-tune" rv-on-click="actions.generateTuneDownloadLink">Download</a>
                                 <a href="#" data-toggle="modal" data-target="#edit-bars" rv-on-click="actions.onBarsEditing">Edit bars</a>
                                 <a href="#" data-toggle="modal" data-target="#edit-part" rv-on-click="actions.onPartEditing">Edit part</a>
                                 <a href="#" rv-show="model.tune.parts | length | gt 1" rv-on-click="actions.deletePart">Delete part</a>
@@ -126,6 +127,20 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- download tune modal -->
+            <div id="download-tune" class="modal fade" role="dialog" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Download</h4>
+                        </div>
+                        <div class="modal-body">
+                            <a rv-href="tuneDataUrl" rv-download="model.tune.name | suffix '.json''">Download</a>
                         </div>
                     </div>
                 </div>

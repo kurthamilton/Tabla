@@ -16,6 +16,9 @@
                 create: createTune,
                 delete: deleteTune,
                 deletePart: deletePart,
+                getTuneForDownload: function() {
+                    return getSavedTuneObject(model.tune.id);
+                },
                 load: loadTune,
                 save: saveTune,
                 selectPart: selectPart,
@@ -112,6 +115,13 @@
 
         function getTuneIndex(id) {
             return model.tunes.findIndex(i => i.id === id);
+        }
+
+        function loadTune(id) {
+            let stored = getSavedTuneObject(id);
+            let tune = stored ? new Tune(stored) : null;
+            setActiveTune(tune);
+            utils.async(() => saveTunes());
         }
 
         function selectPart(index) {
@@ -224,14 +234,8 @@
         }
 
         // storage functions
-        function loadTune(id) {
-            let saved = storageService.get(`tune.${id}`);
-            let tune = null;
-            if (saved) {
-                tune = new Tune(saved);
-            }
-            setActiveTune(tune);
-            utils.async(() => saveTunes());
+        function getSavedTuneObject(id) {
+            return storageService.get(`tune.${id}`);
         }
 
         function loadTunes() {

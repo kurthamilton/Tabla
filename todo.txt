@@ -22,5 +22,5 @@ UX
 FUNCTIONALITY
 - custom instruments
 - Set note length / add rest notes
-- import / export. Sync?
+- import. Sync?
 - import from tabledit

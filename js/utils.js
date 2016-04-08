@@ -19,6 +19,10 @@
                     executeFunction(callback);
                 }, 0);
             },
+            dataUrl: function(obj) {
+                let encoded = encodeURIComponent(JSON.stringify(obj));
+                return `data:text/json;charset=utf-8,${encoded}`;
+            },
             // lightweight function returning a value looking like a GUID. Uses Math.random, so can't be fully trusted.
             guid: function() {
                 function S4() {
