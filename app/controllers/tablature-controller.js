@@ -229,6 +229,7 @@
             if (!viewBinding) {
                 viewBinding = bind();
             }
+            eventService.clearUndoHistory();
         }
 
         function setFret(fret) {

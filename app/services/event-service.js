@@ -9,6 +9,7 @@
 
         return {
             addEventListener: addEventListener,
+            clearUndoHistory: clearUndoHistory,
             performAction: performAction,
             redo: redoAction,
             trigger: trigger,
@@ -38,6 +39,11 @@
                 eventListeners[event] = [];
             }
             eventListeners[event].push(callback);
+        }
+
+        function clearUndoHistory() {
+            undoActions.splice(0, undoActions.length - 1);
+            redoActions.splice(0, redoActions.length - 1);
         }
 
         function performAction(redo, undo) {
