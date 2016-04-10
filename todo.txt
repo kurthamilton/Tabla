@@ -18,9 +18,9 @@ UI
 
 UX
 - Key events for play position: backwards/forwards with cursor
+- Parse/validate uploaded tune. Offer to replace existing with same id.
 
 FUNCTIONALITY
 - custom instruments
 - Set note length / add rest notes
-- import. Sync?
 - import from tabledit

@@ -23,10 +23,12 @@
                 onPartEditing: function() {
                     scope.editPart = new EditPartViewModel(scope.model.part);
                 },
+                onTuneUploadFileChanged: onTuneUploadFileChanged,
                 save: saveTune,
                 selectPart: selectPart,
                 updateBars: updateBars,
-                updatePart: updatePart
+                updatePart: updatePart,
+                uploadTune: uploadTune
             },
             audioActions: audioService.actions,
             audioModel: audioService.model,
@@ -41,7 +43,8 @@
                 instrumentName: '',
                 name: ''
             },
-            tuneDataUrl: ''
+            tuneDataUrl: '',
+            uploadedTune: null
         };
 
         function EditPartViewModel(options) {
@@ -138,6 +141,25 @@
             domUtils.closeModal();
         }
 
+        function onTuneUploadFileChanged(e) {
+            if (e.target.files.length > 0) {
+                let reader = new FileReader();
+                reader.onload = onTuneUploadFileRead;
+                reader.readAsText(e.target.files[0]);
+            } else {
+                scope.uploadedTune = null;
+            }
+        }
+
+        function onTuneUploadFileRead(e) {
+            try {
+                let tuneObject = JSON.parse(e.target.result);
+                scope.uploadedTune = tuneObject;
+            } catch(err) {
+                scope.uploadedTune = null;
+            }
+        }
+
         function saveTune() {
             if (validateTune()) {
                 tuneService.actions.save();
@@ -165,6 +187,14 @@
             tuneService.actions.updatePart(scope.model.part.index(), scope.editPart);
             domUtils.closeModal();
             alertService.addAlert({ message: 'Part updated', timeout: 2000 });
+        }
+
+        function uploadTune() {
+            if (!scope.uploadedTune) {
+                return;
+            }
+
+            tuneService.actions.insertTune(scope.uploadedTune);
         }
 
         function validateNewPart() {

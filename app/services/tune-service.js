@@ -19,6 +19,7 @@
                 getTuneForDownload: function() {
                     return getSavedTuneObject(model.tune.id);
                 },
+                insertTune: insertTune,
                 load: loadTune,
                 save: saveTune,
                 selectPart: selectPart,
@@ -52,7 +53,14 @@
 
             trigger('part.added', { index: model.tune.parts.length - 1 });
 
-            utils.async(() => saveTune());
+            utils.async(() => saveActiveTune());
+        }
+
+        function addTune(tune) {
+            model.tunes.push({
+                id: tune.id,
+                name: tune.name
+            });
         }
 
         function createTune(options) {
@@ -66,14 +74,11 @@
             options.tune = tune;
             tune.parts.push(new Part(options));
 
-            model.tunes.push({
-                id: tune.id,
-                name: tune.name
-            });
+            addTune(tune);
             setActiveTune(tune);
 
             utils.async(() => {
-                saveTune();
+                saveActiveTune();
                 saveTunes();
             });
         }
@@ -92,7 +97,7 @@
 
             trigger('part.deleted', { index: index });
 
-            utils.async(() => saveTune());
+            utils.async(() => saveActiveTune());
         }
 
         function deleteTune(id) {
@@ -115,6 +120,18 @@
 
         function getTuneIndex(id) {
             return model.tunes.findIndex(i => i.id === id);
+        }
+
+        function insertTune(tuneObject) {
+            tuneObject.id = utils.guid();
+            let tune = new Tune(tuneObject);
+            
+            addTune(tune);
+
+            utils.async(() => {
+                saveTunes();
+                saveTune(tune);
+            });
         }
 
         function loadTune(id) {
@@ -148,13 +165,13 @@
             let fret = note.fret;
             if (fret === null || isNaN(fret) === true) {
                 model.part.deleteNote(note);
-                utils.async(() => saveTune());
+                utils.async(() => saveActiveTune());
                 return true;
             }
 
             if (fret >= 0 && fret <= model.part.instrument.frets) {
                 model.part.addNote(note);
-                utils.async(() => saveTune());
+                utils.async(() => saveActiveTune());
                 return true;
             }
 
@@ -173,7 +190,7 @@
 
             let on = partNote.toggleEffect(effect);
 
-            utils.async(() => saveTune());
+            utils.async(() => saveActiveTune());
 
             return on;
         }
@@ -188,7 +205,7 @@
 
             model.tune.setNumberOfBars(options.number);
             trigger('tune.bars.updated');
-            saveTune();
+            saveActiveTune();
         }
 
         function updatePart(index, options) {
@@ -206,7 +223,7 @@
             part.sound = options.sound || part.sound;
 
             trigger('part.updated', { index: index });
-            saveTune();
+            saveActiveTune();
         }
 
         function updateTune(options) {
@@ -223,7 +240,7 @@
             }
 
             utils.async(() => {
-                saveTune();
+                saveActiveTune();
                 saveTunes();
             });
         }
@@ -252,11 +269,15 @@
             storageService.remove(`tune.${id}`);
         }
 
-        function saveTune() {
-            if (!model.tune) {
+        function saveActiveTune() {
+            saveTune(model.tune);
+        }
+
+        function saveTune(tune) {
+            if (!tune) {
                 return;
             }
-            storageService.set(`tune.${model.tune.id}`, model.tune.serialize());
+            storageService.set(`tune.${tune.id}`, tune.serialize());
         }
 
         function saveTunes() {

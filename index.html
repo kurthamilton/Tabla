@@ -127,6 +127,17 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- upload tune -->
+                            <div>
+                                <h4>Upload Tune</h4>
+                                <div>
+                                    <input id="tune-upload" type="file" rv-on-change="actions.onTuneUploadFileChanged" />
+                                    <button type="button" rv-enabled="uploadedTune" rv-on-click="actions.uploadTune">
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
