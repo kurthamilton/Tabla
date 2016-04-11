@@ -15,7 +15,6 @@ CODE
 
 UI
 - show part edit and delete options in tab drop down
-- undo/redo range paste
 
 UX
 - Key events for play position: backwards/forwards with cursor

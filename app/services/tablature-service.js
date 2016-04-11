@@ -208,6 +208,20 @@
             return quavers;
         }
 
+        function getOffsetRange(range, startNote) {
+            let offsetRange = [];
+            let offsetNote = cloneNote(startNote);
+            let prev = range[0];
+            range.forEach(note => {
+                let offset = model.part.getOffset(prev, note);
+                model.part.offsetNote(offsetNote, offset, true);
+                offsetNote.fret = getString(offsetNote).fret;
+                offsetRange.push(cloneNote(offsetNote));
+                prev = note;
+            });
+            return offsetRange;
+        }
+
         function getRange(startNote, endNote) {
             if (!startNote || !endNote) {
                 return null;
@@ -308,13 +322,18 @@
                 return;
             }
 
-            let copiedRange = model.copiedRange.slice();
+            let copiedRange = model.copiedRange.map(n => cloneNote(n));
+            let targetRange = getOffsetRange(copiedRange, model.selectedNote).map(n => cloneNote(n));
             let note = cloneNote(model.selectedNote);
 
             let undo = () => {
-                // todo
+                targetRange.forEach(targetRangeNote => {
+                    setFret(targetRangeNote, targetRangeNote.fret);
+                });
             };
-            let redo = () => pasteRange(copiedRange, note);
+            let redo = () => {
+                pasteRange(copiedRange, note);
+            };
 
             pasteRange(copiedRange, note);
 
