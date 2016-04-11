@@ -162,7 +162,7 @@
 
         function saveTune() {
             if (validateTune()) {
-                tuneService.actions.save();
+                tuneService.actions.updateTune(tuneService.model.tune);
                 alertService.addAlert({ message: 'Tune updated', timeout: 2000 });
             }
         }

@@ -42,13 +42,7 @@
                 return;
             }
 
-            options.id = utils.guid();
-            options.sound = options.sound || instrumentFactory.defaultSound(options.instrumentName);
-            options.tune = model.tune;
-
-            let part = new Part(options);
-            model.tune.parts.push(part);
-
+            let part = createPart(model.tune, options);
             setActivePart(part);
 
             trigger('part.added', { index: model.tune.parts.length - 1 });
@@ -63,16 +57,21 @@
             });
         }
 
+        function createPart(tune, options) {
+            options.id = utils.guid();
+            options.name = options.name || options.instrumentName;
+            options.sound = options.sound || instrumentFactory.defaultSound(options.instrumentName);
+            options.tune = tune;
+            let part = new Part(options);
+            tune.parts.push(part);
+            return part;
+        }
+
         function createTune(options) {
             options.id = utils.guid();
 
             let tune = new Tune(options);
-
-            options.id = utils.guid();
-            options.name = options.instrumentName;
-            options.sound = instrumentFactory.defaultSound(options.instrumentName);
-            options.tune = tune;
-            tune.parts.push(new Part(options));
+            createPart(tune, options);
 
             addTune(tune);
             setActiveTune(tune);
@@ -122,9 +121,26 @@
             return model.tunes.findIndex(i => i.id === id);
         }
 
+        function getTuneIndexByName(name) {
+            if (!name) {
+                return -1;
+            }
+            name = name.toLowerCase();
+            return model.tunes.findIndex(i => i.name.toLowerCase() === name);
+        }
+
         function importTune(tuneObject) {
-            tuneObject.id = utils.guid();
-            let tune = new Tune(tuneObject);
+            let tune = parseTune(tuneObject);
+
+            if (getTuneIndex(tune.id) > 0 && !confirm('Tune id already exists. Do you want to overwrite the existing tune?')) {
+                tune.id = utils.guid();
+            }
+
+            let name = tune.name;
+            let i = 2;
+            while (getTuneIndexByName(tune.name) > 0) {
+                tune.name = `${name} (${i++})`;
+            }
 
             addTune(tune);
 
@@ -136,9 +152,18 @@
 
         function loadTune(id) {
             let stored = getSavedTuneObject(id);
-            let tune = stored ? new Tune(stored) : null;
+            let tune = stored ? parseTune(stored) : null;
             setActiveTune(tune);
             utils.async(() => saveTunes());
+        }
+
+        function parseTune(options) {
+            if (!options) {
+                options = {};
+            }
+
+            options.id = options.id || utils.guid();
+            return new Tune(options);
         }
 
         function selectPart(index) {
@@ -226,21 +251,17 @@
             saveActiveTune();
         }
 
-        function updateTune(options) {
-            if (!model.tune) {
+        function updateTune(tune) {
+            if (!tune) {
                 return;
             }
 
-            if (options.name && model.tune.name !== options.name) {
-                model.tune.name = options.name;
-
-                // update tunes object with updated name
-                let i = model.tunes.findIndex(t => t.id === model.tune.id);
-                model.tunes[i].name = options.name;
-            }
+            // ensure tunes object has current tune name
+            let i = model.tunes.findIndex(t => t.id === tune.id);
+            model.tunes[i].name = tune.name;
 
             utils.async(() => {
-                saveActiveTune();
+                saveTune(tune);
                 saveTunes();
             });
         }
