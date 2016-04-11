@@ -16,10 +16,10 @@
                 create: createTune,
                 delete: deleteTune,
                 deletePart: deletePart,
-                getTuneForDownload: function() {
+                getTuneForExport: function() {
                     return getSavedTuneObject(model.tune.id);
                 },
-                insertTune: insertTune,
+                importTune: importTune,
                 load: loadTune,
                 save: saveTune,
                 selectPart: selectPart,
@@ -122,10 +122,10 @@
             return model.tunes.findIndex(i => i.id === id);
         }
 
-        function insertTune(tuneObject) {
+        function importTune(tuneObject) {
             tuneObject.id = utils.guid();
             let tune = new Tune(tuneObject);
-            
+
             addTune(tune);
 
             utils.async(() => {

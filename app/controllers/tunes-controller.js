@@ -14,7 +14,7 @@
                 delete: deleteTune,
                 deletePart: deletePart,
                 generateTuneDownloadLink: function() {
-                    scope.tuneDataUrl = utils.dataUrl(tuneService.actions.getTuneForDownload());
+                    scope.tuneDataUrl = utils.dataUrl(tuneService.actions.getTuneForExport());
                 },
                 load: loadTune,
                 onBarsEditing: function() {
@@ -194,7 +194,7 @@
                 return;
             }
 
-            tuneService.actions.insertTune(scope.uploadedTune);
+            tuneService.actions.importTune(scope.uploadedTune);
         }
 
         function validateNewPart() {
