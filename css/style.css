@@ -21,6 +21,11 @@ body {
     margin-top: 20px;
 }
 
+/* elements */
+input[type=file] {
+    display: inline;
+}
+
 /* utilities */
 .no-select {
     -webkit-user-select: none;

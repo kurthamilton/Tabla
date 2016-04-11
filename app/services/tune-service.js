@@ -142,7 +142,9 @@
                 tune.name = `${name} (${i++})`;
             }
 
-            addTune(tune);
+            if (getTuneIndex(tune.id) < 0) {
+                addTune(tune);
+            }
 
             utils.async(() => {
                 saveTunes();

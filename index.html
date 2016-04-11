@@ -86,12 +86,12 @@
                             <div rv-hide="model.tunes | empty">
                                 <h4>Tunes</h4>
                                 <div>
-                                    <table class="table">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr><th>Name</th><th></th><th></th></tr>
                                         </thead>
                                         <tbody>
-                                            <tr rv-each-tune="model.tunes" rv-class-active="tune.id | eq model.tune.id">
+                                            <tr rv-each-tune="model.tunes" rv-class-info="tune.id | eq model.tune.id">
                                                 <td>{ tune.name }</td>
                                                 <td><a href="#" rv-on-click="actions.load">Load</a></td>
                                                 <td><a href="#tunes-manager" rv-on-click="actions.delete">Delete</a></td>
@@ -122,7 +122,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-sm-offset-3 col-sm-8">
-                                            <button type="button" rv-on-click="actions.create">Create</button>
+                                            <button type="button" class="btn btn-primary" rv-on-click="actions.create">Create</button>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@
                                 <h4>Upload Tune</h4>
                                 <div>
                                     <input id="tune-upload" type="file" rv-on-change="actions.onTuneUploadFileChanged" />
-                                    <button type="button" rv-enabled="uploadedTune" rv-on-click="actions.uploadTune">
+                                    <button type="button" class="btn btn-default" rv-show="uploadedTune" rv-on-click="actions.uploadTune">
                                         Upload
                                     </button>
                                 </div>
