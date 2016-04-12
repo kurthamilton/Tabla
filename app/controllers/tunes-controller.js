@@ -112,7 +112,7 @@
         }
 
         function createTune() {
-            if (validationService.validateForm(document.getElementById('create-tune'))) {
+            if (validateNewTune()) {
                 tuneService.actions.create(scope.newTune);
 
                 scope.newTune.name = '';
@@ -201,11 +201,28 @@
             return validationService.validateForm(document.getElementById('add-part'));
         }
 
+        function validateNewTune() {
+            let results = [];
+            results.push(validationService.validateForm(document.getElementById('create-tune')));
+            results.push(validateTuneName(document.getElementById('new-tune-name')));
+            return results.filter(r => r === false).length === 0;
+        }
+
         function validateTune() {
             let results = [];
-            results.push(validationService.validateElement(document.getElementById('tune-name')));
+            let tuneNameElement = document.getElementById('tune-name');
+            results.push(validationService.validateElement(tuneNameElement));
             results.push(validationService.validateElement(document.getElementById('tune-bpm')));
+            results.push(validateTuneName(tuneNameElement, scope.model.tune.id));
             return results.filter(r => r === false).length === 0;
+        }
+
+        function validateTuneName(element, id) {
+            let valid = tuneService.tuneNameExists(element.value, id) === false;
+            if (!valid) {
+                validationService.setElementValidity(element, false);
+            }
+            return valid;
         }
     }
 })(rivets);

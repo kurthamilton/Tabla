@@ -5,9 +5,15 @@
 
     function ValidationService() {
         return {
+            setElementValidity: setElementValidity,
             validateElement: validateElement,
             validateForm: validateForm
         };
+
+        function setElementValidity(element, valid) {
+            let action = valid ? 'remove' : 'add';
+            element.parentNode.classList[action]('has-error');
+        }
 
         function validateForm(form) {
             let elements = form.querySelectorAll('input,select,textarea');
@@ -24,8 +30,7 @@
 
         function validateElement(element) {
             let valid = element.checkValidity();
-            let action = valid ? 'remove' : 'add';
-            element.parentNode.classList[action]('has-error');
+            setElementValidity(element, valid);
 
             if (!element.dataset.validateOnInput) {
                 element.addEventListener('input', () => validateElement(element));

@@ -33,7 +33,14 @@
                 eventService.addEventListener(TuneService, event, callback);
             },
             load: loadTunes,
-            model: model
+            model: model,
+            tuneNameExists: function(name, id) {
+                let index = getTuneIndexByName(name);
+                if (index < 0) {
+                    return false;
+                }
+                return getTuneIndex(id) !== index;
+            }
         };
 
         // actions
