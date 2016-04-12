@@ -78,6 +78,7 @@
             options.id = utils.guid();
 
             let tune = new Tune(options);
+            options.name = options.instrumentName;
             createPart(tune, options);
 
             addTune(tune);
