@@ -50,7 +50,6 @@ input[type=file] {
 }
 #tune-name {
     font-size: inherit;
-    width: initial;
 }
 
 /* validation */
